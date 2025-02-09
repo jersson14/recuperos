@@ -238,35 +238,49 @@ function AbrirRegistro(){
 }
 
 //CARGAR OBRAS SOCIALES
+// Modificar tu función actual
 function Cargar_Select_Obras_Sociales() {
   $.ajax({
-    url: "../controller/obras_sociales/controlador_cargar_select_obras_sociales.php",
-    type: 'POST',
+      url: "../controller/obras_sociales/controlador_cargar_select_obras_sociales.php",
+      type: 'POST',
   }).done(function(resp) {
-    let data = JSON.parse(resp);
-    let cadena = "<option value=''>Seleccionar Obra Social</option>";
-    if (data.length > 0) {
-      for (let i = 0; i < data.length; i++) {
-        cadena += "<option value='" + data[i][0] + "'>CUIT: " + data[i][1] + " - Nombre: " + data[i][2] + "</option>";
+      let data = JSON.parse(resp);
+      let cadena = "<option value=''>Seleccionar Obra Social</option>";
+      if (data.length > 0) {
+          for (let i = 0; i < data.length; i++) {
+              cadena += "<option value='" + data[i][0] + "'>CUIT: " + data[i][1] + " - Nombre: " + data[i][2] + "</option>";
+          }
+      } else {
+          cadena += "<option value=''>No hay obras disponibles</option>";
       }
-    } else {
-      cadena += "<option value=''>No hay obras disponibles</option>";
-    }
-    $('#txt_obras_sociales').html(cadena);
-    $('#txt_obras_sociales_mostrar').html(cadena);
-    $('#txt_obras_sociales_editar').html(cadena);
-    $('#select_obras').html(cadena);
-
-    // Inicializar Select2 después de cargar opciones
-    $('#txt_obras_sociales').select2({
-      placeholder: "Seleccionar Obra Social",
-      allowClear: true,
-      width: '100%' // Asegura que use todo el ancho
-    });
+      
+      // Actualizar todos los selects
+      $('#txt_obras_sociales, #txt_obras_sociales_mostrar, #txt_obras_sociales_editar, #select_obras').html(cadena);
+      
+      // Inicializar Select2 para el select principal
+      $('#select_obras').select2({
+          placeholder: "Seleccionar Obra Social",
+          allowClear: true
+      });
   });
 }
 
+// Agregar estos event listeners
+$('#modal_registro').on('shown.bs.modal', function() {
+  $('#txt_obras_sociales').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      dropdownParent: $('#modal_registro')
+  });
+});
 
+$('#modal_editar').on('shown.bs.modal', function() {
+  $('#txt_obras_sociales_editar').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      dropdownParent: $('#modal_editar')
+  });
+});
 
 function Registrar_Paciente(){
   let dni = document.getElementById('txt_nro').value;

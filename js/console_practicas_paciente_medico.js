@@ -544,6 +544,7 @@ function Cargar_Select_Areas() {
   });
 }
 
+
 function Cargar_Select_Obras_Sociales() {
   $.ajax({
     url: "../controller/obras_sociales/controlador_cargar_select_obras_sociales.php",
@@ -604,94 +605,153 @@ function Cargar_Select_Obras_Sociales2() {
     });
   });
 }
-
-function Cargar_Select_Paciente(id, id_paciente = null) {
+// Función para cargar pacientes
+function Cargar_Select_Paciente(id) {
+  console.log("Cargando pacientes para obra social ID:", id); // Debug
+  
+  // Limpiar el select de pacientes antes de la nueva carga
+  $("#select_paciente").empty().trigger('change');
+  
   $.ajax({
-    url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica.php",
-    type: 'POST',
-    data: {
-      id: id
-    },
-  }).done(function(resp) {
-    let data = JSON.parse(resp);
-    let cadena = "<option value='' disabled selected>No hay datos disponibles</option>";
-
-    if (data.length > 0) {
-      cadena = "<option value='' disabled selected>Seleccione paciente</option>"; // Placeholder por defecto
-      for (let i = 0; i < data.length; i++) {
-        cadena += "<option value='" + data[i][0] + "'>DNI: " + data[i][1] + " - PACIENTE: " + data[i][2] + "</option>";
-
+      url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica.php",
+      type: 'POST',
+      data: {
+          id: id
+      },
+      beforeSend: function() {
+          console.log("Enviando solicitud de pacientes..."); // Debug
+      },
+      success: function(response) {
+          console.log("Respuesta recibida:", response); // Debug
+          
+          try {
+              let data = JSON.parse(response);
+              let cadena = "<option value=''>Seleccione un paciente</option>";
+              
+              if (data && data.length > 0) {
+                  data.forEach(function(item) {
+                      cadena += `<option value="${item[0]}">DNI: ${item[1]} - ${item[2]}</option>`;
+                  });
+                  console.log("Pacientes cargados exitosamente"); // Debug
+              } else {
+                  cadena = "<option value=''>No hay pacientes disponibles</option>";
+                  console.log("No se encontraron pacientes"); // Debug
+              }
+              
+              // Actualizar el select y reinicializar
+              $("#select_paciente")
+                  .html(cadena)
+                  .select2({
+                      dropdownParent: $("#modal_registro"),
+                      placeholder: "Seleccione un paciente",
+                      allowClear: true,
+                      width: '100%'
+                  });
+              
+          } catch (error) {
+              console.error("Error al procesar datos de pacientes:", error);
+              $("#select_paciente").html("<option value=''>Error al cargar pacientes</option>");
+          }
+      },
+      error: function(xhr, status, error) {
+          console.error("Error en la petición AJAX de pacientes:", error);
+          $("#select_paciente").html("<option value=''>Error al cargar pacientes</option>");
       }
-
-      $('#select_paciente').html(cadena);
-
-      // Selecciona automáticamente el curso si se pasa id_paciente (para edición)
-      if (id_paciente) {
-        $('#select_paciente_editar').val(id_paciente).trigger('change');
-      }
-    } else {
-      cadena += "<option value=''>No se encontraron registros</option>";
-      $('#select_paciente').html(cadena);
-    }
-    $('#select_paciente').select2({
-      placeholder: "Seleccionar paciente",
-      allowClear: true,
-      width: '100%' // Asegura que use todo el ancho
-    });
-  }).fail(function() {
-    console.log("Error al cargar los cursos.");
   });
 }
 
-
-
-function Cargar_Select_Practica(id2, id_practica = null) {
+// Función para cargar prácticas
+function Cargar_Select_Practica(id) {
+  console.log("Cargando prácticas para obra social ID:", id); // Debug
+  
+  // Limpiar los selects de prácticas antes de la nueva carga
+  $("#select_practica, #select_practica_editar").empty().trigger('change');
+  
   $.ajax({
-    url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica2.php",
-    type: 'POST',
-    data: { id2: id2 },
-  }).done(function(resp) {
-    let data = JSON.parse(resp);
-    let cadena = "<option value='' disabled selected>No hay datos disponibles</option>";
-
-    if (data.length > 0) {
-      cadena = "<option value='' disabled selected>Seleccione práctica</option>"; // Placeholder
-      for (let i = 0; i < data.length; i++) {
-        cadena += "<option value='" + data[i][0] + "'>Código: " + data[i][1] + " - Práctica: " + data[i][2] + "</option>";
-
+      url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica2.php",
+      type: 'POST',
+      data: {
+          id2: id
+      },
+      beforeSend: function() {
+          console.log("Enviando solicitud de prácticas..."); // Debug
+      },
+      success: function(response) {
+          console.log("Respuesta recibida:", response); // Debug
+          
+          try {
+              let data = JSON.parse(response);
+              let cadena = "<option value=''>Seleccione una práctica</option>";
+              
+              if (data && data.length > 0) {
+                  data.forEach(function(item) {
+                      cadena += `<option value="${item[0]}">Código: ${item[1]} - ${item[2]}</option>`;
+                  });
+                  console.log("Prácticas cargadas exitosamente"); // Debug
+              } else {
+                  cadena = "<option value=''>No hay prácticas disponibles</option>";
+                  console.log("No se encontraron prácticas"); // Debug
+              }
+              
+              // Actualizar ambos selects y reinicializarlos
+              $("#select_practica")
+                  .html(cadena)
+                  .select2({
+                      dropdownParent: $("#modal_registro"),
+                      placeholder: "Seleccione una práctica",
+                      allowClear: true,
+                      width: '100%'
+                  });
+              
+              $("#select_practica_editar")
+                  .html(cadena)
+                  .select2({
+                      dropdownParent: $("#modal_editar"),
+                      placeholder: "Seleccione una práctica",
+                      allowClear: true,
+                      width: '100%'
+                  });
+              
+          } catch (error) {
+              console.error("Error al procesar datos de prácticas:", error);
+              $("#select_practica, #select_practica_editar")
+                  .html("<option value=''>Error al cargar prácticas</option>");
+          }
+      },
+      error: function(xhr, status, error) {
+          console.error("Error en la petición AJAX de prácticas:", error);
+          $("#select_practica, #select_practica_editar")
+              .html("<option value=''>Error al cargar prácticas</option>");
       }
-    }
+  });
+}
 
-    // Actualizar los selects
-    $('#select_practica').html(cadena);
-    $('#select_practica_editar').html(cadena);
- 
-    // Si hay una práctica seleccionada para edición
-    if (id_practica) {
-      $('#select_practica_editar').val(id_practica).trigger('change');
-    }
-
-    // Inicializar select2
-    $('#select_practica').select2({
-      placeholder: "Seleccionar práctica",
-      allowClear: true,
-      width: '100%'
-    });
-
-    // Evento change para cargar el precio cuando se seleccione una práctica
-    $('#select_practica').on('change', function() {
-      var idSeleccionado = $(this).val();
-      if (idSeleccionado) {
-        Traerprecio(idSeleccionado);
+// Event listeners actualizados
+$(document).ready(function() {
+  // Evento para cambio en obra social
+  $("#select_obras").off('change').on('change', function() {
+      let id = $(this).val();
+      console.log("Obra social seleccionada:", id); // Debug
+      
+      if (id) {
+          // Primero cargar pacientes
+          Cargar_Select_Paciente(id);
+          // Luego cargar prácticas
+          Cargar_Select_Practica(id);
       } else {
-        $("#txt_precio").val(''); // Limpiar si no hay selección
+          // Limpiar selects dependientes si no hay obra social seleccionada
+          $("#select_paciente, #select_practica").empty().trigger('change');
       }
-    });
-
-  }).fail(function() {
-    console.log("Error al cargar las prácticas.");
   });
-}
+  
+  // Evento para cambio en práctica
+  $("#select_practica, #select_practica_editar").off('change').on('change', function() {
+      let id = $(this).val();
+      if (id) {
+          Traerprecio(id);
+      }
+  });
+});
 
 function Traerprecio(id) {
   $.ajax({
@@ -712,8 +772,6 @@ function Traerprecio(id) {
     console.log("Error al traer el precio.");
   });
 }
-
-/////
 
 
 

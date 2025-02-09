@@ -258,6 +258,22 @@ function Cargar_Select_Obras_Sociales() {
     });
   });
 }
+// Agregar estos event listeners
+$('#modal_registro').on('shown.bs.modal', function() {
+  $('#txt_obras_sociales').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      dropdownParent: $('#modal_registro')
+  });
+});
+
+$('#modal_editar').on('shown.bs.modal', function() {
+  $('#txt_obras_sociales_editar').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      dropdownParent: $('#modal_editar')
+  });
+});
 
 
 

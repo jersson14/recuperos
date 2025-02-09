@@ -94,7 +94,7 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Total</th>
                     <th style="text-align:center">Fecha registro</th>
                     <th style="text-align:center">Fecha actualización</th>
-                    <th style="text-align:center">Usuario que actualizo</th>
+                    <th style="text-align:center">Usuario que registro</th>
                     <th style="text-align:center">Acciones</th>
                   </tr>
                 </thead>
@@ -333,17 +333,162 @@ if (!isset($_SESSION['S_ID'])) {
   </style>
 
   <script>
-$(document).ready(function () {
-  $('.js-example-basic-single').select2({
+$(document).ready(function() {
+    // Función para inicializar todos los select2 básicos
+    function initializeAllSelect2() {
+        // Inicializar select2 para obras sociales
+        $('#select_obras').select2({
+            placeholder: "Seleccionar obra social...",
+            allowClear: true,
+            width: '100%'
+        });
 
-  });
-  Cargar_Select_Obras_Sociales();
-  Cargar_Select_Obras_Sociales2();
-  Cargar_Select_Usuarios();
-  Cargar_Select_Areas();
-  listar_practica_paciente_diario();
+        // Inicializar select2 para pacientes
+        $('#select_paciente').select2({
+            placeholder: "Seleccionar paciente...",
+            allowClear: true,
+            width: '100%'
+        });
+
+        // Inicializar select2 para prácticas
+        $('#select_practica').select2({
+            placeholder: "Seleccionar práctica...",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#select_practica_editar').select2({
+            placeholder: "Seleccionar práctica...",
+            allowClear: true,
+            width: '100%'
+        });
+        // Inicializar otros select2 básicos
+        $('.js-example-basic-single').select2({
+            placeholder: "Seleccionar...",
+            allowClear: true,
+            width: '100%'
+        });
+    }
+
+    // Inicializar al cargar la página
+    initializeAllSelect2();
+
+    // Reinicializar cuando se abre el modal de registro
+    $('#modal_registro').on('shown.bs.modal', function() {
+        // Destruir instancias previas de select2
+        $('#select_obras, #select_paciente, #select_practica').select2('destroy');
+        
+        // Reinicializar con el modal como padre
+        $('#select_obras').select2({
+            dropdownParent: $('#modal_registro'),
+            placeholder: "Seleccionar obra social...",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#select_area').select2({
+            dropdownParent: $('#modal_registro'),
+            placeholder: "Seleccionar Área",
+            allowClear: true,
+            width: '100%'
+        });
+        $('#select_paciente').select2({
+            dropdownParent: $('#modal_registro'),
+            placeholder: "Seleccionar paciente...",
+            allowClear: true,
+            width: '100%'
+        });
+
+        $('#select_practica').select2({
+            dropdownParent: $('#modal_registro'),
+            placeholder: "Seleccionar práctica...",
+            allowClear: true,
+            width: '100%'
+        });
+       
+    });
+    $('#modal_editar').on('shown.bs.modal', function() {
+        // Destruir instancias previas de select2
+        $('#select_obras, #select_practica_editar').select2('destroy');
+        
+        // Reinicializar con el modal como padre
+        $('#select_obras').select2({
+            dropdownParent: $('#modal_editar'),
+            placeholder: "Seleccionar obra social...",
+            allowClear: true,
+            width: '100%'
+        });
+    
+        $('#select_practica_editar').select2({
+            dropdownParent: $('#modal_editar'),
+            placeholder: "Seleccionar práctica...",
+            allowClear: true,
+            width: '100%'
+        });
+       
+    });
+
+    // Manejar el cambio en obra social
+    $('#select_obras').off('change').on('change', function() {
+        var id = $(this).val();
+        if(id) {
+            // Cargar pacientes
+            $.ajax({
+                url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica.php",
+                type: 'POST',
+                data: { id: id },
+                success: function(response) {
+                    try {
+                        var data = JSON.parse(response);
+                        var options = '<option value="">Seleccionar paciente...</option>';
+                        
+                        if(data.length > 0) {
+                            data.forEach(function(item) {
+                                options += `<option value="${item[0]}">DNI: ${item[1]} - ${item[2]}</option>`;
+                            });
+                        }
+                        
+                        $('#select_paciente')
+                            .html(options)
+                            .trigger('change');
+                    } catch(e) {
+                        console.error("Error al procesar respuesta:", e);
+                    }
+                }
+            });
+
+            // Cargar prácticas
+            $.ajax({
+                url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica2.php",
+                type: 'POST',
+                data: { id2: id },
+                success: function(response) {
+                    try {
+                        var data = JSON.parse(response);
+                        var options = '<option value="">Seleccionar práctica...</option>';
+                        
+                        if(data.length > 0) {
+                            data.forEach(function(item) {
+                                options += `<option value="${item[0]}">Código: ${item[1]} - ${item[2]}</option>`;
+                            });
+                        }
+                        
+                        $('#select_practica')
+                            .html(options)
+                            .trigger('change');
+                    } catch(e) {
+                        console.error("Error al procesar respuesta:", e);
+                    }
+                }
+            });
+        }
+    });
+
+    // Cargar datos iniciales
+    Cargar_Select_Obras_Sociales();
+    Cargar_Select_Obras_Sociales2();
+    Cargar_Select_Usuarios();
+    Cargar_Select_Areas();
+    listar_practica_paciente_diario();
 });
-
 //TRAER DATOS DE PACIENTE
 
 

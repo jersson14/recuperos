@@ -90,7 +90,7 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Total</th>
                     <th style="text-align:center">Fecha registro</th>
                     <th style="text-align:center">Fecha actualización</th>
-                    <th style="text-align:center">Usuario que actualizo</th>
+                    <th style="text-align:center">Usuario que registro</th>
                     <th style="text-align:center">Acciones</th>
                   </tr>
                 </thead>
