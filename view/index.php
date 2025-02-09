@@ -82,7 +82,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
             <a class="nav-link" data-toggle="dropdown" href="#">
               <img src="../<?php echo $_SESSION['S_FOTO']; ?>" class="img-circle elevation-1" width="15" height="18">
 
-              <b>Usuario: <?php echo $_SESSION['S_NOMBRE'] ?></b>
+              <b>Usuario: <?php echo $_SESSION['S_COMPLETOS'] ?></b>
               <i class="fas fa-caret-down"></i>
             </a>
             <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
@@ -124,7 +124,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <nav class="mt-1">
           <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
             <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
-              <b>GESTIÓN TRÁMITES</b>
+              <b>GESTIÓN PRÁCTICAS</b>
             </li>
 
             <!-- Add icons to the links using the .nav-icon class
@@ -138,6 +138,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
+             
               <li class="nav-item">
                 <a href="#" onclick="cargar_contenido('contenido_principal','obra_social/view_obra_social.php')" class="nav-link">
                   <i class="nav-icon fas fa-file"></i>
@@ -163,46 +164,26 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   </p>
                 </a>
               </li>
-
-              <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
-                <b>FACTURAS Y REPORTES</b>
-              </li>
               <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-file-signature"></i>
+                <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente.php')" class="nav-link">
+                  <i class="nav-icon fas fa-stethoscope"></i>
                   <p style="color:white">
-                    Reporte de Trámites
-                    <i class="right fas fa-angle-left"></i>
+                    Prácticas - Paciente
                   </p>
                 </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite/view_reporte_fecha_area.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p style="color:white">
-                        Reporte por Fechas y Área
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite/view_reporte_fecha_estado.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p style="color:white">
-                        Reporte por Fechas y Estado
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite/view_reporte_fecha_tipodoc.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p style="color:white">
-                        Reporte por Fechas y Tipo de Documento
-                      </p>
-                    </a>
-                  </li>
-
-                </ul>
               </li>
+              <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
+                <b>FACTURAS</b>
+              </li>
+              <li class="nav-item">
+                <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente.php')" class="nav-link">
+                  <i class="nav-icon fas fa-file"></i>
+                  <p style="color:white">
+                    Gestión de facturas
+                  </p>
+                </a>
+              </li>
+              
               <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
                 <b>CONFIGURACIÓN Y MANUAL</b>
               </li>
@@ -226,83 +207,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
             ?>
             <?php if ($_SESSION['S_ROL'] == "MEDICO") { ?>
+              
               <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','tramite_area/view_tramite_registro.php')" class="nav-link">
-                  <i class="nav-icon fas fa-plus"></i>
-                  <p>
-                    Trámite Nuevo
+                <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente2.php')" class="nav-link">
+                <i class="nav-icon fas fa-stethoscope"></i>
+                <p style="color:white">
+                    Prácticas - Paciente
                   </p>
                 </a>
               </li>
-              <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','tramite_area/view_tramite.php')" class="nav-link">
-                  <i class="nav-icon fas fa-file-signature"></i>
-                  <p>
-                    Trámites Recibidos
-                  </p>
-                </a>
+            
+              <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
+                <b>MANUAL</b>
               </li>
               <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','tramite_area/view_tramite_enviados.php')" class="nav-link">
-                  <i class="nav-icon fas fa-file-signature"></i>
-                  <p>
-                    Documentos Enviados
-                  </p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','rastreo/view_rastreo.php')" class="nav-link">
-                  <i class="nav-icon fas fa-search"></i>
-                  <p>
-                    Rastrear Trámites
-                  </p>
-                </a>
-              </li>
-              <li class="header text-center" style="color:#FFFFFF;background-color:#023D77;"><b>REPORTE DE TRÁMITES</b></li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="nav-icon fas fa-file-signature"></i>
-                  <p>
-                    Reporte de Trámites
-                    <i class="right fas fa-angle-left"></i>
-                  </p>
-                </a>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite_area/view_reporte_fecha_area.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p>Reporte por Fechas y Área
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite_area/view_reporte_fecha_estado.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p>
-                        Reporte por Fechas y Estado
-                      </p>
-                    </a>
-                  </li>
-                  <li class="nav-item">
-                    <a onclick="cargar_contenido('contenido_principal','tramite_area/view_reporte_fecha_tipodoc.php')" class="nav-link">
-                      <i class="nav-icon fas fa-file"></i>
-                      <p>
-                        Reporte por Fechas y Tipo de Documento
-                      </p>
-                    </a>
-                  </li>
-
-                </ul>
-              </li>
-              <li class="header text-center" style="color:#FFFFFF;background-color:Gray;"><b>MANUAL</b></li>
-              <li class="nav-item">
-                <a href="../manual_usuario.pdf" target="_blank" class="nav-link">
+                <a href="../manual.pdf" target="blank" onclick="" class="nav-link">
                   <i class="nav-icon fas fa-file"></i>
-                  <p>
+                  <p style="color:white">
                     Manual de Usuario
                   </p>
                 </a>
               </li>
+            
             <?php
             }
             ?>
@@ -325,7 +251,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
       <!-- Content Wrapper. Contains page content -->
 
       <!-- Content Header (Page header) -->
-      <div class="content-header">
+    
+      <?php if ($_SESSION['S_ROL'] == "ADMINISTRADOR") { ?>
+        <div class="content-header">
         <div class="container-fluid">
           <div class="row mb-2">
             <div class="col-sm-6">
@@ -343,13 +271,11 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div><!-- /.container-fluid -->
       </div>
       <!-- /.content-header -->
-      <?php if ($_SESSION['S_ROL'] == "ADMINISTRADOR") { ?>
-
 
 
         <div class="col-md-12">
           <div class="card card-primary">
-            <div class="card-header py-2" style="border-radius: 15px 15px 0 0; background-color: #005CA5;">
+            <div class="card-header py-2"   style="background: linear-gradient(135deg, #023D77, #0266C8)">
               <h5 class="m-0" style="font-family:cooper; text-align:center; line-height: 1; padding: 0;">
                 <i class="fas fa-list-ol" style="margin-right: 8px;"></i>DATOS IMPORTANTES
               </h5>
@@ -431,7 +357,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <div class="col-md-12">
           <div class="card card-primary" style="border-radius: 15px; overflow: hidden;">
-            <div class="card-header py-2" style="border-radius: 15px 15px 0 0; background-color: #005CA5;">
+            <div class="card-header py-2"   style="background: linear-gradient(135deg, #023D77, #0266C8)">
               <h5 class="m-0" style="font-family:cooper; text-align:center; line-height: 1; padding: 0; color: white;">
                 <i class="fas fa-hospital" style="margin-right: 8px;"></i>DATOS DEL HOSPITAL
               </h5>
@@ -465,7 +391,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="col-md-12">
           <div class="card card-primary">
             <div class="card card-primary">
-              <div class="card-header py-2" style="border-radius: 15px 15px 0 0; background-color: #005CA5;">
+              <div class="card-header py-2"   style="background: linear-gradient(135deg, #023D77, #0266C8)">
                 <h5 class="m-0" style="font-family:cooper; text-align:center; line-height: 1; padding: 0;">
                   <i class="fas fa-image" style="margin-right: 8px;"></i>CATALOGO DE FOTOS
                 </h5>
@@ -905,7 +831,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <div class="modal fade" id="modal_editar_foto" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog" role="document">
             <div class="modal-content">
-              <div class="modal-header" style="background-color:#1FA0E0;">
+              <div class="modal-header"   style="background: linear-gradient(135deg, #023D77, #0266C8)">
                 <h5 class="modal-title" id="exampleModalLabel" style="color:white; text-align:center"><b>EDITAR FOTO DE LA INSTITUCIÓN: </b><label for="" id="lb_empresa"></label></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -940,39 +866,423 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Main content -->
 
         <div class="content">
-          <div class="container-fluid">
-            <div class="row">
-              <!-- /.col-md-6 -->
-              <div class="col-lg-12">
-                <img src="../logo_diresa.png" width="100%"><br>
-                <div class="card-primary"><br>
-                  <div class="card-header">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-10 text-center">
+        <div class="p-5 rounded shadow-lg" 
+             style="background: linear-gradient(135deg, #023D77, #0266C8); 
+                    color: white; 
+                    border-radius: 20px; 
+                    margin-bottom: 20px;">
+          <h1 class="display-3 font-weight-bold" style="font-family: Cooper;">
+            ¡BIENVENIDO AL SISTEMA!
+          </h1>
+          <p class="lead" style="font-size: 1.3rem;">
+            Gestiona y revisa las prácticas realizadas a cada paciente de manera eficiente y organizada.
+          </p>
+          <hr class="my-4 border-light">
+          <a href="#seccion_practicas" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente2.php')" class="btn btn-light btn-lg font-weight-bold" 
 
-                    <h5 class="m-0" style="font-family:cooper;text-align:center"><i class="fas fa-bullhorn"></i><b> COMUNICADOS</b></h5>
-                  </div>
-                  <div class="table-responsive" style="text-align:center">
-                    <div class="card-body">
-                      <table id="tabla_comunicados_listar" class="table table-striped table-bordered" style="width:100%">
-                        <thead style="background-color:#023D77;color:white;">
-                          <tr>
-                            <th style="text-align:center">Título</th>
-                            <th style="text-align:center">Descripción</th>
-                            <th style="text-align:center">Fecha</th>
-                            <th style="text-align:center">Enlace</th>
+             style="border-radius: 10px;">
+            <i class="fas fa-stethoscope"></i> Ver Prácticas
+          </a>
+        </div>
+      </div>
+    </div> <!-- /.row -->
+  </div> <!-- /.container-fluid -->
+</div> <!-- /.content -->
 
-                            <th style="text-align:center">Estado</th>
-                          </tr>
-                        </thead>
-                      </table>
 
+        <div class="col-md-12">
+          <div class="card card-primary">
+            <div class="card card-primary">
+              <div class="card-header py-2"   style="background: linear-gradient(135deg, #023D77, #0266C8)">
+              <h5 class="m-0 text-center" style="font-family: 'Poppins', sans-serif; font-weight: 600; line-height: 1.2; padding: 5px;">
+  <i class="fas fa-image me-2"></i> Catálogo de Fotos
+</h5>
+
+              </div>
+              <div class="table-responsive" style="text-align:center">
+                <div class="card-body" style="display: block;">
+                  <div id="photoCarousel" class="carousel slide" data-ride="carousel" data-interval="5000" style="transition: opacity 1s ease-in-out;">
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="../Fotos/1.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 1">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/2.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 2">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/4.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 4">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/5.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 5">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/6.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 6">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/7.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 7">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/8.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 8">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/9.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 9">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/10.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 10">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/11.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 11">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/12.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 12">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/13.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 13">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/14.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 14">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/15.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 15">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/16.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 16">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/17.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 17">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/18.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 18">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/19.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 19">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/20.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 20">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/21.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 21">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/22.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 22">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/23.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 23">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/24.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 24">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/25.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 25">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/26.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 26">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/27.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 27">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/28.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 28">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/29.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 29">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/30.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 30">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/31.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 31">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/32.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 32">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/33.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 33">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/34.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 34">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/35.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 35">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/36.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 36">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/37.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 37">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/38.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 38">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/39.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 39">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/40.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 40">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/41.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 41">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/42.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 42">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/43.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 43">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/44.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 44">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/45.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 45">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/46.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 46">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/47.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 47">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/48.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 48">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/49.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 49">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/50.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 50">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/51.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 51">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/52.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 52">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/53.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 53">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/54.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 54">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/55.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 55">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/56.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 56">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/57.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 57">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/58.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 58">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/59.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 59">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/60.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 60">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/61.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 61">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/62.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 62">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/63.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 63">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/64.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 64">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/65.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 65">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/66.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 66">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/67.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 67">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/68.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 68">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/69.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 69">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/70.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 70">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/71.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 71">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/72.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 72">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/73.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 73">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/74.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 74">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/75.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 75">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/76.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 76">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/77.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 77">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/78.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 78">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/79.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 79">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/80.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 80">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/81.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 81">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/82.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 82">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/83.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 83">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/84.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 84">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/85.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 85">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/86.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 86">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/87.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 87">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/88.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 88">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/90.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 90">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/91.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 91">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/92.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 92">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/93.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 93">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/94.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 94">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/95.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 95">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/96.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 96">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/97.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 97">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/98.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 98">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/99.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 99">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/100.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 100">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/101.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 101">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/102.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 102">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/103.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 103">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/104.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 104">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/105.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 105">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/106.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 106">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/107.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 107">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/108.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 108">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/109.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 109">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/110.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 110">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/111.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 111">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/112.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 112">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/113.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 113">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/114.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 114">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/115.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 115">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/116.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 116">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/117.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 117">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/118.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 118">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/119.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 119">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/120.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 120">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/121.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 121">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/122.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 122">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="../Fotos/124.jpg" class="d-block w-100" style="height: 600px; object-fit: cover;" alt="Foto 124">
+                      </div>
+                      <!-- Agrega más fotos aquí -->
                     </div>
                   </div>
+                  <!-- Botones personalizados para cambiar foto -->
+                  <button id="prevBtn" class="btn btn-primary" style="margin-top: 10px;">
+                    <i class="fas fa-chevron-left"></i> Anterior
+                  </button>
+                  <button id="nextBtn" class="btn btn-primary" style="margin-top: 10px;">
+                    Siguiente <i class="fas fa-chevron-right"></i>
+                  </button>
 
                 </div>
-                <!-- /.col-md-6 -->
               </div>
-              <!-- /.row -->
-            </div><!-- /.container-fluid -->
+            </div>
           </div>
         </div>
 
@@ -1091,183 +1401,40 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script src="../plantilla/plugins//bootstrap/js/bootstrap.bundle.min.js"></script>
   <!-- AdminLTE App -->
   <script src="../plantilla/dist/js/adminlte.min.js"></script>
-  <script src="../js/console_comunicados.js?rev=<?php echo time(); ?>"></script>
-  <script src="../js/console_empleado.js?rev=<?php echo time(); ?>"></script>
-  <script src="../js/console_tramite.js?rev=<?php echo time(); ?>"></script>
-  <script src="../js/console_usuario.js?rev=<?php echo time(); ?>"></script>
-  <script src="../js/console_empresa.js?rev=<?php echo time(); ?>"></script>
+
 
   <script src="../utilitario/DataTables/datatables.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="../js/console_usuario.js?rev=<?php echo time(); ?>"></script>
+  <script src="../js/console_empresa.js?rev=<?php echo time(); ?>"></script>
 
 </body>
 
 </html>
 <script>
   $(document).ready(function() {
-    listar_comunicado_dash();
-    listar_empresa();
+   listar_empresa();/*  
     Total_empleados();
     Total_documentos_pendientes();
     Total_documentos_aceptados();
-    Total_documentos_finalizado();
+    Total_documentos_finalizado(); */
   });
 
-  <?php if ($_SESSION['S_ROL'] == "ADMINISTRADOR") { ?>
-    TraerNotificacionComunicado();
 
-    function TraerNotificacionComunicado() {
-      $.ajax({
-        "url": "../controller/usuario/controlador_traer_notificacion_comunicado.php",
-        type: 'POST',
-      }).done(function(resp) {
-
-        let data = JSON.parse(resp);
-        document.getElementById('lbl_contador').innerHTML = data.length;
-        let llenardata = "";
-        if (data.length > 0) {
-          let cadena = "";
-          for (let i = 0; i < data.length; i++) {
-            llenardata += '<a href="#" class="dropdown-item">' +
-              '<div class="media">' +
-              '<div class="media-body">' +
-              '<h3 class="dropdown-item-title" >' +
-              '<b>Título: </b>' + data[i][1] + '' +
-              '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
-              '</h3>' +
-              '<p class="text-sm"><b>Descripción: </b>' + data[i][2] + '</p>' +
-              '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i><b>Fecha: </b>' + data[i][4] + '</p>' +
-              '</div>' +
-              '</div>' +
-              '</a>';
-          }
-          document.getElementById('div_cuerpo').innerHTML = llenardata;
-
-        } else {
-          document.getElementById('div_cuerpo').innerHTML = llenardata;
-
-        }
-      })
-    }
-    document.getElementById("txt_foto").addEventListener("change", () => {
-      var fileName = document.getElementById("txt_foto").value;
-      var idxDot = fileName.lastIndexOf(".") + 1;
-      var extFile = fileName.substr(idxDot, fileName.length).toLowerCase();
-      if (extFile == "jpg" || extFile == "jpeg" || extFile == "png") {
-        //TO DO
-      } else {
-        Swal.fire("Mensaje de Advertencia", "Solo se aceptan imagenes - usted subio un archivo con extensión ." + extFile, "warning");
-        document.getElementById("txt_foto").value = "";
-
-      }
-    })
-  <?php
-  }
-  ?>
-  <?php if ($_SESSION['S_ROL'] == "MEDICO") { ?>
-    TraerNotificacionComunicado();
-
-    function TraerNotificacionComunicado() {
-      $.ajax({
-        "url": "../controller/usuario/controlador_traer_notificacion_comunicado.php",
-        type: 'POST',
-      }).done(function(resp) {
-
-        let data = JSON.parse(resp);
-        document.getElementById('lbl_contador').innerHTML = data.length;
-        let llenardata = "";
-        if (data.length > 0) {
-          let cadena = "";
-          for (let i = 0; i < data.length; i++) {
-            llenardata += '<a href="#" class="dropdown-item">' +
-              '<div class="media">' +
-              '<div class="media-body">' +
-              '<h3 class="dropdown-item-title" >' +
-              '<b>Título: </b>' + data[i][1] + '' +
-              '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
-              '</h3>' +
-              '<p class="text-sm"><b>Descripción: </b>' + data[i][2] + '</p>' +
-              '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i><b>Fecha: </b>' + data[i][4] + '</p>' +
-              '</div>' +
-              '</div>' +
-              '</a>';
-          }
-          document.getElementById('div_cuerpo').innerHTML = llenardata;
-
-        } else {
-          document.getElementById('div_cuerpo').innerHTML = llenardata;
-
-        }
-      })
-    }
-
-
-
-    TraerNotificacionDocumentos();
-
-    function TraerNotificacionDocumentos() {
-      let idarea = document.getElementById('txtidprincipalarea').value;
-      $.ajax({
-        "url": "../controller/usuario/controlador_traer_notificacion_tramite.php",
-        type: 'POST',
-        data: {
-          idarea: idarea
-        }
-      }).done(function(resp) {
-        let data = JSON.parse(resp);
-        document.getElementById('lbl_contador_pendientes').innerHTML = data.length;
-        let llenardata = "";
-        if (data.length > 0) {
-          let cadena = "";
-          for (let i = 0; i < data.length; i++) {
-            llenardata += '<a href="#" class="dropdown-item">' +
-              '<div class="media">' +
-              '<div class="media-body">' +
-              '<h3 class="dropdown-item-title" >' +
-              '<b>DNI: </b>' + data[i][1] + '' +
-              '<span class="float-right text-sm text-danger"><i class="fas fa-star"></i></span>' +
-              '</h3>' +
-              '<p class="text-sm"><b>Remitente: </b>' + data[i][2] + '</p>' +
-              '<p class="text-sm"><b>Area Origén: </b>' + data[i][24] + '</p>' +
-              '<p class="text-sm"><b>Asunto: </b>' + data[i][18] + '</p>' +
-              '<p class="text-sm"><b>Estado: </b>' + data[i][8] + '</p>' +
-
-              '<p class="text-sm text-muted"><i class="far fa-clock mr-1"></i><b>Fecha: </b>' + data[i][20] + '</p>' +
-              '</div>' +
-              '</div>' +
-              '</a>';
-          }
-          document.getElementById('div_cuerpo_tramite').innerHTML = llenardata;
-
-        } else {
-          document.getElementById('div_cuerpo_tramite').innerHTML = llenardata;
-
-        }
-      })
-    }
-
-  <?php
-  }
-  ?>
 </script>
 
 <style>
-  /* Color de fondo principal del aside */
+  /* Color de fondo principal del aside con degradado */
   .main-sidebar {
-    background-color: #005CA5 !important;
-    /* Color más suave */
-    color: white !important;
-    /* Color de texto blanco */
+    background: linear-gradient(135deg, #023D77, #0266C8) !important;
+    color: white !important; /* Texto en blanco */
   }
 
   /* Eliminar cualquier color heredado del tema dark */
   .sidebar-dark-primary {
-    background-color: #005CA5 !important;
-    /* Color más suave */
+    background: linear-gradient(135deg, #023D77, #0266C8) !important;
     color: white !important;
-    /* Color de texto blanco */
   }
 
   /* Asegurar que la elevación no afecte el color */
@@ -1275,6 +1442,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
   }
 </style>
+
 <style>
   /* Estilos para la tabla con bordes redondeados */
   .table-bordered {

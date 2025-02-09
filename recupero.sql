@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-01-2025 a las 22:16:52
+-- Tiempo de generación: 08-02-2025 a las 23:45:19
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -25,13 +25,63 @@ DELIMITER $$
 --
 -- Procedimientos
 --
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_AREA` ()   SELECT
+areas_hospital.id_area,
+areas_hospital.nombre
+FROM areas_hospital$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_OBRAS_SOCIALES` ()   SELECT id_cuit,Cuit,Nombre
 FROM obras_sociales$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_PACIENTE` ()   SELECT
+pacientes.Dni,
+CONCAT_WS(pacientes.Nombres,' ',pacientes.Apellidos)as PACIENTE
+FROM pacientes$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_PACIENTEYPRACTICA` (IN `ID` INT)   BEGIN
+SELECT
+pacientes.id_paciente,
+pacientes.Dni,
+CONCAT_WS(' ',pacientes.Nombres,pacientes.Apellidos)AS paciente
+FROM obras_sociales INNER JOIN pacientes
+ON obras_sociales.id_cuit=pacientes.Id_obra_social
+WHERE obras_sociales.id_cuit=ID;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_PACIENTEYPRACTICA2` (IN `ID` INT)   BEGIN
+SELECT
+practicas.`id_práctica`,
+practicas.cod_practica,
+practicas.practica
+FROM obras_sociales INNER JOIN practicas
+ON obras_sociales.id_cuit=practicas.id_obras
+WHERE obras_sociales.id_cuit=ID;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_PRACTICAS` ()   SELECT 
+practicas.id_práctica,
+practicas.cod_practica,
+practicas.practica
+
+FROM practicas$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_SELECT_AREA` ()   SELECT
 areas_hospital.id_area,areas_hospital.nombre
 FROM areas_hospital
 WHERE estado_area="ACTIVO"$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_TRAER_PRECIO` (IN `ID` INT)   SELECT
+practicas.cod_practica,
+practicas.valor
+FROM practicas
+WHERE practicas.`id_práctica`=ID$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_CARGAR_USUARIOS` ()   SELECT 
+usuario.id_usuario,
+usuario.dni_usuario,
+CONCAT_WS(usuario.usu_nombre,' ',usuario.usu_apellido)as USUARIO
+FROM usuario$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ELIMINAR_AREA` (IN `ID` INT)   DELETE FROM areas_hospital
 WHERE id_area=ID$$
@@ -41,6 +91,16 @@ WHERE obras_sociales.id_cuit=ID$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ELIMINAR_PACIENTE` (IN `ID` INT)   DELETE FROM pacientes
 WHERE pacienteS.id_paciente=ID$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ELIMINAR_PRACTICA` (IN `ID` INT)   DELETE FROM practicas
+WHERE id_práctica=ID$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_ELIMINAR_PRACTICAS_PACIENTE` (IN `ID` INT)   BEGIN
+DELETE FROM practica_totales
+WHERE practica_totales.id_practica_paciente=ID;
+DELETE FROM paciente_practica
+WHERE paciente_practica.id_paciente_practica=ID;
+END$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_AREA` ()   SELECT
 id_area,
@@ -143,6 +203,178 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PACIENTES_FILTRO` (IN `OB
     OR DATE(pacientes.created_at) BETWEEN FECHAINI AND FECHAFIN;
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS` ()   SELECT
+practicas.id_práctica,
+practicas.cod_practica,
+practicas.practica,
+practicas.valor,
+practicas.estado,
+practicas.id_usu,
+practicas.id_obras,
+practicas.created_at,
+practicas.updated_at,
+obras_sociales.Cuit AS CODIGO,
+obras_sociales.Nombre as OBRA,
+usuario.usu_usuario,
+CONCAT_WS(' ',usuario.usu_nombre,usuario.usu_apellido) AS USUARIO,
+	date_format(practicas.created_at, "%d-%m-%Y - %H:%i:%s") as fecha_formateada,
+ 	date_format(practicas.updated_at, "%d-%m-%Y - %H:%i:%s") as fecha_formateada2
+FROM practicas inner join obras_sociales
+ON practicas.id_obras=obras_sociales.id_cuit inner join usuario
+on practicas.id_usu=usuario.id_usuario$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS_FILTRO` (IN `OBRA` INT, IN `FECHAINI` DATE, IN `FECHAFIN` DATE)   BEGIN
+SELECT
+practicas.id_práctica,
+practicas.cod_practica,
+practicas.practica,
+practicas.valor,
+practicas.estado,
+practicas.id_usu,
+practicas.id_obras,
+practicas.created_at,
+practicas.updated_at,
+obras_sociales.Cuit AS CODIGO,
+obras_sociales.Nombre as OBRA,
+usuario.usu_usuario,
+CONCAT_WS(' ',usuario.usu_nombre,usuario.usu_apellido) AS USUARIO,
+	date_format(practicas.created_at, "%d-%m-%Y - %H:%i:%s") as fecha_formateada,
+ 	date_format(practicas.updated_at, "%d-%m-%Y - %H:%i:%s") as fecha_formateada2
+FROM practicas inner join obras_sociales
+ON practicas.id_obras=obras_sociales.id_cuit inner join usuario
+on practicas.id_usu=usuario.id_usuario
+ WHERE 
+    practicas.id_obras = OBRA 
+    OR DATE(practicas.created_at) BETWEEN FECHAINI AND FECHAFIN;
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS_PACIENTES` ()   SELECT
+    pacientes.id_paciente, 
+    pacientes.Dni, 
+    CONCAT_WS(' ', pacientes.Nombres, pacientes.Apellidos) AS PACIENTE, 
+    pacientes.Nombres, 
+    pacientes.Apellidos, 
+    paciente_practica.id_paciente_practica, 
+    paciente_practica.id_area, 
+    paciente_practica.id_paciente, 
+    paciente_practica.total, 
+    paciente_practica.id_usuario, 
+    paciente_practica.created_at, 
+    paciente_practica.updated_at, 
+    DATE_FORMAT(paciente_practica.created_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada, 
+    DATE_FORMAT(paciente_practica.updated_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada2, 
+    areas_hospital.id_area, 
+    areas_hospital.nombre AS area_nombre, 
+    usuario.id_usuario, 
+    usuario.dni_usuario, 
+    usuario.usu_nombre, 
+    usuario.usu_apellido, 
+    CONCAT_WS(' ', usuario.usu_nombre, usuario.usu_apellido) AS USUARIO, 
+    obras_sociales.id_cuit, 
+    obras_sociales.Cuit, 
+    obras_sociales.Nombre AS obra_social
+FROM pacientes
+INNER JOIN paciente_practica ON pacientes.id_paciente = paciente_practica.id_paciente
+LEFT JOIN usuario ON paciente_practica.id_usuario = usuario.id_usuario
+LEFT JOIN areas_hospital ON paciente_practica.id_area = areas_hospital.id_area
+LEFT JOIN obras_sociales ON pacientes.Id_obra_social = obras_sociales.id_cuit$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS_PACIENTES_DIARIO` ()   SELECT
+    pacientes.id_paciente, 
+    pacientes.Dni, 
+    CONCAT_WS(' ', pacientes.Nombres, pacientes.Apellidos) AS PACIENTE, 
+    pacientes.Nombres, 
+    pacientes.Apellidos, 
+    paciente_practica.id_paciente_practica, 
+    paciente_practica.id_area, 
+    paciente_practica.id_paciente, 
+    paciente_practica.total, 
+    paciente_practica.id_usuario, 
+    paciente_practica.created_at, 
+    paciente_practica.updated_at, 
+    DATE_FORMAT(paciente_practica.created_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada, 
+    DATE_FORMAT(paciente_practica.updated_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada2, 
+    areas_hospital.id_area, 
+    areas_hospital.nombre AS area_nombre, 
+    usuario.id_usuario, 
+    usuario.dni_usuario, 
+    usuario.usu_nombre, 
+    usuario.usu_apellido, 
+    CONCAT_WS(' ', usuario.usu_nombre, usuario.usu_apellido) AS USUARIO, 
+    obras_sociales.id_cuit, 
+    obras_sociales.Cuit, 
+    obras_sociales.Nombre AS obra_social
+FROM pacientes
+INNER JOIN paciente_practica ON pacientes.id_paciente = paciente_practica.id_paciente
+LEFT JOIN usuario ON paciente_practica.id_usuario = usuario.id_usuario
+LEFT JOIN areas_hospital ON paciente_practica.id_area = areas_hospital.id_area
+LEFT JOIN obras_sociales ON pacientes.Id_obra_social = obras_sociales.id_cuit
+	WHERE DATE(paciente_practica.created_at)  BETWEEN CURDATE() AND CURDATE()$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS_PACIENTES_FECHAS` (IN `FECHAINI` DATE, IN `FECHAFIN` DATE, IN `USU` INT)   SELECT
+    pacientes.id_paciente, 
+    pacientes.Dni, 
+    CONCAT_WS(' ', pacientes.Nombres, pacientes.Apellidos) AS PACIENTE, 
+    pacientes.Nombres, 
+    pacientes.Apellidos, 
+    paciente_practica.id_paciente_practica, 
+    paciente_practica.id_area, 
+    paciente_practica.id_paciente, 
+    paciente_practica.total, 
+    paciente_practica.id_usuario, 
+    paciente_practica.created_at, 
+    paciente_practica.updated_at, 
+    DATE_FORMAT(paciente_practica.created_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada, 
+    DATE_FORMAT(paciente_practica.updated_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada2, 
+    areas_hospital.id_area, 
+    areas_hospital.nombre AS area_nombre, 
+    usuario.id_usuario, 
+    usuario.dni_usuario, 
+    usuario.usu_nombre, 
+    usuario.usu_apellido, 
+    CONCAT_WS(' ', usuario.usu_nombre, usuario.usu_apellido) AS USUARIO, 
+    obras_sociales.id_cuit, 
+    obras_sociales.Cuit, 
+    obras_sociales.Nombre AS obra_social
+FROM pacientes
+INNER JOIN paciente_practica ON pacientes.id_paciente = paciente_practica.id_paciente
+LEFT JOIN usuario ON paciente_practica.id_usuario = usuario.id_usuario
+LEFT JOIN areas_hospital ON paciente_practica.id_area = areas_hospital.id_area
+LEFT JOIN obras_sociales ON pacientes.Id_obra_social = obras_sociales.id_cuit
+	WHERE DATE(paciente_practica.created_at)  BETWEEN FECHAINI AND FECHAFIN OR usuario.id_usuario=USU$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_PRACTICAS_PACIENTES_FILTRO` (IN `ID` INT)   SELECT
+    pacientes.id_paciente, 
+    pacientes.Dni, 
+    CONCAT_WS(' ', pacientes.Nombres, pacientes.Apellidos) AS PACIENTE, 
+    pacientes.Nombres, 
+    pacientes.Apellidos, 
+    paciente_practica.id_paciente_practica, 
+    paciente_practica.id_area, 
+    paciente_practica.id_paciente, 
+    paciente_practica.total, 
+    paciente_practica.id_usuario, 
+    paciente_practica.created_at, 
+    paciente_practica.updated_at, 
+    DATE_FORMAT(paciente_practica.created_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada, 
+    DATE_FORMAT(paciente_practica.updated_at, "%d-%m-%Y - %H:%i:%s") AS fecha_formateada2, 
+    areas_hospital.id_area, 
+    areas_hospital.nombre AS area_nombre, 
+    usuario.id_usuario, 
+    usuario.dni_usuario, 
+    usuario.usu_nombre, 
+    usuario.usu_apellido, 
+    CONCAT_WS(' ', usuario.usu_nombre, usuario.usu_apellido) AS USUARIO, 
+    obras_sociales.id_cuit, 
+    obras_sociales.Cuit, 
+    obras_sociales.Nombre AS obra_social
+FROM pacientes
+INNER JOIN paciente_practica ON pacientes.id_paciente = paciente_practica.id_paciente
+LEFT JOIN usuario ON paciente_practica.id_usuario = usuario.id_usuario
+LEFT JOIN areas_hospital ON paciente_practica.id_area = areas_hospital.id_area
+LEFT JOIN obras_sociales ON pacientes.Id_obra_social = obras_sociales.id_cuit
+	WHERE pacientes.Id_obra_social=ID$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_USUARIO` ()   SELECT
 	usuario.id_usuario, 
 	usuario.dni_usuario,
@@ -170,6 +402,38 @@ FROM
 	empresa
 	ON 
 		usuario.id_empresa = empresa.id_empresa$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_LISTAR_VER_PRACTICAS_PACIENTE` (IN `ID` INT)   SELECT
+	pacientes.id_paciente, 
+	pacientes.Dni, 
+	pacientes.Nombres, 
+	pacientes.Apellidos, 
+	CONCAT_WS(' ', pacientes.Nombres, pacientes.Apellidos) AS PACIENTE, 
+	paciente_practica.id_paciente_practica, 
+	practica_totales.id_practica_paciente_total, 
+	practica_totales.id_practica_paciente, 
+	practica_totales.id_practica, 
+	practica_totales.subtotal, 
+	practicas.`id_práctica`, 
+	practicas.cod_practica, 
+	practicas.practica AS PRACTICA, 
+	practica_totales.created_at, 
+	practica_totales.updated_at
+FROM
+	practica_totales
+	INNER JOIN
+	practicas
+	ON 
+		practica_totales.id_practica = practicas.`id_práctica`
+	INNER JOIN
+	paciente_practica
+	ON 
+		practica_totales.id_practica_paciente = paciente_practica.id_paciente_practica
+	INNER JOIN
+	pacientes
+	ON 
+		paciente_practica.id_paciente = pacientes.id_paciente
+	WHERE practica_totales.id_practica_paciente=ID$$
 
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_MODIFICAR_AREA` (IN `ID` INT, IN `NAREA` VARCHAR(255), IN `DESCRIP` VARCHAR(255), IN `ESTADO` VARCHAR(20), IN `USU` INT)   BEGIN
 DECLARE AREAACTUAL VARCHAR(255);
@@ -291,6 +555,41 @@ END IF;
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_MODIFICAR_PRACTICAS` (IN `ID` INT, IN `CODI` CHAR(8), IN `PRACT` VARCHAR(500), IN `VAL` DECIMAL(8,2), IN `OBRA` INT, IN `ESTA` VARCHAR(20), IN `USU` INT)   BEGIN
+DECLARE PRACTICAACTUAL VARCHAR(255);
+DECLARE CANTIDAD INT;
+SET @PRACTICAACTUAL:=(SELECT cod_practica FROM practicas WHERE id_práctica=ID);
+IF @PRACTICAACTUAL = CODI THEN
+	UPDATE practicas SET
+	cod_practica=CODI,
+	practica=PRACT,
+	valor=VAL,
+	estado=ESTA,
+	id_usu=USU,
+	id_obras=OBRA,
+	updated_at =NOW()
+	WHERE id_práctica=ID;
+	SELECT 1;
+ELSE
+SET @CANTIDAD:=(SELECT COUNT(*) FROM practicas WHERE cod_practica=CODI);
+	IF @CANTIDAD=0 THEN
+	UPDATE practicas SET
+	cod_practica=CODI,
+	practica=PRACT,
+	valor=VAL,
+	estado=ESTA,
+	id_usu=USU,
+	id_obras=OBRA,
+	updated_at =NOW()
+	WHERE id_práctica=ID;
+		SELECT 1;	
+	ELSE
+		SELECT 2;	
+	END IF;
+END IF;
+
+END$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_MODIFICAR_USUARIO` (IN `ID` INT, IN `DNI` CHAR(8), IN `NOMBRE` VARCHAR(50), IN `APELLIDO` VARCHAR(50), IN `EMAIL` VARCHAR(255), IN `TELEFONO` CHAR(11), IN `DIRECCION` TEXT, IN `FOTO` VARCHAR(255), IN `USU` VARCHAR(255), IN `ROL` VARCHAR(25))   BEGIN
     DECLARE CANTIDAD_DNI INT;
     DECLARE CANTIDAD_USU INT;
@@ -348,6 +647,9 @@ END IF;
 
 END$$
 
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_REGISTRAR_DETALLE_PRACTICAS` (IN `ID` INT, IN `PRACTICA` INT, IN `SUBTO` DECIMAL(8,2))   INSERT INTO practica_totales(practica_totales.id_practica_paciente,id_practica,subtotal,created_at)
+VALUES(ID,PRACTICA,SUBTO,NOW())$$
+
 CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_REGISTRAR_OBRA_SOCIAL` (IN `NCUIT` CHAR(11), IN `NOMB` VARCHAR(255), IN `DOMICILIO` TEXT, IN `LOCALIDAD` VARCHAR(255), IN `EMAIL` VARCHAR(40), IN `IDUSU` INT)   BEGIN
 DECLARE CANTIDAD INT;
 SET @CANTIDAD:=(SELECT COUNT(*) FROM obras_sociales where Cuit=NCUIT);
@@ -371,6 +673,31 @@ ELSE
 SELECT 2;
 
 END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_REGISTRAR_PRACTICAS` (IN `CODI` CHAR(8), IN `PRACT` VARCHAR(500), IN `VAL` DECIMAL(8,2), IN `OBRA` INT, IN `USU` INT)   BEGIN
+DECLARE CANTIDAD INT;
+SET @CANTIDAD:=(SELECT COUNT(*) FROM practicas where cod_practica=CODI);
+IF @CANTIDAD = 0 THEN
+INSERT INTO practicas(cod_practica,practica,valor,estado,id_usu,id_obras,created_at)VALUE(CODI,PRACT,VAL,'ACTIVO',USU,OBRA,NOW());
+SELECT 1;
+ELSE
+SELECT 2;
+
+END IF;
+
+END$$
+
+CREATE DEFINER=`root`@`localhost` PROCEDURE `SP_REGISTRAR_PRACTICAS_PACIENTE` (IN `AREA` INT, IN `PACIENTE` INT, IN `TOTALPRA` DECIMAL(8,2), IN `IDUSU` INT)   BEGIN 
+
+DECLARE ULTI INT;
+
+INSERT INTO paciente_practica(id_area,id_paciente,total,id_usuario,created_at)VALUES
+(AREA,PACIENTE,TOTALPRA,IDUSU,NOW());
+
+SET @ULTI:=(SELECT MAX(paciente_practica.id_paciente_practica) FROM paciente_practica);
+select @ULTI;
 
 END$$
 
@@ -552,19 +879,79 @@ INSERT INTO `pacientes` (`id_paciente`, `Dni`, `Nombres`, `Apellidos`, `Direccio
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `paciente_practica`
+--
+
+CREATE TABLE `paciente_practica` (
+  `id_paciente_practica` int(11) NOT NULL,
+  `id_area` int(11) DEFAULT NULL,
+  `id_paciente` int(11) DEFAULT NULL,
+  `total` decimal(8,2) DEFAULT NULL,
+  `id_usuario` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `paciente_practica`
+--
+
+INSERT INTO `paciente_practica` (`id_paciente_practica`, `id_area`, `id_paciente`, `total`, `id_usuario`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 9648.00, 1, '2025-02-08 08:09:43', NULL),
+(7, 2, 2, 8448.00, 1, '2025-02-08 16:55:16', NULL),
+(8, 2, 4, 1200.00, 1, '2025-02-08 17:07:57', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `practicas`
 --
 
 CREATE TABLE `practicas` (
-  `id_practicas` int(11) NOT NULL,
-  `cod_practica` char(20) DEFAULT NULL,
-  `nombre` varchar(70) DEFAULT NULL,
-  `area_practica` int(11) DEFAULT NULL,
-  `valor_monetario` decimal(10,0) DEFAULT NULL,
-  `fecha_ultima_actualizacion` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
+  `id_práctica` int(11) NOT NULL,
+  `cod_practica` char(8) DEFAULT NULL,
+  `practica` varchar(500) DEFAULT NULL,
+  `valor` decimal(8,2) DEFAULT NULL,
+  `estado` enum('INACTIVO','ACTIVO') DEFAULT NULL,
+  `id_usu` int(11) DEFAULT NULL,
+  `id_obras` int(11) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `practicas`
+--
+
+INSERT INTO `practicas` (`id_práctica`, `cod_practica`, `practica`, `valor`, `estado`, `id_usu`, `id_obras`, `created_at`, `updated_at`) VALUES
+(2, '1011', 'CONSULTA EN CAPS.', 1200.00, 'ACTIVO', 1, 2, '2025-01-30 14:35:29', '2025-01-30 15:44:33'),
+(3, '1012', 'CONSULTA Y UNA PRáCTICA DEL CóDIGO 1.03.', 8448.00, 'ACTIVO', 1, 1, '2025-01-30 14:37:20', '2025-01-30 15:51:26'),
+(4, '1021', 'CONSULTA EN CAPS Y UNA PRáCTICA DEL CóDIGO 103.', 1200.00, 'ACTIVO', 1, 1, '2025-01-30 15:22:03', '2025-01-30 15:51:29');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `practica_totales`
+--
+
+CREATE TABLE `practica_totales` (
+  `id_practica_paciente_total` int(11) NOT NULL,
+  `id_practica_paciente` int(11) DEFAULT NULL,
+  `id_practica` int(11) DEFAULT NULL,
+  `subtotal` decimal(8,2) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `practica_totales`
+--
+
+INSERT INTO `practica_totales` (`id_practica_paciente_total`, `id_practica_paciente`, `id_practica`, `subtotal`, `created_at`, `updated_at`) VALUES
+(1, 1, 4, 4000.00, '2025-02-08 08:10:03', NULL),
+(4, 1, 3, 4000.00, '2025-02-08 08:10:14', NULL),
+(10, 7, 3, 8448.00, '2025-02-08 16:55:16', NULL),
+(11, 8, 2, 1200.00, '2025-02-08 17:07:57', NULL);
 
 -- --------------------------------------------------------
 
@@ -596,7 +983,7 @@ CREATE TABLE `usuario` (
 
 INSERT INTO `usuario` (`id_usuario`, `dni_usuario`, `usu_nombre`, `usu_apellido`, `usu_email`, `usu_telefono`, `usu_direccion`, `usu_usuario`, `usu_contrasenia`, `usu_rol`, `usu_estatus`, `usu_foto`, `id_empresa`, `created_at`, `updated_at`) VALUES
 (1, '72646121', 'JERSSON JORGE', 'CORILLA MIRANDA', 'jersson14071996@gmail.com', '974031318', 'JR. NICOLAS DE PIEROLA', 'jersson', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-600.jpg', 1, '2025-01-18 14:56:34', '2025-01-25 11:45:46'),
-(2, '23354564', 'ESTEFANY', 'CHIPANA DAMIAN', 'ESTE23@GMAIL.COM', '922145214', 'JR. CANADA N° 323', 'ESTEFANY2025', '$2y$12$OFdwUIOo./CC.vnSX.73LeKctoIi.kB632x0q42O9cB.gJMdFu5iC', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-312.jpg', 1, '2025-01-18 15:43:46', '2025-01-25 11:41:34'),
+(2, '23354564', 'ESTEFANY', 'CHIPANA DAMIAN', 'ESTE23@GMAIL.COM', '922145214', 'JR. CANADA N° 323', 'ESTEFANY2025', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-312.jpg', 1, '2025-01-18 15:43:46', '2025-01-25 11:41:34'),
 (3, '34455454', 'JHOSEP', 'DAVILA MERMA', 'JHOSEP321@GMAIL.COM', '924158487', 'JR. CUSCO N° 323', 'JHOSEP12@GMAIL.COM', '$2y$12$EghB6xXAOQTSCQNeww8bYOcFEnhmAb8.Na7NqfuujdBWEXLw4z1fi', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/', 1, '2025-01-25 00:00:00', '2025-01-25 11:40:38'),
 (4, '64415434', 'SOFIA', 'SANCHEZ JIMENEZ', 'SFOI123@GMAIL.COM', '920414444', 'AV. PERU N° 323', 'SOFIA2025', '$2y$12$GLuvdovVqnkeMOZybSJ7HOo5i7dsfEBd9PF94BR35ly58UsAbzrSa', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-176.jpg', 1, '2025-01-25 00:00:00', '2025-01-25 11:43:58'),
 (5, '99526626', 'ANDRES', 'PEÑA HUAMAN', 'ANDRES21@GMAIL.COM', '954214587', 'AV. CANADA N° 323', 'ANDRES2025', '$2y$12$SgNBUsWce5wNi984Ln0uhOPvOgMd5HGmbuShTfTN.Ziyt4E2f2uBe', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-631.webp', 1, '2025-01-25 09:57:53', '2025-01-25 11:38:24'),
@@ -635,11 +1022,29 @@ ALTER TABLE `pacientes`
   ADD KEY `fk_usuario` (`id_usuario`);
 
 --
+-- Indices de la tabla `paciente_practica`
+--
+ALTER TABLE `paciente_practica`
+  ADD PRIMARY KEY (`id_paciente_practica`),
+  ADD KEY `fk_area` (`id_area`),
+  ADD KEY `fk_paciente` (`id_paciente`),
+  ADD KEY `fk_usu233` (`id_usuario`);
+
+--
 -- Indices de la tabla `practicas`
 --
 ALTER TABLE `practicas`
-  ADD PRIMARY KEY (`id_practicas`),
-  ADD KEY `fk_ara_hospital` (`area_practica`);
+  ADD PRIMARY KEY (`id_práctica`),
+  ADD KEY `fk_usss` (`id_usu`),
+  ADD KEY `fk_obrit` (`id_obras`);
+
+--
+-- Indices de la tabla `practica_totales`
+--
+ALTER TABLE `practica_totales`
+  ADD PRIMARY KEY (`id_practica_paciente_total`),
+  ADD KEY `id_practica_paciente` (`id_practica_paciente`),
+  ADD KEY `id_practic` (`id_practica`);
 
 --
 -- Indices de la tabla `usuario`
@@ -677,10 +1082,22 @@ ALTER TABLE `pacientes`
   MODIFY `id_paciente` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
+-- AUTO_INCREMENT de la tabla `paciente_practica`
+--
+ALTER TABLE `paciente_practica`
+  MODIFY `id_paciente_practica` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT de la tabla `practicas`
 --
 ALTER TABLE `practicas`
-  MODIFY `id_practicas` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_práctica` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT de la tabla `practica_totales`
+--
+ALTER TABLE `practica_totales`
+  MODIFY `id_practica_paciente_total` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT de la tabla `usuario`
@@ -712,10 +1129,26 @@ ALTER TABLE `pacientes`
   ADD CONSTRAINT `fk_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON UPDATE CASCADE;
 
 --
+-- Filtros para la tabla `paciente_practica`
+--
+ALTER TABLE `paciente_practica`
+  ADD CONSTRAINT `fk_area` FOREIGN KEY (`id_area`) REFERENCES `areas_hospital` (`id_area`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_paciente` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_usu233` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+--
 -- Filtros para la tabla `practicas`
 --
 ALTER TABLE `practicas`
-  ADD CONSTRAINT `fk_ara_hospital` FOREIGN KEY (`area_practica`) REFERENCES `areas_hospital` (`id_area`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_obrit` FOREIGN KEY (`id_obras`) REFERENCES `obras_sociales` (`id_cuit`) ON DELETE NO ACTION,
+  ADD CONSTRAINT `fk_usss` FOREIGN KEY (`id_usu`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION;
+
+--
+-- Filtros para la tabla `practica_totales`
+--
+ALTER TABLE `practica_totales`
+  ADD CONSTRAINT `id_practic` FOREIGN KEY (`id_practica`) REFERENCES `practicas` (`id_práctica`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  ADD CONSTRAINT `id_practica_paciente` FOREIGN KEY (`id_practica_paciente`) REFERENCES `paciente_practica` (`id_paciente_practica`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `usuario`

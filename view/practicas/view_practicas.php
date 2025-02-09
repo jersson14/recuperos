@@ -188,28 +188,9 @@ $(document).ready(function () {
   listar_practicas();
 });
 $('#modal_registro').on('shown.bs.modal', function () {
-  $('#txt_nro').trigger('focus')
+  $('#select_obras').trigger('focus')
 })
-var input=  document.getElementById('txt_nro');
-input.addEventListener('input',function(){
-  if (this.value.length > 8) 
-     this.value = this.value.slice(0,8); 
-})
-var input=  document.getElementById('txt_tele');
-input.addEventListener('input',function(){
-  if (this.value.length > 11) 
-     this.value = this.value.slice(0,11); 
-})
-var input=  document.getElementById('txt_nro_editar');
-input.addEventListener('input',function(){
-  if (this.value.length > 8) 
-     this.value = this.value.slice(0,8); 
-})
-var input=  document.getElementById('txt_tele_editar');
-input.addEventListener('input',function(){
-  if (this.value.length > 11) 
-     this.value = this.value.slice(0,9); 
-})
+
 //var n = new Date();
 //var y= n.getFullYear();
 //var m= n.getMonth()+1;
