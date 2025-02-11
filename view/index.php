@@ -293,14 +293,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- small box -->
                     <div class="small-box bg-info">
                       <div class="inner">
-                        <b>Total de empleados</b>
+                        <b>Total de facturas</b>
                         <h3 id="total_empleados"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
-                        <i class="fas fa-users"></i>
+                      <i class="fas fa-file"></i>
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','empleado/view_empleado.php')" class="small-box-footer"><b>Ver Empleados</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','empleado/view_empleado.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
@@ -308,14 +308,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- small box -->
                     <div class="small-box bg-warning">
                       <div class="inner">
-                        <b>Nº De Documentos</b>
+                        <b>Facturas pendientes</b>
                         <h3 id="totaldocpendientes"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
                         <i class="fas fa-file"></i>
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Documentos Pendientes</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas pendientes</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
@@ -324,29 +324,29 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="small-box bg-success">
                       <div class="inner">
 
-                        <b>Nº De Documentos</b>
+                        <b>Facturas cobradas</b>
                         <h3 id="totaldocpaceptados"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
                         <i class="fas fa-file"></i>
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Documentos Aceptados</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas cobradas</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
                   <div class="col-lg-3 col-6">
                     <!-- small box -->
-                    <div class="small-box bg-dark">
+                    <div class="small-box bg-danger">
                       <div class="inner">
-                        <b>Nº De Documentos</b>
+                        <b>Facturas rechazadas</b>
                         <h3 id="totaldocfinalizado"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
                         <i class="fas fa-file"></i>
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Documentos Finalizados</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas rechazadas</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                 </div>
@@ -1310,7 +1310,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <em>Versión 1.0.0</em>
       </div>
       <!-- Default to the left -->
-      <strong>Copyright &copy; 2025 <a href="https://web.facebook.com/jerzhitho.cm/" target="_blank"><em>DESARROLLADO POR JCM</em></a></strong>
+      <strong>Copyright &copy; 2025 <a href="https://samicnestorkirchner.org/" target="_blank"><em>Hospital SAMIC – Presidente Néstor Kirchner</em></a></strong>
     </footer>
   </div>
   <!-- ./wrapper -->

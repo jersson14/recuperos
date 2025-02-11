@@ -76,7 +76,7 @@
             <input type="text" autocomplete="on" class="form-control" id="txt_cuit" onkeypress="return soloNumeros(event)" placeholder="Ingrese el N° CUIT">
           </div>
           <div class="col-12 form-group">
-            <label for="">Nombre de CUIT<b style="color:red">(*)</b>:</label>
+            <label for="">Nombre de Obra Social<b style="color:red">(*)</b>:</label>
             <input type="text" autocomplete="on" class="form-control" id="tct_nombre" onkeypress="return sololetras(event)" placeholder="Ingrese el nombre">
           </div>
           <div class="col-12 form-group">
@@ -122,7 +122,7 @@
             <input type="text" autocomplete="on" class="form-control" id="txt_cuit_editar" onkeypress="return soloNumeros(event)">
           </div>
           <div class="col-12 form-group">
-            <label for="">Nombre de CUIT<b style="color:red">(*)</b>:</label>
+            <label for="">Nombre de Obra Social<b style="color:red">(*)</b>:</label>
             <input type="text" autocomplete="on" class="form-control" id="tct_nombre_editar" onkeypress="return sololetras(event)">
           </div>
           <div class="col-12 form-group">
@@ -172,7 +172,7 @@
             <input type="text" autocomplete="on" class="form-control" id="txt_cuit_mostrar" onkeypress="return soloNumeros(event)" readonly>
           </div>
           <div class="col-12 form-group">
-            <label for="">Nombre de CUIT:</label>
+            <label for="">Nombre de Obra Social:</label>
             <input type="text" autocomplete="on" class="form-control" id="tct_nombre_mostrar" onkeypress="return sololetras(event)" readonly>
           </div>
           <div class="col-12 form-group">
