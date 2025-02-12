@@ -85,6 +85,21 @@
             }
             conexionBD::cerrar_conexion();
         }
+        public function Listar_Historial_practicas($id){
+            $c = conexionBD::conexionPDO();
+            $arreglo = array();
+            $sql = "CALL SP_LISTA_HISTORIAL_PRACTICAS(?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        
+        }
     }
 
 

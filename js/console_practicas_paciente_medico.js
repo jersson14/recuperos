@@ -24,43 +24,40 @@ function listar_practica_paciente_diario(){
       dom: 'Bfrtip', 
      
       buttons:[ 
-        
-    {
-      extend:    'excelHtml5',
-      text:      '<i class="fas fa-file-excel"></i> ',
-      titleAttr: 'Exportar a Excel',
-      
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-        title: function() {
-          return  "LISTA DE  PRACTICAS - PACIENTE"
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-excel' // Clase personalizada para Excel
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-pdf' // Clase personalizada para PDF
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-print' // Clase personalizada para Imprimir
         }
-  
-    },
-    {
-      extend:    'pdfHtml5',
-      text:      '<i class="fas fa-file-pdf"></i> ',
-      orientation: 'landscape',
-      pageSize: 'LEGAL',
-      titleAttr: 'Exportar a PDF',
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-    }
-  },
-    {
-      extend:    'print',
-      text:      '<i class="fa fa-print"></i> ',
-      titleAttr: 'Imprimir',
-      
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-  
-    }
-    }],
+      ],
       "columns":[
         {"defaultContent":""},
         {"data":"obra_social"},
@@ -141,43 +138,40 @@ function listar_practica_paciente(){
       dom: 'Bfrtip', 
      
       buttons:[ 
-        
-    {
-      extend:    'excelHtml5',
-      text:      '<i class="fas fa-file-excel"></i> ',
-      titleAttr: 'Exportar a Excel',
-      
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-        title: function() {
-          return  "LISTA DE  PRACTICAS - PACIENTE"
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-excel' // Clase personalizada para Excel
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-pdf' // Clase personalizada para PDF
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-print' // Clase personalizada para Imprimir
         }
-  
-    },
-    {
-      extend:    'pdfHtml5',
-      text:      '<i class="fas fa-file-pdf"></i> ',
-      orientation: 'landscape',
-      pageSize: 'LEGAL',
-      titleAttr: 'Exportar a PDF',
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-    }
-  },
-    {
-      extend:    'print',
-      text:      '<i class="fa fa-print"></i> ',
-      titleAttr: 'Imprimir',
-      
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-  
-    }
-    }],
+      ],
       "columns":[
         {"defaultContent":""},
         {"data":"obra_social"},
@@ -258,43 +252,40 @@ function listar_practica_paciente_obras(){
       dom: 'Bfrtip', 
      
       buttons:[ 
-        
-    {
-      extend:    'excelHtml5',
-      text:      '<i class="fas fa-file-excel"></i> ',
-      titleAttr: 'Exportar a Excel',
-      
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-        title: function() {
-          return  "LISTA DE  PRACTICAS - PACIENTE"
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-excel' // Clase personalizada para Excel
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-pdf' // Clase personalizada para PDF
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: function() {
+            return "LISTA DE PRÁCTICAS - PACIENTE"
+          },
+          className: 'btn btn-print' // Clase personalizada para Imprimir
         }
-  
-    },
-    {
-      extend:    'pdfHtml5',
-      text:      '<i class="fas fa-file-pdf"></i> ',
-      orientation: 'landscape',
-      pageSize: 'LEGAL',
-      titleAttr: 'Exportar a PDF',
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-    }
-  },
-    {
-      extend:    'print',
-      text:      '<i class="fa fa-print"></i> ',
-      titleAttr: 'Imprimir',
-      
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-  
-    }
-    }],
+      ],
       "columns":[
         {"defaultContent":""},
         {"data":"obra_social"},

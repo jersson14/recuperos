@@ -82,6 +82,11 @@ function listar_practicas(){
   {
     "defaultContent": `
 
+<button class="historial btn btn-warning btn-sm" title="Ver historial de ediciones">
+  <i class="fa fa-history"></i> Historial
+</button>
+
+
       <button class='editar btn btn-primary btn-sm' title='Editar datos de área'>
         <i class='fa fa-edit'></i> Editar
       </button>
@@ -408,3 +413,100 @@ $('#tabla_practicas').on('click','.eliminar',function(){
     }
   })
 })
+
+
+//MODAL VER HISTORIAL
+$('#tabla_practicas').on('click','.historial',function(){
+  var data = tbl_practicas.row($(this).parents('tr')).data();
+
+  if(tbl_practicas.row(this).child.isShown()){
+      var data = tbl_practicas.row(this).data();
+  }
+$("#modal_ver_historial").modal('show');
+
+  document.getElementById('lb_titulo').innerHTML="<b>HISTORIAL DE PRACTICAS:</b> "+data.practica+"";
+
+  listar_historial(data.id_práctica);
+
+})
+// VISTA DE HISTORIAL
+var tbl_historial;
+function listar_historial(id) {
+  tbl_historial = $("#tabla_ver_historial").DataTable({
+      "ordering": false,
+      "bLengthChange": true,
+      "searching": false,  // Deshabilita la barra de búsqueda
+      "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+      "pageLength": 5,
+      "destroy": true,
+      "pagingType": 'full_numbers',
+      "scrollCollapse": true,
+      "responsive": true,
+      "async": false,
+      "processing": true,
+      "ajax": {
+          "url": "../controller/practicas/controlador_listar_historial_practicas.php",
+          "type": 'POST',
+          "data": { id: id },
+          "dataSrc": function(json) {
+              console.log("Respuesta JSON:", json);
+              return json.data;
+          }
+      },
+      "dom": 'Bfrtip', 
+      "buttons": [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA_DE_HISTORIAL",
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-success' 
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA_DE_HISTORIAL",
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-danger'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-primary' 
+        }
+      ],
+      "columns": [
+          { "data": null, "render": function(data, type, row, meta) { return meta.row + 1; } }, 
+          { "data": "USUARIO" },
+          {
+            "data": "Valor_monetario",
+            "render": function (data, type, row) {
+              return `<strong>$AR ${data}</strong>`;
+            }
+          },
+          { "data": "fecha_formateada" }
+      ],
+      "language": {
+          "emptyTable": "No se encontraron datos", // ✅ Mensaje cuando la tabla está vacía
+          "zeroRecords": "No se encontraron resultados", // ✅ Mensaje para búsquedas sin coincidencias
+          "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+          "infoFiltered": "(filtrado de _MAX_ registros en total)",
+          "lengthMenu": "Mostrar _MENU_ registros",
+          "loadingRecords": "Cargando...",
+          "processing": "Procesando...",
+          "search": "Buscar:",
+          "paginate": {
+              "first": "Primero",
+              "last": "Último",
+              "next": "Siguiente",
+              "previous": "Anterior"
+          }
+      },
+      "select": true
+  });
+}
