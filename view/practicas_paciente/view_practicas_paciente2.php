@@ -87,7 +87,6 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Obra Social</th>
                     <th style="text-align:center">DNI</th>
                     <th style="text-align:center">Paciente</th>
-                    <th style="text-align:center">Total</th>
                     <th style="text-align:center">Fecha registro</th>
                     <th style="text-align:center">Fecha actualización</th>
                     <th style="text-align:center">Usuario que registro</th>
@@ -137,15 +136,14 @@ if (!isset($_SESSION['S_ID'])) {
               <select class="js-example-basic-single" id="select_paciente" style="width:100%">
               </select>
             </div>
-            <div class="col-6 form-group">
+            <div class="col-12 form-group">
+            <input type="text" class="form-control" id="txt_precio" hidden>
+
               <label for="">Tipo de Práctica<b style="color:red">(*)</b>:</label>
               <select class="js-example-basic-single" id="select_practica" style="width:100%">
               </select>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Precio de Práctica<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_precio">
-            </div>
+
             <div class="col-6 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
@@ -165,7 +163,7 @@ if (!isset($_SESSION['S_ID'])) {
                   <tr>
                     <th>Id.</th>
                     <th>Practica</th>
-                    <th>Subtotal</th>
+                    <th style="text-align:center; display: none;">Subtotal</th>
                     <th>Acci&oacute;n</th>
                   </tr>
                 </thead>
@@ -175,7 +173,7 @@ if (!isset($_SESSION['S_ID'])) {
               <div class="col-9">
               </div>
               <div class="col-3">
-                <h3 for="" id="lbl_totalneto" style="display: inline-block;white-space: nowrap;"></h3>
+                <h3 for="" hidden id="lbl_totalneto" style="display: inline-block;white-space: nowrap;"></h3>
               </div>
             </div>
 
@@ -190,50 +188,51 @@ if (!isset($_SESSION['S_ID'])) {
   </div>
 
   <div class="modal fade" id="modal_ver_practicas" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-            <div style="display: flex; flex-direction: column;">
-            <h5 class="modal-title" id="lb_titulo"></h5>
-            <h5 class="modal-title" id="lb_titulo2" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div style="display: flex; flex-direction: column;">
+          <h5 class="modal-title" id="lb_titulo"></h5>
+          <h5 class="modal-title" id="lb_titulo2" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
         </div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-12" style="text-align:center">
-              <div class="table-responsive" style="text-align:center">
-                <div class="card-body">
-                  <table id="tabla_ver_practicas" class="display compact" style="width:100%; text-align:center;">
-                    <thead style="background-color:#0A5D86;color:#FFFFFF;">
-                      <tr style="text-align:center;">
-                        <th style="text-align:center;">Nro.</th>
-                        <th style="text-align:center;">Código</th>
-                        <th style="text-align:center;">Práctica</th>
-                        <th style="text-align:center;">Subtotal</th>
-                      </tr>
-                    </thead>
-                    <tfoot>
-                      <tr>
-                        <th colspan="2" style="text-align:right;">Total:</th>
-                        <th style="text-align:center;" id="total_sub_total">S/. 0.00</th>
-                        <th></th>
-                      </tr>
-                    </tfoot>
-                  </table>
-                </div>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12" style="text-align:center">
+            <div class="table-responsive" style="text-align:center">
+              <div class="card-body">
+                <table id="tabla_ver_practicas" class="display compact" style="width:100%; text-align:center;">
+                  <thead style="background-color:#0252A0;color:#FFFFFF;">
+                    <!-- Fila con el título general -->
+                    <tr>
+                      <th colspan="3" style="text-align:center; font-size: 18px; font-weight: bold;">PRÁCTICAS REALIZADAS</th>
+                    </tr>
+                    <!-- Fila con los encabezados de columnas -->
+                    <tr style="text-align:center;">
+                      <th style="text-align:center;">Nro.</th>
+                      <th style="text-align:center;">Código</th>
+                      <th style="text-align:center;">Práctica</th>
+                    </tr>
+                  </thead>
+                </table>
               </div>
             </div>
           </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-arrow-right-from-bracket"></i>Cerrar</button>
-        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">
+          <i class="fa fa-arrow-right-from-bracket"></i> Cerrar
+        </button>
       </div>
     </div>
   </div>
+</div>
+
+
 
 
 
@@ -268,15 +267,13 @@ if (!isset($_SESSION['S_ID'])) {
               <input type="text" class="form-control" id="txt_paciente" disabled>
 
             </div>
-            <div class="col-6 form-group">
+            <div class="col-12 form-group">
+            <input type="text" class="form-control" id="txt_precio_editar" hidden >
               <label for="">Tipo de Práctica<b style="color:red">(*)</b>:</label>
               <select class="js-example-basic-single" id="select_practica_editar" style="width:100%">
               </select>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Precio de Práctica<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_precio_editar">
-            </div>
+
             <div class="col-6 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional_editar" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
@@ -297,7 +294,7 @@ if (!isset($_SESSION['S_ID'])) {
                   <th style="text-align:center">Id principal</th>
                     <th style="text-align:center">Id.</th>
                     <th style="text-align:center">Practica</th>
-                    <th style="text-align:center">Subtotal</th>
+                    <th style="text-align:center; display: none;">Subtotal</th>
                     <th style="text-align:center">Acci&oacute;n</th>
                   </tr>
                 </thead>
@@ -307,7 +304,7 @@ if (!isset($_SESSION['S_ID'])) {
               <div class="col-9">
               </div>
               <div class="col-3">
-                <h3 for="" id="lbl_totalneto_editar" style="display: inline-block;white-space: nowrap;"></h3>
+                <h3 for="" hidden id="lbl_totalneto_editar" style="display: inline-block;white-space: nowrap;"></h3>
               </div>
             </div>
 

@@ -101,6 +101,10 @@ tbl_paciente_practica.on('draw.td',function(){
 }
 
 function listar_practica_paciente(){
+  Cargar_Select_Obras_Sociales();
+  Cargar_Select_Usuarios();
+  document.getElementById('txt_fecha_desde').value='';
+  document.getElementById('txt_fecha_hasta').value='';
   tbl_paciente_practica = $("#tabla_paciente_practica").DataTable({
       "ordering":false,   
       "bLengthChange":true,
@@ -713,28 +717,31 @@ function listar_practicas(id) {
   tbl_practica = $("#tabla_ver_practicas").DataTable({
       "ordering": false,
       "bLengthChange": true,
-"searching": false,  // Deshabilita la barra de búsqueda
-      "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      "searching": false,  // Deshabilita la barra de búsqueda
+      "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
       "pageLength": 5,
       "destroy": true,
-      pagingType: 'full_numbers',
-      scrollCollapse: true,
-      responsive: true,
+      "pagingType": 'full_numbers',
+      "scrollCollapse": true,
+      "responsive": true,
       "async": false,
       "processing": true,
       "ajax": {
           "url": "../controller/practicas_paciente/controlador_listar_tabla_practicas_paciente.php",
-          type: 'POST',
-          data: {
-              id: id
-          },
-          dataSrc: function(json) {
+          "type": "POST",
+          "data": { id: id },
+          "dataSrc": function(json) {
               console.log("Respuesta JSON:", json);
               return json.data;
           }
       },
       "columns": [
-          { "data": "id_practica_paciente_total" },
+          { 
+              "data": null, 
+              "render": function(data, type, row, meta) {
+                  return meta.row + 1; // Asigna un número correlativo
+              }
+          },
           { "data": "cod_practica" },
           { "data": "PRACTICA" },
           { 
@@ -745,7 +752,7 @@ function listar_practicas(id) {
           }
       ],
       "language": idioma_espanol,
-      select: true
+      "select": true
   });
 
   // Evento para calcular y mostrar el total con tamaño más grande
@@ -762,6 +769,7 @@ function listar_practicas(id) {
   });
 
 }
+
 
 
 

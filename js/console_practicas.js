@@ -1,5 +1,9 @@
 var tbl_practicas;
 function listar_practicas(){
+  Cargar_Select_Obras_Sociales();
+  document.getElementById('txtfechainicio').value='';
+  document.getElementById('txtfechafin').value='';
+
   tbl_practicas = $("#tabla_practicas").DataTable({
       "ordering":false,   
       "bLengthChange":true,

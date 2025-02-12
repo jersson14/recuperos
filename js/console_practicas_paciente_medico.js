@@ -66,12 +66,7 @@ function listar_practica_paciente_diario(){
         {"data":"obra_social"},
         {"data":"Dni"},
         {"data":"PACIENTE"},
-        {
-          "data": "total",
-          "render": function (data, type, row) {
-            return `<strong>$AR ${data}</strong>`;
-          }
-        },        
+  
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
@@ -119,6 +114,9 @@ tbl_paciente_practica.on('draw.td',function(){
 }
 
 function listar_practica_paciente(){
+  Cargar_Select_Obras_Sociales();
+  document.getElementById('txt_fecha_desde').value='';
+  document.getElementById('txt_fecha_hasta').value='';
   let idusu = document.getElementById('txtprincipalid').value;
 
   tbl_paciente_practica = $("#tabla_paciente_practica").DataTable({
@@ -185,12 +183,7 @@ function listar_practica_paciente(){
         {"data":"obra_social"},
         {"data":"Dni"},
         {"data":"PACIENTE"},
-        {
-          "data": "total",
-          "render": function (data, type, row) {
-            return `<strong>$AR ${data}</strong>`;
-          }
-        },        
+     
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
@@ -307,12 +300,7 @@ function listar_practica_paciente_obras(){
         {"data":"obra_social"},
         {"data":"Dni"},
         {"data":"PACIENTE"},
-        {
-          "data": "total",
-          "render": function (data, type, row) {
-            return `<strong>$AR ${data}</strong>`;
-          }
-        },        
+    
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
@@ -431,12 +419,7 @@ function listar_practica_paciente_fecha_usu(){
         {"data":"obra_social"},
         {"data":"Dni"},
         {"data":"PACIENTE"},
-        {
-          "data": "total",
-          "render": function (data, type, row) {
-            return `<strong>$AR ${data}</strong>`;
-          }
-        },        
+     
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
@@ -838,7 +821,7 @@ function listar_practicas(id) {
   tbl_practica = $("#tabla_ver_practicas").DataTable({
       "ordering": false,
       "bLengthChange": true,
-"searching": false,  // Deshabilita la barra de búsqueda
+      "searching": false,  // Deshabilita la barra de búsqueda
       "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
       "pageLength": 5,
       "destroy": true,
@@ -859,33 +842,18 @@ function listar_practicas(id) {
           }
       },
       "columns": [
-          { "data": "id_practica_paciente_total" },
-          { "data": "cod_practica" },
-          { "data": "PRACTICA" },
           { 
-              "data": "subtotal",
-              "render": function(data) {
-                  return `<strong>$AR ${parseFloat(data).toFixed(2)}</strong>`;  
+              "data": null, // Columna vacía para la numeración
+              "render": function (data, type, row, meta) {
+                  return meta.row + 1; // Devuelve el índice de la fila + 1
               }
-          }
+          },
+          { "data": "cod_practica" },
+          { "data": "PRACTICA" }
       ],
       "language": idioma_espanol,
       select: true
   });
-
-  // Evento para calcular y mostrar el total con tamaño más grande
-  tbl_practica.on('draw.dt', function() {
-      var total = 0;
-
-      // Sumar los valores de la columna "subtotal"
-      tbl_practica.column(3, { page: 'current' }).data().each(function(value) {
-          total += parseFloat(value) || 0;
-      });
-
-      // Mostrar el total con tamaño más grande
-      $('#total_sub_total').html(`<span style="font-size: 20px; font-weight: bold; color: #0A5D86;">$AR ${total.toFixed(2)}</span>`);
-  });
-
 }
 
 
@@ -906,7 +874,7 @@ function Agregar_practica(){
 
   datos_agregar+="<td for='id'>"+id_practica+"</td>";
   datos_agregar+="<td>"+practica+"</td>";
-  datos_agregar+="<td>"+precio+"</td>";
+  datos_agregar+="<td style='text-align:center; display: none;'>"+precio+"</td>";
 
   datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
   datos_agregar+="</tr>";
@@ -1068,7 +1036,7 @@ function listar_practicas_del_paciente(id) {
       {"data": "id_paciente_practica"},
       {"data": "id_practica"},
       {"data": "practica"},
-      {"data": "subtotal"},
+      {"data": "subtotal", "visible": false}, // Oculta la columna
       {"defaultContent": "<button class='delete btn btn-danger btn-sm' title='Eliminar datos de especialidad'><i class='fa fa-trash'></i> Eliminar</button>"}
     ],
     "language": idioma_espanol,
@@ -1137,7 +1105,7 @@ function Agregar_practica_editar(){
   datos_agregar+="<td >"+id_practica_edi_principal+"</td>";
   datos_agregar+="<td for='id'>"+id_practica_edi+"</td>";
   datos_agregar+="<td>"+practica_edi+"</td>";
-  datos_agregar+="<td>"+precio_edi+"</td>";
+  datos_agregar+="<td style='text-align:center; display: none;'>"+precio_edi+"</td>";
 
   datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
   datos_agregar+="</tr>";
