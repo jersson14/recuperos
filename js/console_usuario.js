@@ -114,39 +114,40 @@ function listar_usuario(){
       },
       dom: 'Bfrtip',       
     
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE USUARIOS"
-          },
-          title: function() {
-            return "LISTA DE USUARIOS"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE USUARIOS",
+          title: "LISTA DE USUARIOS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 3, 4, 5, 6, 7, 8,9] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE USUARIOS"
-          },
-          title: function() {
-            return "LISTA DE USUARIOS"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE USUARIOS",
+          title: "LISTA DE USUARIOS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 3, 4, 5, 6, 7, 8,9] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE USUARIOS"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE USUARIOS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 3, 4, 5, 6, 7, 8,9] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns":[
@@ -645,3 +646,129 @@ function Traerrdatosexpediente(idrequisito){
   })
 }
 
+
+// TOTALES
+function Total_facturas(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_facturas.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_facturas").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+
+function Total_facturas_pendientes(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_facturas_pendientes.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_fact_pendiente").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+function Total_facturas_cobradas(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_facturas_cobradas.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_fact_cobradas").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+function Total_facturas_rechazadas(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_facturas_rechazadas.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_fact_rechazada").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+function Total_practicas_paciente(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_practicas_paciente.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_practicas_paciente").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+function Total_practicas(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_practicas.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_practicas").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+
+function Total_pacientes(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_pacientes.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_pacientes").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}
+
+
+function Total_obras_sociales(){
+  $.ajax({
+      "url":"../controller/usuario/controlador_total_obras_sociales.php",
+      type:'POST'
+      }).done(function(resp){
+      var data = JSON.parse(resp);
+      var cadena="";
+      if (data.length > 0) {
+        $("#total_obras_sociales").html(data[0][0]);
+    } else {
+      return Swal.fire("Mensaje de Error","No se pudo traer los resultados","error");
+    }
+    
+  })
+}

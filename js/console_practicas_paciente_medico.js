@@ -23,39 +23,40 @@ function listar_practica_paciente_diario(){
       },
       dom: 'Bfrtip', 
      
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns":[
@@ -137,39 +138,40 @@ function listar_practica_paciente(){
       },
       dom: 'Bfrtip', 
      
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns":[
@@ -251,39 +253,40 @@ function listar_practica_paciente_obras(){
       },
       dom: 'Bfrtip', 
      
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PRÁCTICAS - PACIENTE"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns":[
@@ -367,44 +370,42 @@ function listar_practica_paciente_fecha_usu(){
       },
       dom: 'Bfrtip', 
      
-      buttons:[ 
-        
-    {
-      extend:    'excelHtml5',
-      text:      '<i class="fas fa-file-excel"></i> ',
-      titleAttr: 'Exportar a Excel',
-      
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-        title: function() {
-          return  "LISTA DE  PRACTICAS - PACIENTE"
+      buttons: [ 
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE PRÁCTICAS REALIZADAS A PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6] // Exportar solo hasta la columna 'estado'
+          }
         }
-  
-    },
-    {
-      extend:    'pdfHtml5',
-      text:      '<i class="fas fa-file-pdf"></i> ',
-      orientation: 'landscape',
-      pageSize: 'LEGAL',
-      titleAttr: 'Exportar a PDF',
-      filename: function() {
-        return  "LISTA DE  PRACTICAS - PACIENTE"
-      },
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-    }
-  },
-    {
-      extend:    'print',
-      text:      '<i class="fa fa-print"></i> ',
-      titleAttr: 'Imprimir',
-      
-    title: function() {
-      return  "LISTA DE  PRACTICAS - PACIENTE"
-  
-    }
-    }],
+      ],
       "columns":[
         {"defaultContent":""},
         {"data":"obra_social"},
@@ -759,7 +760,7 @@ function Eliminar_Practica_paciente(id){
     }
   }).done(function(resp){
     if(resp>0){
-        Swal.fire("Mensaje de Confirmación","Se la práctica del paciente con exito","success").then((value)=>{
+        Swal.fire("Mensaje de Confirmación","Se elimino la práctica del paciente con exito","success").then((value)=>{
           tbl_paciente_practica.ajax.reload();
         });
     }else{
@@ -832,6 +833,33 @@ function listar_practicas(id) {
               return json.data;
           }
       },
+      "dom": 'Bfrtip', 
+
+      "buttons": [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE PRACTICAS REALIZADAS",
+          title: "LISTA DE PRACTICAS REALIZADAS",
+          className: 'btn btn-success' 
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE PRACTICAS REALIZADAS",
+          title: "LISTA DE PRACTICAS REALIZADAS",
+          className: 'btn btn-danger'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE PRACTICAS REALIZADAS",
+          className: 'btn btn-primary' 
+        }
+      ],
       "columns": [
           { 
               "data": null, // Columna vacía para la numeración
@@ -939,7 +967,6 @@ function Registrar_Practica() {
           Registrar_Detalle_practicas(parseInt(resp));
           Swal.fire("Mensaje de Confirmación", "Datos registrados correctamente", "success").then(() => {
               tbl_paciente_practica.ajax.reload();
-              $('#tabla_practica').DataTable().clear().draw();
               $("#modal_registro").modal('hide');
           });
       } else {

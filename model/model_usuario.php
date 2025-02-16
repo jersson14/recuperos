@@ -187,6 +187,110 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
+        public function listar_total_facturas(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_FACTURAS()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_facturas_pendientes(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_FACTURAS_PENDIENTES()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_facturas_cobradas(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_FACTURAS_COBRADAS()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_facturas_rechazada(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_FACTURAS_RECHAZADA()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_practicas_paciente(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_PRACTICAS_PACIENTE()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_practicas(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_PRACTICAS()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_pacientes(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_PACIENTES()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function listar_total_obras_sociales(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_TOTAL_OBRAS_SOCIALES()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll();
+            foreach($resultado as $resp){
+                $arreglo[]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
     }
 
 

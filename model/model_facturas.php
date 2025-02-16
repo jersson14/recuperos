@@ -1,12 +1,12 @@
 <?php
     require_once 'model_conexion.php';
 
-    class Modelo_Practicas_Paciente extends conexionBD{
+    class Modelo_Facturas extends conexionBD{
         
 
-        public function Listar_Practicas_paciente(){
+        public function Listar_Facturas(){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES()";
+            $sql = "CALL SP_LISTAR_PRACTICAS_FACTURAS()";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query->execute();
@@ -17,24 +17,9 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Listar_Practicas_paciente_medico($idusu){
+        public function Listar_Facturas_todo(){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_MEDICO(?)";
-            $arreglo = array();
-            $query  = $c->prepare($sql);
-            $query->bindParam(1,$idusu);
-
-            $query->execute();
-            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach($resultado as $resp){
-                $arreglo["data"][]=$resp;
-            }
-            return $arreglo;
-            conexionBD::cerrar_conexion();
-        }
-        public function Listar_Practicas_paciente_diario(){
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_DIARIO()";
+            $sql = "CALL SP_LISTAR_FACTURAS_TODO()";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query->execute();
@@ -45,27 +30,14 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Listar_Practicas_paciente_diario_medico($idusu){
+       
+        public function Listar_facturas_edtado_obra($obra,$estado){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_DIARIO_MEDICO(?)";
-            $arreglo = array();
-            $query  = $c->prepare($sql);
-            $query->bindParam(1,$idusu);
-
-            $query->execute();
-            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach($resultado as $resp){
-                $arreglo["data"][]=$resp;
-            }
-            return $arreglo;
-            conexionBD::cerrar_conexion();
-        }
-        public function Listar_practicas_paciente_filtro($obra){
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_FILTRO(?)";
+            $sql = "CALL SP_LISTAR_FACTURAS_OBRA_ESTADO(?,?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query->bindParam(1,$obra);
+            $query->bindParam(2,$estado);
 
             $query->execute();
             $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -75,25 +47,9 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Listar_practicas_paciente_filtro_medico($obra,$idusu){
+        public function Listar_facturas_fecha_usu($fechaini,$fechafin,$usu){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_FILTRO_MEDICO(?,?)";
-            $arreglo = array();
-            $query  = $c->prepare($sql);
-            $query->bindParam(1,$obra);
-            $query->bindParam(2,$idusu);
-
-            $query->execute();
-            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach($resultado as $resp){
-                $arreglo["data"][]=$resp;
-            }
-            return $arreglo;
-            conexionBD::cerrar_conexion();
-        }
-        public function Listar_practicas_paciente_fecha_usu($fechaini,$fechafin,$usu){
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_FECHAS(?,?,?)";
+            $sql = "CALL SP_LISTAR_FACTURAS_FECHAS_USU(?,?,?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query->bindParam(1,$fechaini);
@@ -108,31 +64,17 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Listar_practicas_paciente_fecha_usu_medico($fechaini,$fechafin,$idusu){
+      
+        public function Registrar_Factura($nrofact, $total, $rutaFactura, $rutaNotacre, $fecha, $idusu){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_LISTAR_PRACTICAS_PACIENTES_FECHAS_MEDICO(?,?,?)";
-            $arreglo = array();
+            $sql = "CALL SP_REGISTRAR_FACTURA(?,?,?,?,?,?)";
             $query  = $c->prepare($sql);
-            $query->bindParam(1,$fechaini);
-            $query->bindParam(2,$fechafin);
-            $query->bindParam(3,$idusu);
-
-            $query->execute();
-            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach($resultado as $resp){
-                $arreglo["data"][]=$resp;
-            }
-            return $arreglo;
-            conexionBD::cerrar_conexion();
-        }
-        public function Registrar_Practicas_paciente($area2,$paciente2,$total,$idusu){
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_REGISTRAR_PRACTICAS_PACIENTE(?,?,?,?)";
-            $query  = $c->prepare($sql);
-            $query ->bindParam(1,$area2);
-            $query ->bindParam(2,$paciente2);
-            $query ->bindParam(3,$total);
-            $query ->bindParam(4,$idusu);
+            $query ->bindParam(1,$nrofact);
+            $query ->bindParam(2,$total);
+            $query ->bindParam(3,$rutaFactura);
+            $query ->bindParam(4,$rutaNotacre);
+            $query ->bindParam(5,$fecha);
+            $query ->bindParam(6,$idusu);
 
             $query->execute();
             if($row = $query->fetchColumn()){
@@ -141,12 +83,12 @@
             conexionBD::cerrar_conexion();
 
         }
-        function Registrar_detalle_practicas($id, $array_practicas, $array_subtotal){
+        function Registrar_detalle_facturas($id, $array_practicas_paciente, $array_subtotal){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_REGISTRAR_DETALLE_PRACTICAS(?,?,?)"; // Se agregaron 3 placeholders
+            $sql = "CALL SP_REGISTRAR_DETALLE_FACTURA(?,?,?)"; // Se agregaron 3 placeholders
             $query = $c->prepare($sql);
             $query->bindParam(1, $id, PDO::PARAM_INT);
-            $query->bindParam(2, $array_practicas, PDO::PARAM_INT);
+            $query->bindParam(2, $array_practicas_paciente, PDO::PARAM_INT);
             $query->bindParam(3, $array_subtotal, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
             
             $resul = $query->execute();
@@ -157,34 +99,30 @@
         
 
 
-        public function Modificar_Paciente($id,$dni,$nom,$epell,$direc,$local,$tele,$obra,$idusu){
+        public function Eliminar_Factura($id){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_MODIFICAR_PACIENTE(?,?,?,?,?,?,?,?,?)";
-            $arreglo = array();
-            $query  = $c->prepare($sql);
-            $query ->bindParam(1,$id);
-            $query ->bindParam(2,$dni);
-            $query ->bindParam(3,$nom);
-            $query ->bindParam(4,$epell);
-            $query ->bindParam(5,$direc);
-            $query ->bindParam(6,$local);
-            $query ->bindParam(7,$tele);
-            $query ->bindParam(8,$obra);
-            $query ->bindParam(9,$idusu);
-            $query->execute();
-            if($row = $query->fetchColumn()){
-                return $row;
-            }
-            conexionBD::cerrar_conexion();
-        }
-      
-        public function Eliminar_Practicas_paciente($id){
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_ELIMINAR_PRACTICAS_PACIENTE(?)";
+            $sql = "CALL SP_ELIMINAR_FACTURA(?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
     
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
+        }
+        public function Modificar_Estado($id,$esta,$motivo,$idusu){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_ESTADO(?,?,?,?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query ->bindParam(2,$esta);
+            $query ->bindParam(3,$motivo);
+            $query ->bindParam(4,$idusu);
+
             $resul = $query->execute();
             if($resul){
                 return 1;
@@ -219,12 +157,12 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Cargar_Practicaspaciente($id){
+        public function Cargar_Practicaspaciente_factura($id2){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_CARGAR_PACIENTEYPRACTICA(?)";
+            $sql = "CALL SP_CARGAR_PACIENTEYPRACTICA_FACTURA(?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
-            $query ->bindParam(1,$id);
+            $query ->bindParam(1,$id2);
             $query->execute();
             $resultado = $query->fetchAll();
             foreach($resultado as $resp){
@@ -233,25 +171,10 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Cargar_Practicaspaciente2($id2) {
-            $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_CARGAR_PACIENTEYPRACTICA2(?)";
-            $arreglo = array();
-            $query = $c->prepare($sql);
-            $query->bindParam(1, $id2); // Cambiado de $id a $id2
-            $query->execute();
-            $resultado = $query->fetchAll();
-            
-            foreach($resultado as $resp) {
-                $arreglo[] = $resp;
-            }
-            
-            conexionBD::cerrar_conexion();
-            return $arreglo;
-        }
+       
         public function Cargar_Traermonto($id){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_CARGAR_TRAER_PRECIO(?)";
+            $sql = "CALL SP_CARGAR_TRAER_PRECIO_PRACTICA_PACIENTE(?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
@@ -279,10 +202,10 @@
             conexionBD::cerrar_conexion();
         }
 
-        public function Listar_detalle_practicas($id){
+        public function Listar_detalle_facturas($id){
             $c = conexionBD::conexionPDO();
             $arreglo = array();
-            $sql = "CALL SP_LISTA_DETALLE_PRACTICAS(?)";
+            $sql = "CALL SP_LISTA_DETALLE_FACTURAS(?)";
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
             $query->execute();
@@ -309,18 +232,15 @@
             }
             conexionBD::cerrar_conexion();
         }
-        public function Modificar_Detalle_practicas($idpracitcageneral,$idpracitca, $precio,$total,$idusu) {
+        public function Modificar_Detalle_practicas($idpracitcageneral,$idpracitca, $precio) {
             $c = conexionBD::conexionPDO();
         
             // Suponiendo que usas una consulta SQL o un procedimiento almacenado
-            $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?,?,?,?,?)"; // Cambia esto a tu consulta real
+            $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?, ?,?)"; // Cambia esto a tu consulta real
             $query = $c->prepare($sql);
             $query->bindParam(1, $idpracitcageneral);
             $query->bindParam(2, $idpracitca);
             $query->bindParam(3, $precio);
-            $query->bindParam(4, $total);
-            $query->bindParam(5, $idusu);
-
         
             try {
                 $query->execute();
@@ -333,6 +253,21 @@
             } finally {
                 conexionBD::cerrar_conexion();
             }
+        }
+        public function Listar_Historial_facturas($id){
+            $c = conexionBD::conexionPDO();
+            $arreglo = array();
+            $sql = "CALL SP_LISTA_HISTORIAL_FACTURA(?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        
         }
         
     }

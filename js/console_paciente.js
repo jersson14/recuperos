@@ -21,41 +21,44 @@ function listar_paciente(){
           type:'POST'
       },
       dom: 'Bfrtip',       
-      buttons:[ 
+
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PACIENTES"
-          },
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PACIENTES",
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PACIENTES"
-          },
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PACIENTES",
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
+      
       "columns":[
         {"defaultContent":""},
         {"data":"Dni"},
@@ -122,41 +125,43 @@ function listar_paciente_filtro(){
           }
       },
       dom: 'Bfrtip',       
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PACIENTES"
-          },
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PACIENTES",
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PACIENTES"
-          },
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PACIENTES",
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PACIENTES"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PACIENTES",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
+      
       "columns":[
         {"defaultContent":""},
         {"data":"Dni"},

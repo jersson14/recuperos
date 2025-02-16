@@ -1,0 +1,1678 @@
+//LISTAR TODOS
+var tbl_facturas;
+function listar_facturas_diario(){
+  tbl_facturas = $("#tabla_facturas").DataTable({
+      "ordering":false,   
+      "bLengthChange":true,
+      "searching": { "regex": false },
+      "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      "pageLength": 10,
+      pagingType: 'full_numbers',
+      scrollCollapse: true,
+      responsive: true,
+      "destroy":true,
+      "async": false ,
+      "processing": true,
+      "ajax":{
+          "url":"../controller/facturas/controlador_listar_facturas.php",
+          type:'POST'
+      },
+      dom: 'Bfrtip', 
+       
+      buttons: [ 
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        }
+      ],
+      "columns":[
+        {"defaultContent":""},
+        {"data":"obra_social"},
+        {"data":"numero_fact"},
+        {
+          "data": "monto",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {"data":"archivo_fact",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filefacturas/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Sin archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver factura</a>";
+                  }
+              }   
+          },    
+        {"data":"nota_credito",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filenotacredito/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver nota de credito</a>";
+                  }
+              }   
+          },    
+       
+        
+
+        {"data":"fecha_credito"},
+
+        {"data":"fecha_formateada"},
+
+        {
+            "data": "estado_fact",
+            render: function(data, type, row) {
+                if (data == 'PENDIENTE') {
+                    return '<span class="badge bg-warning">PENDIENTE</span>';
+                } else if (data == 'COBRADA') {
+                    return '<span class="badge bg-success">COBRADA</span>';
+                } else {
+                    return `
+                        <div>
+                            <span class="badge bg-danger">RECHAZADA</span>
+                            <button class="ver_estado btn btn-sm btn-primary ms-2 motivo-btn" data-bs-toggle="modal" data-bs-target="#motivoModal" data-motivo="${row.motivo}">
+                                <i class='fa fa-eye'></i> Ver Motivo
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        },        
+
+        {"data":"estado_fact",
+          render: function(data,type,row){
+                  if(data=='PENDIENTE'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }else if(data=='COBRADA'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }
+                  else{
+                      return `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;; ;
+                  }
+          }   
+      },
+                
+    ],
+
+    "language":idioma_espanol,
+    select: true
+});
+tbl_facturas.on('draw.td',function(){
+  var PageInfo = $("#tabla_facturas").DataTable().page.info();
+  tbl_facturas.column(0, {page: 'current'}).nodes().each(function(cell, i){
+    cell.innerHTML = i + 1 + PageInfo.start;
+  });
+});
+}
+
+function listar_facturas(){
+  Cargar_Select_Obras_Sociales();
+  Cargar_Select_Usuarios();
+  document.getElementById('txt_fecha_desde').value='';
+  document.getElementById('txt_fecha_hasta').value='';
+  document.getElementById('select_estado').value='';
+
+  tbl_facturas = $("#tabla_facturas").DataTable({
+      "ordering":false,   
+      "bLengthChange":true,
+      "searching": { "regex": false },
+      "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      "pageLength": 10,
+      pagingType: 'full_numbers',
+      scrollCollapse: true,
+      responsive: true,
+      "destroy":true,
+      "async": false ,
+      "processing": true,
+      "ajax":{
+          "url":"../controller/facturas/controlador_listar_facturas_total.php",
+          type:'POST'
+      },
+      dom: 'Bfrtip', 
+     
+      buttons: [ 
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        }
+      ],
+      "columns":[
+        {"defaultContent":""},
+        {"data":"obra_social"},
+        {"data":"numero_fact"},
+        {
+          "data": "monto",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {"data":"archivo_fact",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filefacturas/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Sin archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver factura</a>";
+                  }
+              }   
+          },    
+        {"data":"nota_credito",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filenotacredito/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver nota de credito</a>";
+                  }
+              }   
+          },    
+       
+        
+
+        {"data":"fecha_credito"},
+
+        {"data":"fecha_formateada"},
+
+        {
+            "data": "estado_fact",
+            render: function(data, type, row) {
+                if (data == 'PENDIENTE') {
+                    return '<span class="badge bg-warning">PENDIENTE</span>';
+                } else if (data == 'COBRADA') {
+                    return '<span class="badge bg-success">COBRADA</span>';
+                } else {
+                    return `
+                        <div>
+                            <span class="badge bg-danger">RECHAZADA</span>
+                            <button class="ver_estado btn btn-sm btn-primary ms-2 motivo-btn" data-bs-toggle="modal" data-bs-target="#motivoModal" data-motivo="${row.motivo}">
+                                <i class='fa fa-eye'></i> Ver Motivo
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        },        
+        {"data":"estado_fact",
+          render: function(data,type,row){
+                  if(data=='PENDIENTE'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }else if(data=='COBRADA'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }
+                  else{
+                      return `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;; ;
+                  }
+          }   
+      },
+                
+    ],
+
+    "language":idioma_espanol,
+    select: true
+});
+tbl_facturas.on('draw.td',function(){
+  var PageInfo = $("#tabla_facturas").DataTable().page.info();
+  tbl_facturas.column(0, {page: 'current'}).nodes().each(function(cell, i){
+    cell.innerHTML = i + 1 + PageInfo.start;
+  });
+});
+}
+
+//LISTAR POR OBRAS SOCIALES
+function listar_practica_paciente_obras(){
+  let obra = document.getElementById('select_obras_buscar').value;
+  let estado = document.getElementById('select_estado').value;
+
+  tbl_facturas = $("#tabla_facturas").DataTable({
+      "ordering":false,   
+      "bLengthChange":true,
+      "searching": { "regex": false },
+      "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      "pageLength": 10,
+      pagingType: 'full_numbers',
+      scrollCollapse: true,
+      responsive: true,
+      "destroy":true,
+      "async": false ,
+      "processing": true,
+      "ajax":{
+          "url":"../controller/facturas/controlador_listar_facturas_obra_estado.php",
+          type:'POST',
+          data:{
+            obra:obra,
+            estado:estado
+          }
+      },
+      dom: 'Bfrtip', 
+      buttons: [ 
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        }
+      ],
+      "columns":[
+        {"defaultContent":""},
+        {"data":"obra_social"},
+        {"data":"numero_fact"},
+        {
+          "data": "monto",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {"data":"archivo_fact",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filefacturas/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Sin archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver factura</a>";
+                  }
+              }   
+          },    
+        {"data":"nota_credito",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filenotacredito/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver nota de credito</a>";
+                  }
+              }   
+          },    
+       
+        
+
+        {"data":"fecha_credito"},
+
+        {"data":"fecha_formateada"},
+
+        {
+            "data": "estado_fact",
+            render: function(data, type, row) {
+                if (data == 'PENDIENTE') {
+                    return '<span class="badge bg-warning">PENDIENTE</span>';
+                } else if (data == 'COBRADA') {
+                    return '<span class="badge bg-success">COBRADA</span>';
+                } else {
+                    return `
+                        <div>
+                            <span class="badge bg-danger">RECHAZADA</span>
+                            <button class="ver_estado btn btn-sm btn-primary ms-2 motivo-btn" data-bs-toggle="modal" data-bs-target="#motivoModal" data-motivo="${row.motivo}">
+                                <i class='fa fa-eye'></i> Ver Motivo
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        },        
+
+        {"data":"estado_fact",
+          render: function(data,type,row){
+                  if(data=='PENDIENTE'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }else if(data=='COBRADA'){
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                  }
+                  else{
+                      return `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;; ;
+                  }
+          }   
+      },
+                
+    ],
+
+    "language":idioma_espanol,
+    select: true
+});
+tbl_facturas.on('draw.td',function(){
+  var PageInfo = $("#tabla_facturas").DataTable().page.info();
+  tbl_facturas.column(0, {page: 'current'}).nodes().each(function(cell, i){
+    cell.innerHTML = i + 1 + PageInfo.start;
+  });
+});
+}
+
+//LISTAR POR FECHAS Y USUARIO
+function listar_practica_paciente_fecha_usu(){
+  let fechaini = document.getElementById('txt_fecha_desde').value;
+  let fechafin = document.getElementById('txt_fecha_hasta').value;
+  let usu = document.getElementById('select_usuario').value;
+
+  tbl_facturas = $("#tabla_facturas").DataTable({
+      "ordering":false,   
+      "bLengthChange":true,
+      "searching": { "regex": false },
+      "lengthMenu": [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+      "pageLength": 10,
+      pagingType: 'full_numbers',
+      scrollCollapse: true,
+      responsive: true,
+      "destroy":true,
+      "async": false ,
+      "processing": true,
+      "ajax":{
+          "url":"../controller/facturas/controlador_listar_facturas_fecha_usu.php",
+          type:'POST',
+          data:{
+            fechaini:fechaini,
+            fechafin:fechafin,
+            usu:usu
+          }
+      },
+      dom: 'Bfrtip', 
+     
+      buttons: [ 
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA DE FACTURAS",
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE FACTURAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
+        }
+      ],
+      "columns":[
+        {"defaultContent":""},
+        {"data":"obra_social"},
+        {"data":"numero_fact"},
+        {
+          "data": "monto",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {"data":"archivo_fact",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filefacturas/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Sin archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver factura</a>";
+                  }
+              }   
+          },    
+        {"data":"nota_credito",
+          render: function(data,type,row){
+                  if(data=='' || data=='controller/facturas/filenotacredito/'){
+                      return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                  }else{
+                    return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver archivo'><i class='fas fa-eye'></i> Ver nota de credito</a>";
+                  }
+              }   
+          },    
+       
+        
+
+        {"data":"fecha_credito"},
+
+        {"data":"fecha_formateada"},
+
+        {
+            "data": "estado_fact",
+            render: function(data, type, row) {
+                if (data == 'PENDIENTE') {
+                    return '<span class="badge bg-warning">PENDIENTE</span>';
+                } else if (data == 'COBRADA') {
+                    return '<span class="badge bg-success">COBRADA</span>';
+                } else {
+                    return `
+                        <div>
+                            <span class="badge bg-danger">RECHAZADA</span>
+                            <button class="ver_estado btn btn-sm btn-primary ms-2 motivo-btn" data-bs-toggle="modal" data-bs-target="#motivoModal" data-motivo="${row.motivo}">
+                                <i class='fa fa-eye'></i> Ver Motivo
+                            </button>
+                        </div>
+                    `;
+                }
+            }
+        },        
+
+        {"data":"estado_fact",
+            render: function(data,type,row){
+                    if(data=='PENDIENTE'){
+                        return  `
+                        <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                          <i class="fa fa-history"></i> Historial
+                        </button>
+                        <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                            <i class='fa fa-exchange-alt'></i> Cambiar estado
+                        </button>
+                        <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                          <i class='fa fa-eye'></i> Ver Detalles
+                        </button>
+                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                          <i class='fa fa-edit'></i> Editar
+                        </button>
+                        <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                          <i class='fa fa-trash'></i> Eliminar
+                        </button>
+                      `;
+                    }else if(data=='COBRADA'){
+                        return  `
+                        <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                          <i class="fa fa-history"></i> Historial
+                        </button>
+                        <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                            <i class='fa fa-exchange-alt'></i> Cambiar estado
+                        </button>
+                        <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                          <i class='fa fa-eye'></i> Ver Detalles
+                        </button>
+                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                          <i class='fa fa-edit'></i> Editar
+                        </button>
+                        <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                          <i class='fa fa-trash'></i> Eliminar
+                        </button>
+                      `;
+                    }
+                    else{
+                        return `
+                        <button class='historial_fac btn btn-dark btn-sm' title='Cambiar estado'>
+                          <i class="fa fa-history"></i> Historial
+                        </button>
+                        <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                            <i class='fa fa-exchange-alt'></i> Cambiar estado
+                        </button>
+                        <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                          <i class='fa fa-eye'></i> Ver Detalles
+                        </button>
+                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                          <i class='fa fa-edit'></i> Editar
+                        </button>
+                        <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                          <i class='fa fa-trash'></i> Eliminar
+                        </button>
+                      `;; ;
+                    }
+            }   
+        },
+                
+    ],
+
+    "language":idioma_espanol,
+    select: true
+});
+tbl_facturas.on('draw.td',function(){
+  var PageInfo = $("#tabla_facturas").DataTable().page.info();
+  tbl_facturas.column(0, {page: 'current'}).nodes().each(function(cell, i){
+    cell.innerHTML = i + 1 + PageInfo.start;
+  });
+});
+}
+
+
+
+function AbrirRegistro(){
+  $("#modal_registro").modal({backdrop:'static',keyboard:false})
+  $("#modal_registro").modal('show');
+
+
+}
+function Cargar_Select_Usuarios() {
+  $.ajax({
+    url: "../controller/practicas_paciente/controlador_cargar_select_usuario.php",
+    type: 'POST',
+  }).done(function(resp) {
+    let data = JSON.parse(resp);
+    let cadena = "<option value=''>Seleccionar Usuario</option>";
+    if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        cadena += "<option value='" + data[i][0] + "'>DNI: " + data[i][1] + " - Usuario: " + data[i][2] + "</option>";
+      }
+    } else {
+      cadena += "<option value=''>No hay usuarios disponibles</option>";
+    }
+    $('#select_usuario').html(cadena);
+
+
+    // Inicializar Select2 después de cargar opciones
+    $('#select_usuario').select2({
+      placeholder: "Seleccionar Usuario",
+      allowClear: true,
+      width: '100%' // Asegura que use todo el ancho
+    });
+  });
+}
+
+function Cargar_Select_Areas() {
+  $.ajax({
+    url: "../controller/practicas_paciente/controlador_cargar_select_area.php",
+    type: 'POST',
+  }).done(function(resp) {
+    let data = JSON.parse(resp);
+    let cadena = "<option value=''>Seleccionar Área</option>";
+    if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        cadena += "<option value='" + data[i][0] + "'>" + data[i][1] + "</option>";
+      }
+    } else {
+      cadena += "<option value=''>No hay áreas disponibles</option>";
+    }
+    $('#select_area').html(cadena);
+    $('#select_area_editar').html(cadena);
+
+
+    // Inicializar Select2 después de cargar opciones
+    $('#select_area').select2({
+      placeholder: "Seleccionar Área",
+      allowClear: true,
+      width: '100%' // Asegura que use todo el ancho
+    });
+  });
+}
+
+function Cargar_Select_Obras_Sociales() {
+  $.ajax({
+    url: "../controller/obras_sociales/controlador_cargar_select_obras_sociales.php",
+    type: 'POST',
+  }).done(function(resp) {
+    let data = JSON.parse(resp);
+    let cadena = "<option value=''>Seleccionar Obra Social</option>";
+    if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        cadena += "<option value='" + data[i][0] + "'>CUIT: " + data[i][1] + " - Nombre: " + data[i][2] + "</option>";
+      }
+    } else {
+      cadena += "<option value=''>No hay obras disponibles</option>";
+    }
+    $('#select_obras_buscar').html(cadena);
+
+
+    // Inicializar Select2 después de cargar opciones
+    $('#select_obras_buscar').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      width: '100%' // Asegura que use todo el ancho
+    });
+  });
+} 
+
+
+function Cargar_Select_Obras_Sociales2() {
+  $.ajax({
+    url: "../controller/obras_sociales/controlador_cargar_select_obras_sociales.php",
+    type: 'POST'
+  }).done(function(resp) {
+    let data = JSON.parse(resp);
+    cadena = "<option value='' disabled selected>Seleccione Obra Social</option>"; // Placeholder por defecto
+    if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        cadena += "<option value='" + data[i][0] + "'>CUIT: " + data[i][1] + " - Nombre: " + data[i][2] + "</option>";
+      }
+      $('#select_obras, #select_obras_editar').html(cadena);
+      
+
+   
+      // Cargar las prácticas correspondientes a la obra seleccionada por defecto
+      var id_practica = $("#select_practica").val();
+      Cargar_Select_Practica(id_practica, 'select_practica');
+
+      
+    } else {
+      $('#select_obras, #select_obras_editar').html(cadena);
+    }
+    $('#select_obras').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      width: '100%' // Asegura que use todo el ancho
+    });
+  });
+}
+
+
+
+
+function Cargar_Select_Practica(id2, id_practica = null) {
+  $.ajax({
+    url: "../controller/facturas/controlador_cargar_select_paciente_practica_factura.php",
+    type: 'POST',
+    data: { id2: id2 },
+  }).done(function(resp) {
+    let data = JSON.parse(resp);
+    let cadena = "<option value='' disabled selected>No hay datos disponibles</option>";
+
+    if (data.length > 0) {
+      cadena = "<option value='' disabled selected>Seleccione práctica</option>"; // Placeholder
+      for (let i = 0; i < data.length; i++) {
+        cadena += "<option value='" + data[i][0] + "'>DNI: " + data[i][1] + " - Paciente: " + data[i][2] + "</option>";
+
+      }
+    }
+
+    // Actualizar los selects
+    $('#select_practica').html(cadena);
+    $('#select_practica_editar').html(cadena);
+ 
+    // Si hay una práctica seleccionada para edición
+    if (id_practica) {
+      $('#select_practica_editar').val(id_practica).trigger('change');
+    }
+
+    // Inicializar select2
+    $('#select_practica').select2({
+      placeholder: "Seleccionar práctica - paciente",
+      allowClear: true,
+      width: '100%'
+    });
+
+    // Evento change para cargar el precio cuando se seleccione una práctica
+    $('#select_practica').on('change', function() {
+      var idSeleccionado = $(this).val();
+      if (idSeleccionado) {
+        Traerprecio(idSeleccionado);
+      } else {
+        $("#txt_precio").val(''); // Limpiar si no hay selección
+      }
+    });
+
+  }).fail(function() {
+    console.log("Error al cargar las prácticas.");
+  });
+}
+
+function Traerprecio(id) {
+  $.ajax({
+    url: "../controller/facturas/controlador_traermonto.php",
+    type: 'POST',
+    data: { id: id }
+  }).done(function(resp) {
+    var data = JSON.parse(resp);
+    if (data.length > 0) {
+      $("#txt_precio").val(data[0].monto || data[0][1]); // Asegurar acceso correcto al dato
+      $("#txt_precio_editar").val(data[0].monto || data[0][1]); // Asegurar acceso correcto al dato
+    } else {
+      $("#txt_precio").val('');
+      $("#txt_precio_editar").val('');
+
+    }
+  }).fail(function() {
+    console.log("Error al traer el precio.");
+  });
+}
+
+// MODAL ESTADO
+$('#tabla_facturas').on('click','.cambio',function(){
+    var data = tbl_facturas.row($(this).parents('tr')).data();
+  
+    if(tbl_facturas.row(this).child.isShown()){
+        var data = tbl_facturas.row(this).data();
+    }
+  $("#modal_estado").modal('show');
+  
+    document.getElementById('lb_tituloesta').innerHTML="<b>FACTURA N°:</b> "+data.numero_fact+"";
+    document.getElementById('lb_titulo2esta').innerHTML="<b>OBRA SOCIAL:</b> "+data.obra_social+"";
+    document.getElementById('id_estado').value=data.id_factura;
+    document.getElementById('select_estado_edit').value=data.estado_fact;
+  
+  })
+
+  $('#tabla_facturas').on('click','.ver_estado',function(){
+    var data = tbl_facturas.row($(this).parents('tr')).data();
+  
+    if(tbl_facturas.row(this).child.isShown()){
+        var data = tbl_facturas.row(this).data();
+    }
+  $("#modal_estado_ver").modal('show');
+  
+    document.getElementById('lb_titulover').innerHTML="<b>FACTURA N°:</b> "+data.numero_fact+"";
+    document.getElementById('lb_titulo2ver').innerHTML="<b>OBRA SOCIAL:</b> "+data.obra_social+"";
+    document.getElementById('select_estado_ver').value=data.estado_fact;
+    document.getElementById('txt_motivo_ver').value=data.motivo_rechazo;
+
+  })
+
+
+
+
+ //EDITAR ESTADO
+ function Modificar_Estado() {
+    let id = document.getElementById('id_estado').value;
+    let esta = document.getElementById('select_estado_edit').value;
+    let motivo = document.getElementById('txt_motivo').value;
+    let idusu = document.getElementById('txtprincipalid').value;
+
+    
+    if (esta=='RECHAZADA'){
+      if (id.length == 0 || esta.length == 0||motivo.length == 0) {
+        return Swal.fire("Mensaje de Advertencia", "Tiene campos vacíos", "warning");
+    }
+  }else if(esta=='COBRADA'){
+    if (id.length == 0 || esta.length == 0) {
+      return Swal.fire("Mensaje de Advertencia", "Tiene campos vacíos", "warning");
+  }
+
+  }else{
+    if (id.length == 0 || esta.length == 0) {
+      return Swal.fire("Mensaje de Advertencia", "Tiene campos vacíos", "warning");
+  }
+  }
+
+
+    if (esta=='RECHAZADA'){
+        estado='<b style="color:red">' + esta + '</b> '
+    }else if(esta=='COBRADA'){
+        estado='<b style="color:green">' + esta + '</b> '
+
+    }else{
+        estado='<b style="color:#dcdc00">' + esta + '</b> '
+
+    }
+    // Confirmación antes de modificar el estado
+    Swal.fire({
+        title: '¿Está seguro de modificar el estado de la factura?',
+        html: 'El estado de la factura será actualizado al estado de: '+estado+'',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, modificar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Procede con la petición AJAX si el usuario confirma
+            $.ajax({
+                url: "../controller/facturas/controlador_modificar_estado.php",
+                type: 'POST',
+                data: {
+                    id: id,
+                    esta: esta,
+                    motivo: motivo,
+                    idusu:idusu
+                }
+            }).done(function (resp) {
+                if (resp > 0) {
+                    Swal.fire("Mensaje de Confirmación", "Estado actualizado satisfactoriamente ", "success").then(() => {
+                        tbl_facturas.ajax.reload();
+                        $("#modal_estado").modal('hide');
+                    });
+                } else {
+                    Swal.fire("Mensaje de Error", "No se completó la actualización", "error");
+                }
+            });
+        }
+    });
+}
+
+   
+
+//ELIMINAR PRACTICA PACIENTE
+function Eliminar_Factura(id){
+  $.ajax({
+    "url":"../controller/facturas/controlador_eliminar_facturas.php",
+    type:'POST',
+    data:{
+      id:id
+    }
+  }).done(function(resp){
+    if(resp>0){
+        Swal.fire("Mensaje de Confirmación","Se elimino la factura con exito","success").then((value)=>{
+          tbl_facturas.ajax.reload();
+        });
+    }else{
+      return Swal.fire("Mensaje de Advetencia","No se puede eliminar esta factura, verifique por favor","warning");
+
+    }
+  })
+}
+
+//ENVIANDO AL BOTON DELETE
+$('#tabla_facturas').on('click','.eliminar',function(){
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if(tbl_facturas.row(this).child.isShown()){
+      var data = tbl_facturas.row(this).data();
+  }
+  Swal.fire({
+    title: 'Desea eliminar la factura con el numero: <b style="color:blue">'+data.numero_fact+'</b>?',
+    text: "Una vez aceptado la factura y su detalle sera eliminada por completo!!!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Eliminar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+        Eliminar_Factura(data.id_factura);
+    }
+  })
+})
+
+//MODAL VER PRÁCTICAS
+$('#tabla_facturas').on('click','.mostrar',function(){
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if(tbl_facturas.row(this).child.isShown()){
+      var data = tbl_facturas.row(this).data();
+  }
+$("#modal_ver_facturas_paci").modal('show');
+
+document.getElementById('lb_titulo_facturas').innerHTML="<b>FACTURA N°:</b> "+data.numero_fact+"";
+document.getElementById('lb_titulo2_facturas').innerHTML="<b>OBRA SOCIAL:</b> "+data.obra_social+"";
+
+listar_detalle_factura(data.id_factura);
+
+})
+// VISTA DE PRACTICAS
+var tbl_detalle_factu;
+
+function listar_detalle_factura(id) {
+  tbl_detalle_factu = $("#tabla_ver_facturas_paci").DataTable({
+      "ordering": false,
+      "bLengthChange": true,
+      "searching": false,  // Deshabilita la barra de búsqueda
+      "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+      "pageLength": 5,
+      "destroy": true,
+      "pagingType": 'full_numbers',
+      "scrollCollapse": true,
+      "responsive": true,
+      "async": false,
+      "processing": true,
+      "dom": 'Bfrtip', // Agrega los botones
+      "buttons": [
+          {
+              extend: 'excelHtml5',
+              text: '<i class="fas fa-file-excel"></i> Excel',
+              className: 'btn btn-success'
+          },
+          {
+              extend: 'pdfHtml5',
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              className: 'btn btn-danger',
+              orientation: 'landscape',
+              pageSize: 'A4'
+          },
+          {
+              extend: 'print',
+              text: '<i class="fas fa-print"></i> Imprimir',
+              className: 'btn btn-primary'
+          }
+      ],
+      "ajax": {
+          "url": "../controller/facturas/controlador_listar_detalle_factura.php",
+          "type": "POST",
+          "data": { id: id },
+          "dataSrc": function(json) {
+              console.log("Respuesta JSON:", json);
+              return json.data;
+          }
+      },
+
+      "columns": [
+          { 
+              "data": null, 
+              "render": function(data, type, row, meta) {
+                  return meta.row + 1; // Asigna un número correlativo
+              }
+          },
+          { "data": "Dni" },
+          { "data": "PACIENTE" },
+          { 
+              "data": "subtotal",
+              "render": function(data) {
+                  return `<strong>$AR ${parseFloat(data).toFixed(2)}</strong>`;  
+              }
+          }
+      ],
+      "language": idioma_espanol,
+      "select": true
+  });
+
+  // Evento para calcular y mostrar el total con tamaño más grande
+  tbl_detalle_factu.on('draw.dt', function() {
+      var total = 0;
+
+      // Sumar los valores de la columna "subtotal"
+      tbl_detalle_factu.column(3, { page: 'current' }).data().each(function(value) {
+          total += parseFloat(value) || 0;
+      });
+
+      // Mostrar el total con tamaño más grande
+      $('#total_sub_total').html(`<span style="font-size: 20px; font-weight: bold; color: #0A5D86;">$AR ${total.toFixed(2)}</span>`);
+  });
+}
+
+
+
+
+function Agregar_practica() {
+  var id_practica = $("#select_practica").val();
+  var practica = $("#select_practica option:selected").text();
+  var precio = $("#txt_precio").val();
+
+  if(verificarid(id_practica)){
+    return Swal.fire("Mensaje de Advertencia","La asignatura ya fue agregado a la tabla","warning");
+   }
+ 
+   var datos_agregar ="<tr>";
+   datos_agregar+="<td for='id'>"+id_practica+"</td>";
+   datos_agregar+="<td>"+practica+"</td>";
+   datos_agregar+="<td>"+precio+"</td>";
+ 
+   datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
+   datos_agregar+="</tr>";
+   $("#tabla_detalle_factura").append(datos_agregar);
+   SumarTotal();
+ 
+  
+ }
+function remove(t){
+  console.log('hola');
+
+  var td =t.parentNode;
+  var tr=td.parentNode;
+  var table =tr.parentNode;
+  table.removeChild(tr);
+  SumarTotal();
+  console.log(SumarTotal());
+}
+function SumarTotal(){
+  let arreglo_total=new Array();
+   let count=0;
+   let total=0;
+   $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").each(function(){
+     arreglo_total.push($(this).find('td').eq(2).text());
+     count++;
+   })
+   for(var i=0;i<count;i++){
+     var suma = arreglo_total[i];
+     total=(parseFloat(total)+parseFloat(suma)).toFixed(2);
+     
+   };
+   $("#lbl_totalneto1").html("<b>Total:</b> $AR "+total);
+
+ }
+
+function verificarid(id){
+  let idverificar=document.querySelectorAll('#tabla_detalle_factura td[for="id"]');
+  return [].filter.call(idverificar, td=>td.textContent ===id).length===1;
+}
+
+
+
+function Registrar_Practica_paciente() {
+  let count = $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").length;
+  if (count === 0) {
+      return Swal.fire("Mensaje de Advertencia", "La tabla de prácticas debe tener al menos un registro", "warning");
+  }
+
+   //DATOS DEL DOCENTE
+   let nrofact = document.getElementById('txt_nro_factura').value;
+   let total = parseFloat(document.getElementById('lbl_totalneto1').textContent.replace(/[^0-9.]/g, '')) || 0;
+   let factura = document.getElementById('txt_factura').value;
+   let notacre = document.getElementById('txt_notacre').value;
+   let fecha = document.getElementById('txt_fecha_nota').value;
+   let idusu = document.getElementById('txtprincipalid').value;
+   
+   if (nrofact.length == 0 || total == 0 || factura.length == 0) {
+     return Swal.fire("Mensaje de Advertencia", "Tiene campos vacíos en el formulario, revise", "warning");
+   }
+   
+   // Obtener la fecha actual para generar nombres únicos
+   let f = new Date();
+   
+   // Procesar Factura
+   let nombrefactura = "";
+   if (factura.length > 0) {
+     let extensionFact = factura.split('.').pop();
+     nombrefactura = "IMG" + f.getDate() + "-" + (f.getMonth() + 1) + "-" + f.getFullYear() + "-" + f.getHours() + "-" + f.getMilliseconds() + "." + extensionFact;
+   }
+   
+   // Procesar Nota de Crédito
+   let nombrenotacre = "";
+   if (notacre.length > 0) {
+     let extensionNotacre = notacre.split('.').pop();
+     nombrenotacre = "NC" + f.getDate() + "-" + (f.getMonth() + 1) + "-" + f.getFullYear() + "-" + f.getHours() + "-" + f.getMilliseconds() + "." + extensionNotacre;
+   }
+   
+   // Crear FormData
+   let formData = new FormData();
+   let facturaObj = $("#txt_factura")[0].files[0]; // Obtener el archivo de factura
+   let notacreObj = $("#txt_notacre")[0].files[0]; // Obtener el archivo de nota de crédito
+   
+   if (facturaObj) {
+     formData.append("factura", facturaObj, nombrefactura);
+   }
+   if (notacreObj) {
+     formData.append("notacre", notacreObj, nombrenotacre);
+   }
+   
+   // Agregar otros datos al FormData
+      formData.append("nrofact",nrofact);
+      formData.append("total",total);
+      formData.append("nombrefactura",nombrefactura);
+      formData.append("facturaObj",facturaObj);
+      formData.append("nombrenotacre",nombrenotacre);
+      formData.append("notacreObj",notacreObj);
+      formData.append("fecha",fecha);
+      formData.append("idusu",idusu);
+
+     $.ajax({
+       url:"../controller/facturas/controlador_registro_factura.php",
+       type:'POST',
+       data:formData,
+       contentType:false,
+       processData:false,
+       success:function(resp){
+         if(resp.length>0){
+          Registrar_Detalle_factura(parseInt(resp));
+          Swal.fire("Mensaje de Confirmación","Se registro correctamente al la factura con el N° <b>"+nrofact+"</b>","success").then((value)=>{
+
+             document.getElementById('txt_nro_factura').value = "";
+             document.getElementById('txt_precio').value = "";
+             document.getElementById('txt_factura').value = "";
+             document.getElementById('txt_notacre').value = "";
+             document.getElementById('txt_fecha_nota').value = "";
+            Cargar_Select_Obras_Sociales2();
+            Cargar_Select_Practica();
+ 
+             // Cerrar el modal
+
+            });
+
+         }else{
+           Swal.fire("Mensaje de Advertencia","No se pudo registrar al usuario","warning");
+         }
+       }
+     });
+ }
+ 
+
+// REGISTRO DETALLE PRACTICAS
+function Registrar_Detalle_factura(id) {
+  let count = $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").length;
+  if (count === 0) {
+      return Swal.fire("Mensaje de Advertencia", "El detalle de las prácticas debe tener al menos un registro", "warning");
+  }
+
+  let arreglo_practica_paciente = [];
+  let arreglo_subtotal = [];
+
+  $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").each(function () {
+    arreglo_practica_paciente.push($(this).find('td').eq(0).text().trim());
+      arreglo_subtotal.push($(this).find('td').eq(2).text().trim());
+  });
+
+  let practicas_paciente = arreglo_practica_paciente.join(",");
+  let subtotal = arreglo_subtotal.join(",");
+
+  $.ajax({
+      url: "../controller/facturas/controlador_detalle_facturas.php",
+      type: 'POST',
+      data: {
+          id: id,
+          practicas_paciente: practicas_paciente,
+          subtotal:subtotal
+      }
+  }).done(function (resp) {
+      if (resp > 0) {
+          tbl_facturas.ajax.reload();
+          $("#modal_registro").modal('hide');
+      } else {
+          return Swal.fire("Mensaje De Advertencia", "Lo sentimos, no se pudo completar el registro", "warning");
+      }
+  });
+}
+
+//EDITAR PRACTICAS - PACIENTE
+
+$('#tabla_facturas').on('click','.editar',function(){
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if(tbl_facturas.row(this).child.isShown()){
+      var data = tbl_facturas.row(this).data();
+  }
+  $("#modal_editar").modal('show');
+  $("#select_obras_editar").val(data.id_cuit).trigger('change');
+  document.getElementById('txt_id_detalle').value = data.id_paciente_practica;
+  document.getElementById('txt_area').value = data.area_nombre;
+  document.getElementById('txt_paciente').value = data.PACIENTE;
+  document.getElementById('txt_profesional_editar').value = data.USUARIO;
+  document.getElementById('txt_fecha_editar').value = data.fecha_formateada;
+
+  listar_practicas_del_paciente(data.id_paciente_practica);
+
+})
+var tbl_traer_datos;
+function listar_practicas_del_paciente(id) {
+
+  tbl_traer_datos = $("#tabla_practica_editar").DataTable({
+    "ordering": false,
+    "bLengthChange": false,
+    "searching": false,
+    "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+    "pageLength": 10,
+    "destroy": true,
+    "pagingType": 'full_numbers',
+    "scrollCollapse": false,
+    "responsive": true,
+    "processing": true,
+   "ajax": {
+    "url": "../controller/practicas_paciente/controlador_listar_detalle_practicas.php",
+    "type": 'POST',
+    "data": { id: id },
+   
+    },
+    "columns": [
+      {"data": "id_paciente_practica"},
+      {"data": "id_practica"},
+      {"data": "practica"},
+      {"data": "subtotal"},
+      {"defaultContent": "<button class='delete btn btn-danger btn-sm' title='Eliminar datos de especialidad'><i class='fa fa-trash'></i> Eliminar</button>"}
+    ],
+    "language": idioma_espanol,
+    "select": true
+  });
+}
+
+function Eliminar_detalle_practica_unico(id){
+  $.ajax({
+    "url":"../controller/practicas_paciente/controlador_eliminar_detalle_practica.php",
+    type:'POST',
+    data:{
+      id:id
+    }
+  }).done(function(resp){
+    if(resp>0){
+        Swal.fire("Mensaje de Confirmación","Se elimino la práctica exitosamente","success").then((value)=>{
+          tbl_traer_datos.ajax.reload();
+        });
+    }else{
+      return Swal.fire("Mensaje de Advetencia","No se puede eliminar esta práctica por que esta siendo utilizado en otros formularios, verifique por favor","warning");
+
+    }
+  })
+}
+
+//ENVIANDO AL BOTON DELETE
+$('#tabla_practica_editar').on('click','.delete',function(){
+  var data = tbl_traer_datos.row($(this).parents('tr')).data();
+
+  if(tbl_traer_datos.row(this).child.isShown()){
+      var data = tbl_traer_datos.row(this).data();
+  }
+  Swal.fire({
+    title: 'Desea eliminar la práctica: '+data.practica+' seleccionado?',
+    text: "Una vez aceptado la práctica sera eliminada!!!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Si, Eliminar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Eliminar_detalle_practica_unico(data.id_practica_paciente_total);
+    }
+  })
+})
+
+
+
+function Agregar_practica_editar(){
+  var id_practica_edi_principal=$("#txt_id_detalle").val();
+  var id_practica_edi=$("#select_practica_editar").val();
+  var practica_edi=$("#select_practica_editar option:selected").text();
+  var precio_edi=$("#txt_precio_editar").val();
+
+
+
+
+  if(verificarid_editar(id_practica_edi)){
+   return Swal.fire("Mensaje de Advertencia","La práctica ya fue agregado a la tabla","warning");
+  }
+
+  var datos_agregar ="<tr>";
+
+  datos_agregar+="<td >"+id_practica_edi_principal+"</td>";
+  datos_agregar+="<td for='id'>"+id_practica_edi+"</td>";
+  datos_agregar+="<td>"+practica_edi+"</td>";
+  datos_agregar+="<td>"+precio_edi+"</td>";
+
+  datos_agregar+="<td><button class='btn btn-danger' onclick='remove1(this)'><i class='fas fa-trash'><i></button></td>";
+  datos_agregar+="</tr>";
+  $("#tabla_practica_editar").append(datos_agregar);
+  SumarTotal_Editar();
+
+ 
+}
+//BORRAR REGISTRO
+function remove1(t){
+  var td =t.parentNode;
+  var tr=td.parentNode;
+  var table =tr.parentNode;
+  table.removeChild(tr);
+  SumarTotal_Editar();
+
+}
+//SUMAR TOTAL
+// SUMAR TOTAL
+function SumarTotal_Editar() {
+  let total = 0;
+
+  // Recorremos cada fila de la tabla
+  $("#tabla_practica_editar tbody tr").each(function () {
+    let precio = $(this).find('td').eq(3).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
+    
+    if (precio !== "") { // Aseguramos que el valor no esté vacío
+      total += parseFloat(precio) || 0; // Convertimos a número y evitamos NaN con || 0
+    }
+  });
+
+  // Mostramos el total en el label
+  $("#lbl_totalneto_editar").html("<b>Total: </b>$AR " + total.toFixed(2));
+}
+
+//VALIDACIÓN
+function verificarid_editar(id){
+  let idverificar=document.querySelectorAll('#tabla_practica_editar td[for="id"]');
+  return [].filter.call(idverificar, td=>td.textContent ===id).length===1;
+}
+
+//EDITANDO PRACTICAS
+function Modificar_detalle_practicas() {
+  let componentes = [];  // Se inicializa el array vacío cada vez que se ejecuta la función
+
+  // Recorre cada fila de la tabla de edición para extraer los datos
+  $("#tabla_practica_editar tr").each(function() {
+    var idpracitcageneral = $(this).find('td').eq(0).text().trim();  // ID de la hora
+    var idpracitca = $(this).find('td').eq(1).text().trim();  // ID de la hora
+    var precio = $(this).find('td').eq(3).text().trim();  // ID de la asignatura
+
+    // Validar que todos los campos estén llenos y no sean valores vacíos
+    if (idpracitca && precio) {
+      componentes.push({
+        idpracitcageneral:idpracitcageneral,
+        idpracitca: idpracitca,
+        precio: precio,
+      });
+    }
+  });
+
+  // Verificar si hay componentes válidos para enviar
+  if (componentes.length === 0) {
+    return Swal.fire("Mensaje de Advertencia", "No hay prácticas válidos en la tabla para modificar", "warning");
+  }
+
+  // Enviar la solicitud AJAX al servidor para modificar los componentes
+  $.ajax({
+    url: '../controller/practicas_paciente/controlador_modificar_detalle_practicas.php',
+    type: 'POST',
+    data: {
+      componentes: JSON.stringify(componentes)  // Enviar solo los datos de la tabla actual
+    }
+  }).done(function(resp) {
+    console.log("Respuesta del servidor:", resp);  // Verificar la respuesta del servidor
+    if (resp == 1) {
+      Swal.fire("Mensaje de Confirmación", "Prácticas modificadas satisfactoriamente!!!", "success").then(() => {
+        tbl_facturas.ajax.reload();  // Recargar la tabla original (si es necesario)
+        $("#modal_editar").modal('hide');  // Ocultar el modal de edición
+      });
+    } else {
+      Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen", "warning");
+    }
+  });
+}
+
+
+
+//MODAL VER HISTORIAL
+$('#tabla_facturas').on('click','.historial_fac',function(){
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if(tbl_facturas.row(this).child.isShown()){
+      var data = tbl_facturas.row(this).data();
+  }
+$("#modal_ver_historial").modal('show');
+
+  document.getElementById('lb_titulo_historial').innerHTML="<b>HISTORIAL DE FACTURA N°:</b> "+data.numero_fact+"";
+  document.getElementById('lb_titulo_historial2').innerHTML="<b>OBRA SOCIAL:</b> "+data.obra_social+"";
+
+  listar_historial(data.id_factura);
+
+})
+// VISTA DE HISTORIAL
+var tbl_historial;
+function listar_historial(id) {
+  tbl_historial = $("#tabla_ver_historial").DataTable({
+      "ordering": false,
+      "bLengthChange": true,
+      "searching": false,  // Deshabilita la barra de búsqueda
+      "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+      "pageLength": 5,
+      "destroy": true,
+      "pagingType": 'full_numbers',
+      "scrollCollapse": true,
+      "responsive": true,
+      "async": false,
+      "processing": true,
+      "ajax": {
+          "url": "../controller/facturas/controlador_listar_historial_facturas.php",
+          "type": 'POST',
+          "data": { id: id },
+          "dataSrc": function(json) {
+              console.log("Respuesta JSON:", json);
+              return json.data;
+          }
+      },
+      "dom": 'Bfrtip', 
+      "buttons": [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA_DE_HISTORIAL",
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-success' 
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA_DE_HISTORIAL",
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-danger'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE HISTORIAL",
+          className: 'btn btn-primary' 
+        }
+      ],
+      "columns": [
+          { "data": null, "render": function(data, type, row, meta) { return meta.row + 1; } }, 
+          { "data": "USUARIO" },
+          {
+            "data": "estado",
+            render: function(data, type, row) {
+                if (data == 'PENDIENTE') {
+                    return '<span class="badge bg-warning">PENDIENTE</span>';
+                } else if (data == 'COBRADA') {
+                    return '<span class="badge bg-success">COBRADA</span>';
+                } else {
+                  return '<span class="badge bg-danger">RECHAZADA</span>';
+
+                }
+            }
+        },        
+          { "data": "fecha_formateada" }
+      ],
+      "language": {
+          "emptyTable": "No se encontraron datos", // ✅ Mensaje cuando la tabla está vacía
+          "zeroRecords": "No se encontraron resultados", // ✅ Mensaje para búsquedas sin coincidencias
+          "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+          "infoFiltered": "(filtrado de _MAX_ registros en total)",
+          "lengthMenu": "Mostrar _MENU_ registros",
+          "loadingRecords": "Cargando...",
+          "processing": "Procesando...",
+          "search": "Buscar:",
+          "paginate": {
+              "first": "Primero",
+              "last": "Último",
+              "next": "Siguiente",
+              "previous": "Anterior"
+          }
+      },
+      "select": true
+  });
+}

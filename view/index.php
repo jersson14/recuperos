@@ -141,7 +141,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
              
               <li class="nav-item">
                 <a href="#" onclick="cargar_contenido('contenido_principal','obra_social/view_obra_social.php')" class="nav-link">
-                  <i class="nav-icon fas fa-file"></i>
+                  <i class="nav-icon fas fas fa-hands-helping"></i>
+
                   <p style="color:white">
                     Obras Sociales
                   </p>
@@ -158,7 +159,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
               <li class="nav-item">
                 <a href="#" onclick="cargar_contenido('contenido_principal','practicas/view_practicas.php')" class="nav-link">
-                  <i class="nav-icon fas fa-th"></i>
+                  <i class="nav-icon fas fa-briefcase-medical"></i>
+
                   <p style="color:white">
                     Prácticas
                   </p>
@@ -176,8 +178,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <b>FACTURAS</b>
               </li>
               <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente.php')" class="nav-link">
-                  <i class="nav-icon fas fa-file"></i>
+                <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas.php')" class="nav-link">
+                  <i class="nav-icon fas fa-file-invoice-dollar"></i>
+
                   <p style="color:white">
                     Gestión de facturas
                   </p>
@@ -197,7 +200,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
               <li class="nav-item">
                 <a href="../manual.pdf" target="blank" onclick="" class="nav-link">
-                  <i class="nav-icon fas fa-file"></i>
+                  <i class="nav-icon fas fa-file-pdf"></i>
                   <p style="color:white">
                     Manual de Usuario
                   </p>
@@ -222,8 +225,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
               </li>
               <li class="nav-item">
                 <a href="../manual.pdf" target="blank" onclick="" class="nav-link">
-                  <i class="nav-icon fas fa-file"></i>
-                  <p style="color:white">
+                <i class="nav-icon fas fa-file-pdf"></i>
+                <p style="color:white">
                     Manual de Usuario
                   </p>
                 </a>
@@ -293,14 +296,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- small box -->
                     <div class="small-box bg-info">
                       <div class="inner">
-                        <b>Total de facturas</b>
-                        <h3 id="total_empleados"><sup style="font-size: 20px"></sup></h3>
+                        <b>Total de Facturas</b>
+                        <h3 id="total_facturas"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
-                      <i class="fas fa-file"></i>
+                      <i class="fas fa-file-invoice-dollar"></i> <!-- Factura con signo de dólar -->
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','empleado/view_empleado.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
@@ -308,14 +311,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- small box -->
                     <div class="small-box bg-warning">
                       <div class="inner">
-                        <b>Facturas pendientes</b>
-                        <h3 id="totaldocpendientes"><sup style="font-size: 20px"></sup></h3>
+                        <b>Facturas Pendientes</b>
+                        <h3 id="total_fact_pendiente"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
-                        <i class="fas fa-file"></i>
+                      <i class="fas fa-file-invoice-dollar"></i> <!-- Factura con signo de dólar -->
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas pendientes</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
@@ -324,14 +327,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <div class="small-box bg-success">
                       <div class="inner">
 
-                        <b>Facturas cobradas</b>
-                        <h3 id="totaldocpaceptados"><sup style="font-size: 20px"></sup></h3>
+                        <b>Facturas Cobradas</b>
+                        <h3 id="total_fact_cobradas"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
-                        <i class="fas fa-file"></i>
+                      <i class="fas fa-file-invoice-dollar"></i> <!-- Factura con signo de dólar -->
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas cobradas</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
                   <!-- ./col -->
@@ -339,16 +342,79 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     <!-- small box -->
                     <div class="small-box bg-danger">
                       <div class="inner">
-                        <b>Facturas rechazadas</b>
-                        <h3 id="totaldocfinalizado"><sup style="font-size: 20px"></sup></h3>
+                        <b>Facturas Rechazadas</b>
+                        <h3 id="total_fact_rechazada"><sup style="font-size: 20px"></sup></h3>
 
                       </div>
                       <div class="icon">
-                        <i class="fas fa-file"></i>
+                      <i class="fas fa-file-invoice-dollar"></i> <!-- Factura con signo de dólar -->
                       </div>
-                      <a href="#" onclick="cargar_contenido('contenido_principal','tramite/view_movimiento.php')" class="small-box-footer"><b>Facturas rechazadas</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                      
+                      <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas.php')" class="small-box-footer"><b>Ver Facturas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
                     </div>
                   </div>
+                  <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-dark">
+                      <div class="inner">
+                        <b> Total de Prácticas Realizadas a Pacientes</b>
+                        <h3 id="total_practicas_paciente"><sup style="font-size: 20px"></sup></h3>
+
+                      </div>
+                      <div class="icon">
+                      <i class="nav-icon fas fa-stethoscope"></i>
+                      </div>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente.php')" class="small-box-footer"><b>Ver Prácticas - Paciente</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                  </div>
+                  <!-- ./col -->
+                  <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-success">
+                      <div class="inner">
+                        <b>Total de Prácticas</b>
+                        <h3 id="total_practicas"><sup style="font-size: 20px"></sup></h3>
+
+                      </div>
+                      <div class="icon">
+                      <i class="fas fa-briefcase-medical"></i> <!-- Maletín médico (prácticas médicas) -->
+                      </div>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','practicas/view_practicas.php')" class="small-box-footer"><b>Ver Prácticas</b>&nbsp;<i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                  </div>
+                  <!-- ./col -->
+                  <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-info">
+                      <div class="inner">
+
+                        <b>Total de Pacientes</b>
+                        <h3 id="total_pacientes"><sup style="font-size: 20px"></sup></h3>
+
+                      </div>
+                      <div class="icon">
+                      <i class="nav-icon fas fa-users"></i>
+                      </div>
+                      <a href="#" onclick="cargar_contenido('contenido_principal','paciente/view_paciente.php')" class="small-box-footer"><b>Ver Pacientes</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                  </div>
+                  <!-- ./col -->
+                  <div class="col-lg-3 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-warning">
+                      <div class="inner">
+                        <b>Total de Obras Sociales</b>
+                        <h3 id="total_obras_sociales"><sup style="font-size: 20px"></sup></h3>
+
+                      </div>
+                      <div class="icon">
+                      <i class="fas fa-hands-helping"></i> <!-- Manos ayudando (solidaridad) -->
+                      </div>
+                      
+                      <a href="#" onclick="cargar_contenido('contenido_principal','obra_social/view_obra_social.php')" class="small-box-footer"><b>Ver Obras Sociales</b>&nbsp; <i class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>
@@ -1414,11 +1480,16 @@ scratch. This page gets rid of all links and provides the needed markup only.
 </html>
 <script>
   $(document).ready(function() {
-   listar_empresa();/*  
-    Total_empleados();
-    Total_documentos_pendientes();
-    Total_documentos_aceptados();
-    Total_documentos_finalizado(); */
+   listar_empresa();
+   Total_facturas();
+   Total_facturas_pendientes();
+   Total_facturas_cobradas();
+   Total_facturas_rechazadas();
+   Total_practicas_paciente();
+   Total_practicas();
+   Total_pacientes();
+   Total_obras_sociales();
+
   });
 
 

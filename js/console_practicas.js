@@ -21,41 +21,43 @@ function listar_practicas(){
           type:'POST'
       },
       dom: 'Bfrtip',       
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PRÁCTICAS",
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PRÁCTICAS",
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
+      
      "columns": [
   {"defaultContent": ""},
   {"data": "cod_practica"},
@@ -135,39 +137,40 @@ function listar_practicas_filtro(){
           }
       },
       dom: 'Bfrtip',       
-      buttons:[ 
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
           titleAttr: 'Exportar a Excel',
-          filename: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          filename: "LISTA DE PRÁCTICAS",
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
           text: '<i class="fas fa-file-pdf"></i> PDF',
           titleAttr: 'Exportar a PDF',
-          filename: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          filename: "LISTA DE PRÁCTICAS",
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-pdf',
+          orientation: 'landscape', // <-- Establece la orientación en horizontal
+          pageSize: 'A4', // <-- Especifica el tamaño de la página
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
           text: '<i class="fa fa-print"></i> Imprimir',
           titleAttr: 'Imprimir',
-          title: function() {
-            return "LISTA DE PRACTICAS"
-          },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          title: "LISTA DE PRÁCTICAS",
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6, 7, 8] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns": [

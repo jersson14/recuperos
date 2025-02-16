@@ -17,7 +17,8 @@ function listar_obras_sociales(){
           type:'POST'
       },
       dom: 'Bfrtip', 
-      buttons:[ 
+   
+      buttons: [ 
         {
           extend: 'excelHtml5',
           text: '<i class="fas fa-file-excel"></i> Excel',
@@ -28,7 +29,10 @@ function listar_obras_sociales(){
           title: function() {
             return "LISTA DE OBRAS SOCIALES"
           },
-          className: 'btn btn-excel' // Clase personalizada para Excel
+          className: 'btn btn-excel',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6,7] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'pdfHtml5',
@@ -40,7 +44,10 @@ function listar_obras_sociales(){
           title: function() {
             return "LISTA DE OBRAS SOCIALES"
           },
-          className: 'btn btn-pdf' // Clase personalizada para PDF
+          className: 'btn btn-pdf',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6,7] // Exportar solo hasta la columna 'estado'
+          }
         },
         {
           extend: 'print',
@@ -49,7 +56,10 @@ function listar_obras_sociales(){
           title: function() {
             return "LISTA DE OBRAS SOCIALES"
           },
-          className: 'btn btn-print' // Clase personalizada para Imprimir
+          className: 'btn btn-print',
+          exportOptions: {
+            columns: [ 1, 2, 3, 4, 5, 6,7] // Exportar solo hasta la columna 'estado'
+          }
         }
       ],
       "columns":[

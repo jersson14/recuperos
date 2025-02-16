@@ -89,6 +89,7 @@ if (!isset($_SESSION['S_ID'])) {
                   <tr>
                     <th style="text-align:center">Nro.</th>
                     <th style="text-align:center">Obra Social</th>
+                    <th style="text-align:center">Área</th>
                     <th style="text-align:center">DNI</th>
                     <th style="text-align:center">Paciente</th>
                     <th style="text-align:center">Total</th>
@@ -178,9 +179,11 @@ if (!isset($_SESSION['S_ID'])) {
               </table>
               <div class="col-9">
               </div>
-              <div class="col-3">
-                <h3 for="" id="lbl_totalneto" style="display: inline-block;white-space: nowrap;"></h3>
+              <div class="text-right">
+                  <h3 id="lbl_totalneto"></h3>
+                  <hr>
               </div>
+       
             </div>
 
           </div>
@@ -259,7 +262,7 @@ if (!isset($_SESSION['S_ID'])) {
         </div>
         <div class="modal-body">
 
-          <div class="row">
+          <div class="row" >
             <div class="col-12 form-group" style="color:red">
               <h6><b>Campos Obligatorios (*)</b></h6>
             </div>
@@ -317,8 +320,11 @@ if (!isset($_SESSION['S_ID'])) {
               </table>
               <div class="col-9">
               </div>
-              <div class="col-3">
-                <h3 for="" id="lbl_totalneto_editar" style="display: inline-block;white-space: nowrap;"></h3>
+
+
+              <div class="text-left">
+                  <h3 id="lbl_totalneto_editar"></h3>
+                  <hr>
               </div>
             </div>
 
@@ -548,3 +554,73 @@ $("#select_practica_editar").change(function() {
 
 
   </script>
+
+<style>
+    /* Estilo para la tabla */
+    #tabla_practica {
+      border: 2px solid #1FA0E0;
+      border-radius: 8px;
+    }
+
+    #tabla_practica thead {
+      background-color: #1FA0E0;
+      color: white;
+    }
+
+    #tabla_practica th,
+    #tabla_practica td {
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    /* Asegura que los inputs y selects ocupen el ancho completo */
+    .form-group input,
+    .form-group select {
+      width: 100%;
+    }
+
+    /* Botón de limpiar archivos */
+    .btn-clear-file {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+  </style>
+
+<style>
+    /* Estilo para la tabla */
+    #tabla_practica_editar {
+      border: 2px solid #1FA0E0;
+      border-radius: 8px;
+    }
+
+    #tabla_practica_editar thead {
+      background-color: #1FA0E0;
+      color: white;
+    }
+
+    #tabla_practica_editar th,
+    #tabla_practica_editar td {
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    /* Asegura que los inputs y selects ocupen el ancho completo */
+    .form-group input,
+    .form-group select {
+      width: 100%;
+    }
+
+    /* Botón de limpiar archivos */
+    .btn-clear-file {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+  </style>
