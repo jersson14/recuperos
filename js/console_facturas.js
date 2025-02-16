@@ -123,7 +123,7 @@ function listar_facturas_diario(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -141,7 +141,7 @@ function listar_facturas_diario(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -160,7 +160,7 @@ function listar_facturas_diario(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -312,7 +312,7 @@ function listar_facturas(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary disabled btn-sm' title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -330,7 +330,7 @@ function listar_facturas(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary disabled btn-sm' title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -349,7 +349,7 @@ function listar_facturas(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary disabled btn-sm' title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -503,7 +503,7 @@ function listar_practica_paciente_obras(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -521,7 +521,7 @@ function listar_practica_paciente_obras(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -540,7 +540,7 @@ function listar_practica_paciente_obras(){
                       <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                         <i class='fa fa-eye'></i> Ver Detalles
                       </button>
-                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                      <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                         <i class='fa fa-edit'></i> Editar
                       </button>
                       <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -697,7 +697,7 @@ function listar_practica_paciente_fecha_usu(){
                         <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                           <i class='fa fa-eye'></i> Ver Detalles
                         </button>
-                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                           <i class='fa fa-edit'></i> Editar
                         </button>
                         <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -715,7 +715,7 @@ function listar_practica_paciente_fecha_usu(){
                         <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                           <i class='fa fa-eye'></i> Ver Detalles
                         </button>
-                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                           <i class='fa fa-edit'></i> Editar
                         </button>
                         <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
@@ -734,7 +734,7 @@ function listar_practica_paciente_fecha_usu(){
                         <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                           <i class='fa fa-eye'></i> Ver Detalles
                         </button>
-                        <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <button class='editar btn btn-primary btn-sm' disabled title='Editar datos de la factura'>
                           <i class='fa fa-edit'></i> Editar
                         </button>
                         <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
