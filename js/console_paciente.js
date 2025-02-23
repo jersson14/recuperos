@@ -430,3 +430,5 @@ $('#tabla_paciente').on('click','.eliminar',function(){
     }
   })
 })
+
+

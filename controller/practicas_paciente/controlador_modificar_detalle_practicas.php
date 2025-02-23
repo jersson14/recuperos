@@ -3,63 +3,63 @@ require '../../model/model_practicas_paciente.php';
 $MPP = new Modelo_Practicas_Paciente(); // Instanciamos el modelo
 
 // Verificar si se reciben los datos necesarios en la solicitud
-if (!isset($_POST['componentes'], $_POST['total'], $_POST['idusu'])) {
+if (!isset($_POST['total'], $_POST['idusu'], $_POST['idprac'])) {
     echo json_encode(['status' => 0, 'message' => 'Faltan datos en la solicitud']);
-    exit;
-}
-
-// Decodificar JSON a un array PHP
-$detalle_practicas = json_decode($_POST['componentes'], true);
-
-// Validar que el JSON sea válido
-if (!is_array($detalle_practicas)) {
-    echo json_encode(['status' => 0, 'message' => 'Formato de datos inválido']);
     exit;
 }
 
 // Obtener total e id de usuario
 $total = floatval($_POST['total']);
 $idusu = intval($_POST['idusu']);
+$idprac = intval($_POST['idprac']);
+
+$detalle_practicas = isset($_POST['componentes']) ? json_decode($_POST['componentes'], true) : [];
 
 $exito = true; // Bandera de éxito global
 $registros_nuevos = false; // Bandera para detectar si algunos registros son nuevos
 
-foreach ($detalle_practicas as $detalle) {
-    // Validar que los datos existan y no estén vacíos
-    if (
-        empty($detalle['id_practica_general']) ||
-        empty($detalle['id_practica']) ||
-        !isset($detalle['precio'])
-    ) {
-        $exito = false;
-        break;
-    }
+// **Actualizar siempre el total, incluso si `componentes` está vacío**
+$resultado_factura = $MPP->Modificar_Total_Usuario($total, $idusu,$idprac);
 
-    // Llamar al método para modificar el registro de prácticas
-    $resultado = $MPP->Modificar_Detalle_practicas(
-        $detalle['id_practica_general'],
-        $detalle['id_practica'],
-        $detalle['precio'],
-        $total,
-        $idusu
-    );
+if (!empty($detalle_practicas)) {
+    foreach ($detalle_practicas as $detalle) {
+        // Validar que los datos existan y no estén vacíos
+        if (
+            empty($detalle['id_practica_general']) ||
+            empty($detalle['id_practica']) ||
+            !isset($detalle['precio']) ||
+            !isset($detalle['cantidad']) ||
+            !isset($detalle['subtotal'])
+        ) {
+            $exito = false;
+            break;
+        }
 
-    if ($resultado == 1) {
-        $registros_nuevos = true; // Se detectó al menos un cambio
-    } elseif ($resultado === 0) {
-        // Si no se realizaron cambios, continuamos sin hacer nada
-    } else {
-        $exito = false; // Si ocurre un error, marcamos como fallo
-        break;
+        // Llamar al método para modificar el registro de prácticas
+        $resultado = $MPP->Modificar_Detalle_practicas(
+            $detalle['id_practica_general'],
+            $detalle['id_practica'],
+            floatval($detalle['precio']),
+            intval($detalle['cantidad']),
+            floatval($detalle['subtotal']),
+            $total,
+            $idusu
+        );
+
+        if ($resultado == 1) {
+            $registros_nuevos = true; // Se detectó al menos un cambio
+        } elseif ($resultado !== 0) {
+            $exito = false; // Si ocurre un error, marcamos como fallo
+            break;
+        }
     }
 }
 if ($exito) {
-    if ($registros_nuevos) {
-        echo 1; // Algunos registros fueron modificados
+    if ($registros_nuevos || $resultado_factura) {
+        echo json_encode(['status' => 1, 'message' => 'Datos actualizados con éxito']);
     } else {
-        echo 2; // No se modificaron nuevos registros
+        echo json_encode(['status' => 2, 'message' => 'No hubo cambios en los datos']);
     }
 } else {
-    echo 0; // Error en la modificación
+    echo json_encode(['status' => 0, 'message' => 'Error en la modificación']);
 }
-?>

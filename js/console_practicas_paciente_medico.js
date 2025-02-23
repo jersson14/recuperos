@@ -534,18 +534,24 @@ function Cargar_Select_Obras_Sociales() {
     } else {
       cadena += "<option value=''>No hay obras disponibles</option>";
     }
-    $('#select_obras_buscar').html(cadena);
+    $('#select_obras_buscar,#txt_obras_sociales').html(cadena);
 
 
     // Inicializar Select2 después de cargar opciones
-    $('#select_obras_buscar').select2({
+    $('#select_obras_buscar,#txt_obras_sociales').select2({
       placeholder: "Seleccionar Obra Social",
       allowClear: true,
       width: '100%' // Asegura que use todo el ancho
     });
   });
 } 
-
+$('#modal_registro2').on('shown.bs.modal', function() {
+  $('#txt_obras_sociales').select2({
+      placeholder: "Seleccionar Obra Social",
+      allowClear: true,
+      dropdownParent: $('#modal_registro2')
+  });
+});
 
 function Cargar_Select_Obras_Sociales2() {
   $.ajax({
@@ -743,10 +749,43 @@ function Traerprecio(id) {
       $("#txt_precio_editar").val('');
 
     }
+    actualizarSubtotal(); // Llamar al cálculo de subtotal después de obtener el precio
+    actualizarSubtotal_editar();
   }).fail(function() {
     console.log("Error al traer el precio.");
   });
 }
+
+function actualizarSubtotal() {
+  const precio = parseFloat($("#txt_precio").val()) || 0;
+  const cantidad = parseInt($("#txt_cantidad").val()) || 0;
+  const subtotal = precio * cantidad;
+  $("#txt_subtotal").val(subtotal.toFixed(2));
+}
+
+$(document).ready(function() {
+  actualizarSubtotal(); // Inicializar subtotal al cargar la página
+
+  $("#txt_cantidad").on("change", function() {
+    actualizarSubtotal();
+  });
+});
+
+function actualizarSubtotal_editar() {
+  const precio = parseFloat($("#txt_precio_editar").val()) || 0;
+  const cantidad = parseInt($("#txt_cantidad_editar").val()) || 0;
+  const subtotal = precio * cantidad;
+  $("#txt_subtotal_editar").val(subtotal.toFixed(2));
+}
+
+$(document).ready(function() {
+  actualizarSubtotal_editar(); // Inicializar subtotal al cargar la página
+
+  $("#txt_cantidad_editar").on("change", function() {
+    actualizarSubtotal_editar();
+  });
+});
+
 
 
 
@@ -868,7 +907,8 @@ function listar_practicas(id) {
               }
           },
           { "data": "cod_practica" },
-          { "data": "PRACTICA" }
+          { "data": "PRACTICA" },
+          { "data": "CANTIDAD" }
       ],
       "language": idioma_espanol,
       select: true
@@ -881,9 +921,13 @@ function Agregar_practica(){
   var id_practica=$("#select_practica").val();
   var practica=$("#select_practica option:selected").text();
   var precio=$("#txt_precio").val();
+  var cantidad=$("#txt_cantidad").val();
+  var subtotal=$("#txt_subtotal").val();
 
 
-
+  if (!id_practica || id_practica.trim() === "" || !precio || precio === ""|| !cantidad || cantidad === "") {
+    return Swal.fire("Mensaje de Advertencia", "Seleccione una práctica y un precio por favor", "warning");
+}
 
   if(verificarid(id_practica)){
    return Swal.fire("Mensaje de Advertencia","La práctica ya fue agregado a la tabla","warning");
@@ -894,6 +938,8 @@ function Agregar_practica(){
   datos_agregar+="<td for='id'>"+id_practica+"</td>";
   datos_agregar+="<td>"+practica+"</td>";
   datos_agregar+="<td style='text-align:center; display: none;'>"+precio+"</td>";
+  datos_agregar+="<td>"+cantidad+"</td>";
+  datos_agregar+="<td style='text-align:center; display: none;'>"+subtotal+"</td>";
 
   datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
   datos_agregar+="</tr>";
@@ -918,7 +964,7 @@ function SumarTotal() {
 
   // Recorremos cada fila de la tabla
   $("#tabla_practica tbody tr").each(function () {
-    let precio = $(this).find('td').eq(2).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
+    let precio = $(this).find('td').eq(4).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
     
     if (precio !== "") { // Aseguramos que el valor no esté vacío
       total += parseFloat(precio) || 0; // Convertimos a número y evitamos NaN con || 0
@@ -934,7 +980,6 @@ function verificarid(id){
   let idverificar=document.querySelectorAll('#tabla_practica td[for="id"]');
   return [].filter.call(idverificar, td=>td.textContent ===id).length===1;
 }
-
 
 function Registrar_Practica() {
   let count = $("#tabla_practica tbody#tbody_tabla_practica tr").length;
@@ -975,6 +1020,7 @@ function Registrar_Practica() {
   });
 }
 
+
 // REGISTRO DETALLE PRACTICAS
 function Registrar_Detalle_practicas(id) {
   let count = $("#tabla_practica tbody#tbody_tabla_practica tr").length;
@@ -983,15 +1029,22 @@ function Registrar_Detalle_practicas(id) {
   }
 
   let arreglo_practica = [];
+  let arreglo_precio = [];
+  let arreglo_cantidad = [];
   let arreglo_subtotal = [];
 
   $("#tabla_practica tbody#tbody_tabla_practica tr").each(function () {
       arreglo_practica.push($(this).find('td').eq(0).text().trim());
-      arreglo_subtotal.push($(this).find('td').eq(2).text().trim());
+      arreglo_precio.push($(this).find('td').eq(2).text().trim());
+      arreglo_cantidad.push($(this).find('td').eq(3).text().trim());
+      arreglo_subtotal.push($(this).find('td').eq(4).text().trim());
   });
 
   let practicas = arreglo_practica.join(",");
+  let precio = arreglo_precio.join(",");
+  let cantidad = arreglo_cantidad.join(",");
   let subtotal = arreglo_subtotal.join(",");
+
 
   $.ajax({
       url: "../controller/practicas_paciente/controlador_detalle_practicas.php",
@@ -999,6 +1052,8 @@ function Registrar_Detalle_practicas(id) {
       data: {
           id: id,
           practicas: practicas,
+          precio:precio,
+          cantidad:cantidad,
           subtotal:subtotal
       }
   }).done(function (resp) {
@@ -1010,6 +1065,7 @@ function Registrar_Detalle_practicas(id) {
       }
   });
 }
+
 
 //EDITAR PRACTICAS - PACIENTE
 
@@ -1026,6 +1082,7 @@ $('#tabla_paciente_practica').on('click','.editar',function(){
   document.getElementById('txt_paciente').value = data.PACIENTE;
   document.getElementById('txt_profesional_editar').value = data.USUARIO;
   document.getElementById('txt_fecha_editar').value = data.fecha_formateada;
+  document.getElementById('lbl_totalneto_editar').innerHTML = '<b>Total:</b> $AR '+data.total;
 
   listar_practicas_del_paciente(data.id_paciente_practica);
 
@@ -1054,7 +1111,9 @@ function listar_practicas_del_paciente(id) {
       {"data": "id_paciente_practica"},
       {"data": "id_practica"},
       {"data": "practica"},
-      {"data": "subtotal", "visible": false}, // Oculta la columna
+      {"data": "precio_unitario", "visible": false},
+      {"data": "cantidad"},
+      {"data": "subtotal" , "visible": false}, // Oculta la columna
       {"defaultContent": "<button class='delete btn btn-danger btn-sm' title='Eliminar datos de especialidad'><i class='fa fa-trash'></i> Eliminar</button>"}
     ],
     "language": idioma_espanol,
@@ -1073,6 +1132,8 @@ function Eliminar_detalle_practica_unico(id){
     if(resp>0){
         Swal.fire("Mensaje de Confirmación","Se elimino la práctica exitosamente","success").then((value)=>{
           tbl_traer_datos.ajax.reload();
+          setTimeout(SumarTotal_Editar, 500); // Esperar un poco antes de recalcular
+
         });
     }else{
       return Swal.fire("Mensaje de Advetencia","No se puede eliminar esta práctica por que esta siendo utilizado en otros formularios, verifique por favor","warning");
@@ -1099,114 +1160,227 @@ $('#tabla_practica_editar').on('click','.delete',function(){
   }).then((result) => {
     if (result.isConfirmed) {
       Eliminar_detalle_practica_unico(data.id_practica_paciente_total);
+      SumarTotal_Editar();
     }
   })
 })
 
 
+function Agregar_practica_editar() {
+  var id_practica_edi_principal = $("#txt_id_detalle").val();
+  var id_practica_edi = $("#select_practica_editar").val();
+  var practica_edi = $("#select_practica_editar option:selected").text();
+  var precio_edi = $("#txt_precio_editar").val();
+  var cantidad_edi = $("#txt_cantidad_editar").val();
+  var subtotal_edi = $("#txt_subtotal_editar").val();
 
-function Agregar_practica_editar(){
-  var id_practica_edi_principal=$("#txt_id_detalle").val();
-  var id_practica_edi=$("#select_practica_editar").val();
-  var practica_edi=$("#select_practica_editar option:selected").text();
-  var precio_edi=$("#txt_precio_editar").val();
+  if (!id_practica_edi || id_practica_edi.trim() === "" || !precio_edi || precio_edi === ""|| !cantidad_edi || cantidad_edi === "") {
+    return Swal.fire("Mensaje de Advertencia", "Seleccione una práctica y un precio por favor", "warning");
+}
 
 
-
-
-  if(verificarid_editar(id_practica_edi)){
-   return Swal.fire("Mensaje de Advertencia","La práctica ya fue agregado a la tabla","warning");
+  if (verificarid_editar(id_practica_edi)) {
+    return Swal.fire("Mensaje de Advertencia", "La práctica ya fue agregada a la tabla", "warning");
   }
 
-  var datos_agregar ="<tr>";
+  var datos_agregar = "<tr>";
+  datos_agregar += "<td>" + id_practica_edi_principal + "</td>";
+  datos_agregar += "<td for='id'>" + id_practica_edi + "</td>";
+  datos_agregar += "<td>" + practica_edi + "</td>";
+  datos_agregar += "<td style='text-align:center; display: none;'>" + precio_edi + "</td>";
+  datos_agregar += "<td>" + cantidad_edi + "</td>";
+  datos_agregar += "<td style='text-align:center; display: none;'> " + subtotal_edi + "</td>";
 
-  datos_agregar+="<td >"+id_practica_edi_principal+"</td>";
-  datos_agregar+="<td for='id'>"+id_practica_edi+"</td>";
-  datos_agregar+="<td>"+practica_edi+"</td>";
-  datos_agregar+="<td style='text-align:center; display: none;'>"+precio_edi+"</td>";
+  datos_agregar += "<td><button class='btn btn-danger' onclick='remove1(this)'><i class='fas fa-trash'></i></button></td>";
+  datos_agregar += "</tr>";
 
-  datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
-  datos_agregar+="</tr>";
-  $("#tabla_practica_editar").append(datos_agregar);
+  $("#tabla_practica_editar tbody").append(datos_agregar);
   SumarTotal_Editar();
-
- 
 }
-//BORRAR REGISTRO
-function remove(t){
-  var td =t.parentNode;
-  var tr=td.parentNode;
-  var table =tr.parentNode;
-  table.removeChild(tr);
+
+// BORRAR REGISTRO
+function remove1(t) {
+  var td = t.parentNode;
+  var tr = td.parentNode;
+  tr.remove();
   SumarTotal_Editar();
-
 }
-//SUMAR TOTAL
+
 // SUMAR TOTAL
 function SumarTotal_Editar() {
   let total = 0;
-
-  // Recorremos cada fila de la tabla
-  $("#tabla_practica_editar tbody tr").each(function () {
-    let precio = $(this).find('td').eq(3).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
-    
-    if (precio !== "") { // Aseguramos que el valor no esté vacío
-      total += parseFloat(precio) || 0; // Convertimos a número y evitamos NaN con || 0
+  
+  // Primero sumamos los registros de DataTables
+  let tabla = $("#tabla_practica_editar").DataTable();
+  tabla.rows().every(function() {
+    let data = this.data();
+    if (data && data.subtotal) {
+      total += parseFloat(data.subtotal) || 0;
+    }
+  });
+  
+  // Luego sumamos las filas añadidas manualmente al DOM
+  $("#tabla_practica_editar tbody tr").each(function() {
+    // Verifica si la fila es nueva (no está en DataTables)
+    if (!tabla.row(this).data()) {
+      // La columna subtotal está en la posición 5 (0-based index)
+      let subtotal = $(this).find('td').eq(5).text().trim();
+      if (subtotal !== "") {
+        total += parseFloat(subtotal) || 0;
+      }
     }
   });
 
-  // Mostramos el total en el label
   $("#lbl_totalneto_editar").html("<b>Total: </b>$AR " + total.toFixed(2));
 }
 
-//VALIDACIÓN
-function verificarid_editar(id){
-  let idverificar=document.querySelectorAll('#tabla_practica_editar td[for="id"]');
-  return [].filter.call(idverificar, td=>td.textContent ===id).length===1;
+// Función para calcular subtotal cuando se modifica cantidad o precio
+function calcularSubtotal_Editar() {
+  let precio = parseFloat($("#txt_precio_editar").val()) || 0;
+  let cantidad = parseFloat($("#txt_cantidad_editar").val()) || 0;
+  let subtotal = precio * cantidad;
+  $("#txt_subtotal_editar").val(subtotal.toFixed(2));
+}
+
+// Agregar event listeners para recalcular cuando cambian cantidad o precio
+$("#txt_precio_editar, #txt_cantidad_editar").on('input', function() {
+  calcularSubtotal_Editar();
+});
+
+// VALIDACIÓN
+function verificarid_editar(id) {
+  let idverificar = document.querySelectorAll('#tabla_practica_editar td[for="id"]');
+  return [].filter.call(idverificar, td => td.textContent === id).length > 0;
 }
 
 //EDITANDO PRACTICAS
 function Modificar_detalle_practicas() {
-  let componentes = [];  // Se inicializa el array vacío cada vez que se ejecuta la función
+  let componentes = [];
 
-  // Recorre cada fila de la tabla de edición para extraer los datos
-  $("#tabla_practica_editar tr").each(function() {
-    var idpracitcageneral = $(this).find('td').eq(0).text().trim();  // ID de la hora
-    var idpracitca = $(this).find('td').eq(1).text().trim();  // ID de la hora
-    var precio = $(this).find('td').eq(3).text().trim();  // ID de la asignatura
+  let totalText = document.getElementById('lbl_totalneto_editar')?.textContent.replace(/[^0-9.]/g, '').trim();
+  let total = parseFloat(totalText) || 0;  // Validación robusta del total
+  let idusu = document.getElementById('txtprincipalid')?.value.trim();
+  let idprac = document.getElementById('txt_id_detalle')?.value.trim();
 
-    // Validar que todos los campos estén llenos y no sean valores vacíos
-    if (idpracitca && precio) {
+
+  
+  if (!idusu) {
+    return Swal.fire("Mensaje de Advertencia", "El ID del usuario no es válido.", "warning");
+  }
+
+  // Recorremos solo el cuerpo de la tabla para evitar la cabecera
+  $("#tabla_practica_editar tbody tr").each(function() {
+    let id_practica_general = $(this).find('td').eq(0).text().trim();
+    let id_practica = $(this).find('td').eq(1).text().trim();
+    let precio = parseFloat($(this).find('td').eq(3).text().trim()) || 0;
+    let cantidad = parseFloat($(this).find('td').eq(4).text().trim()) || 0;
+    let precioText = $(this).find('td').eq(5).text().trim();
+    let subtotal = parseFloat(precioText) || 0; // Convertimos correctamente a número
+
+    // Validar que todos los campos estén completos
+    if (id_practica && subtotal > 0) {
       componentes.push({
-        idpracitcageneral:idpracitcageneral,
-        idpracitca: idpracitca,
-        precio: precio,
+        id_practica_general,
+        id_practica,
+        precio: precio.toFixed(2),
+        cantidad,
+        subtotal: subtotal.toFixed(2) // Formato con 2 decimales
       });
     }
   });
 
-  // Verificar si hay componentes válidos para enviar
-  if (componentes.length === 0) {
-    return Swal.fire("Mensaje de Advertencia", "No hay prácticas válidos en la tabla para modificar", "warning");
-  }
 
-  // Enviar la solicitud AJAX al servidor para modificar los componentes
+  // Enviar datos por AJAX
   $.ajax({
     url: '../controller/practicas_paciente/controlador_modificar_detalle_practicas.php',
     type: 'POST',
     data: {
-      componentes: JSON.stringify(componentes)  // Enviar solo los datos de la tabla actual
-    }
-  }).done(function(resp) {
-    console.log("Respuesta del servidor:", resp);  // Verificar la respuesta del servidor
-    if (resp == 1) {
-      Swal.fire("Mensaje de Confirmación", "Prácticas modificadas satisfactoriamente!!!", "success").then(() => {
-        tbl_paciente_practica.ajax.reload();  // Recargar la tabla original (si es necesario)
-        $("#modal_editar").modal('hide');  // Ocultar el modal de edición
-      });
+      total: total.toFixed(2),
+      idusu: idusu,
+      idprac:idprac,
+      componentes: JSON.stringify(componentes)
+    },
+    dataType: 'json' // Aseguramos que la respuesta sea JSON
+  })
+  .done(function (resp) {
+    console.log("Respuesta del servidor:", resp);
+    if (resp.status === 1) {
+        Swal.fire("Mensaje de Confirmación", "Se actualizó correctamente la practica paciente", "success").then(() => {
+          tbl_paciente_practica.ajax.reload();
+            $("#modal_editar").modal('hide');
+        });
+    } else if (resp.status === 2) {
+        Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen o no había registros nuevos- solo se modifico el total", "success");
+        tbl_paciente_practica.ajax.reload();
+        $("#modal_editar").modal('hide');
+
     } else {
-      Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen", "warning");
+        Swal.fire("Error", "Hubo un problema en la actualización", "error");
     }
+})
+  .fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("Error en AJAX:", textStatus, errorThrown);
+    console.error("Respuesta del servidor:", jqXHR.responseText);
+    Swal.fire("Error", "No se pudo actualizar las prácticas. Inténtalo de nuevo.", "error");
   });
 }
 
+
+
+
+
+//REGISTRAR PACIENTE
+function AbrirRegistro2(){
+  $("#modal_registro2").modal({backdrop:'static',keyboard:false})
+  $("#modal_registro2").modal('show');
+}
+function Registrar_Paciente(){
+  let dni = document.getElementById('txt_nro').value;
+  let nom = document.getElementById('txt_nom').value;
+  let epell = document.getElementById('txt_apelli').value;
+  let direc = document.getElementById('txt_direccion').value;
+  let local = document.getElementById('txt_local').value;
+  let tele = document.getElementById('txt_tele').value;
+  let obra = document.getElementById('txt_obras_sociales').value;
+  let idusu = document.getElementById('txtprincipalid').value;
+
+
+  if(dni.length==0 || nom.length==0 || epell.length==0 || tele.length==0|| obra.length==0){
+      return Swal.fire("Mensaje de Advertencia","Tiene campos vacios","warning");
+  }
+  
+  $.ajax({
+    "url":"../controller/pacientes/controlador_registro_pacientes.php",
+    type:'POST',
+    data:{
+      dni:dni,
+      nom:nom,
+      epell:epell,
+      direc:direc,
+      local:local,
+      tele:tele,
+      obra:obra,
+      idusu:idusu
+    }
+  }).done(function(resp){
+    if(resp>0){
+      if(resp==1){
+        Swal.fire("Mensaje de Confirmación","Nuevo Paciente registrado con el DNI N°: <b>"+dni+"</b>","success").then((value)=>{
+          document.getElementById('txt_nro').value="";
+          document.getElementById('txt_nom').value="";
+          document.getElementById('txt_apelli').value="";
+          document.getElementById('txt_direccion').value="";
+          document.getElementById('txt_local').value="";
+          document.getElementById('txt_tele').value="";
+
+        $("#modal_registro2").modal('hide');
+        });
+      }else{
+        Swal.fire("Mensaje de Advertencia","El DNI ingresado ya se encuentra en la base de datos, revise por favor","warning");
+      }
+    }else{
+      return Swal.fire("Mensaje de Error","No se completo el registro","error");
+
+    }
+  })
+}

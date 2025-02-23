@@ -619,7 +619,17 @@ function Cargar_Select_Practica(id2, id_practica = null) {
         $("#txt_precio").val(''); // Limpiar si no hay selección
       }
     });
+    $('#select_practica').on('change', function() {
+      var idSeleccionado = $(this).val();
+      if (idSeleccionado) {
+        Traerprecio(idSeleccionado);
+      } else {
+        $("#txt_precio,#txt_precio_editar").val('');
+        actualizarSubtotal(); // Asegurar que el subtotal también se limpie
+        actualizarSubtotal_editar();
 
+      }
+    });
   }).fail(function() {
     console.log("Error al cargar las prácticas.");
   });
@@ -640,12 +650,42 @@ function Traerprecio(id) {
       $("#txt_precio_editar").val('');
 
     }
+    actualizarSubtotal(); // Llamar al cálculo de subtotal después de obtener el precio
+    actualizarSubtotal_editar();
   }).fail(function() {
     console.log("Error al traer el precio.");
   });
 }
 
-/////
+function actualizarSubtotal() {
+  const precio = parseFloat($("#txt_precio").val()) || 0;
+  const cantidad = parseInt($("#txt_cantidad").val()) || 0;
+  const subtotal = precio * cantidad;
+  $("#txt_subtotal").val(subtotal.toFixed(2));
+}
+
+$(document).ready(function() {
+  actualizarSubtotal(); // Inicializar subtotal al cargar la página
+
+  $("#txt_cantidad").on("change", function() {
+    actualizarSubtotal();
+  });
+});
+
+function actualizarSubtotal_editar() {
+  const precio = parseFloat($("#txt_precio_editar").val()) || 0;
+  const cantidad = parseInt($("#txt_cantidad_editar").val()) || 0;
+  const subtotal = precio * cantidad;
+  $("#txt_subtotal_editar").val(subtotal.toFixed(2));
+}
+
+$(document).ready(function() {
+  actualizarSubtotal_editar(); // Inicializar subtotal al cargar la página
+
+  $("#txt_cantidad_editar").on("change", function() {
+    actualizarSubtotal_editar();
+  });
+});
 
 
 
@@ -712,7 +752,7 @@ function listar_practicas(id) {
   tbl_practica = $("#tabla_ver_practicas").DataTable({
       "ordering": false,
       "bLengthChange": true,
-      "searching": false,  // Deshabilita la barra de búsqueda
+      "searching": false,
       "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
       "pageLength": 5,
       "destroy": true,
@@ -730,46 +770,53 @@ function listar_practicas(id) {
               return json.data;
           }
       },
-      "dom": 'Bfrtip', 
-
+      "dom": 'Bfrtip',
       "buttons": [
-        {
-          extend: 'excelHtml5',
-          text: '<i class="fas fa-file-excel"></i> Excel',
-          titleAttr: 'Exportar a Excel',
-          filename: "LISTA DE PRACTICAS REALIZADAS",
-          title: "LISTA DE PRACTICAS REALIZADAS",
-          className: 'btn btn-success' 
-        },
-        {
-          extend: 'pdfHtml5',
-          text: '<i class="fas fa-file-pdf"></i> PDF',
-          titleAttr: 'Exportar a PDF',
-          filename: "LISTA DE PRACTICAS REALIZADAS",
-          title: "LISTA DE PRACTICAS REALIZADAS",
-          className: 'btn btn-danger'
-        },
-        {
-          extend: 'print',
-          text: '<i class="fa fa-print"></i> Imprimir',
-          titleAttr: 'Imprimir',
-          title: "LISTA DE PRACTICAS REALIZADAS",
-          className: 'btn btn-primary' 
-        }
+          {
+              extend: 'excelHtml5',
+              text: '<i class="fas fa-file-excel"></i> Excel',
+              titleAttr: 'Exportar a Excel',
+              filename: "LISTA DE PRACTICAS REALIZADAS",
+              title: "LISTA DE PRACTICAS REALIZADAS",
+              className: 'btn btn-success'
+          },
+          {
+              extend: 'pdfHtml5',
+              text: '<i class="fas fa-file-pdf"></i> PDF',
+              titleAttr: 'Exportar a PDF',
+              filename: "LISTA DE PRACTICAS REALIZADAS",
+              title: "LISTA DE PRACTICAS REALIZADAS",
+              className: 'btn btn-danger'
+          },
+          {
+              extend: 'print',
+              text: '<i class="fa fa-print"></i> Imprimir',
+              titleAttr: 'Imprimir',
+              title: "LISTA DE PRACTICAS REALIZADAS",
+              className: 'btn btn-primary'
+          }
       ],
       "columns": [
-          { 
-              "data": null, 
-              "render": function(data, type, row, meta) {
-                  return meta.row + 1; // Asigna un número correlativo
-              }
-          },
+
           { "data": "cod_practica" },
           { "data": "PRACTICA" },
+          {
+            "data": "PRECIOUNI",
+            "render": function(data) {
+                return `<strong>$AR ${parseFloat(data || 0).toFixed(2)}</strong>`;
+            }
+        },
           { 
+              "data": "CANTIDAD",
+              "defaultContent": "0",
+              "render": function(data) {
+                  return data || "0";
+              }
+          },
+          {
               "data": "subtotal",
               "render": function(data) {
-                  return `<strong>$AR ${parseFloat(data).toFixed(2)}</strong>`;  
+                  return `<strong>$AR ${parseFloat(data || 0).toFixed(2)}</strong>`;
               }
           }
       ],
@@ -780,16 +827,15 @@ function listar_practicas(id) {
   // Evento para calcular y mostrar el total con tamaño más grande
   tbl_practica.on('draw.dt', function() {
       var total = 0;
-
+      
       // Sumar los valores de la columna "subtotal"
-      tbl_practica.column(3, { page: 'current' }).data().each(function(value) {
-          total += parseFloat(value) || 0;
+      tbl_practica.column(4, { page: 'current' }).data().each(function(value) {
+          total += parseFloat(value || 0);
       });
-
+      
       // Mostrar el total con tamaño más grande
       $('#total_sub_total').html(`<span style="font-size: 20px; font-weight: bold; color: #0A5D86;">$AR ${total.toFixed(2)}</span>`);
   });
-
 }
 
 
@@ -799,9 +845,13 @@ function Agregar_practica(){
   var id_practica=$("#select_practica").val();
   var practica=$("#select_practica option:selected").text();
   var precio=$("#txt_precio").val();
+  var cantidad=$("#txt_cantidad").val();
+  var subtotal=$("#txt_subtotal").val();
 
 
-
+  if (!id_practica || id_practica.trim() === "" || !precio || precio === "" || !cantidad || cantidad === "") {
+    return Swal.fire("Mensaje de Advertencia", "Seleccione una práctica y un precio por favor", "warning");
+}
 
   if(verificarid(id_practica)){
    return Swal.fire("Mensaje de Advertencia","La práctica ya fue agregado a la tabla","warning");
@@ -812,6 +862,8 @@ function Agregar_practica(){
   datos_agregar+="<td for='id'>"+id_practica+"</td>";
   datos_agregar+="<td>"+practica+"</td>";
   datos_agregar+="<td>"+precio+"</td>";
+  datos_agregar+="<td>"+cantidad+"</td>";
+  datos_agregar+="<td>"+subtotal+"</td>";
 
   datos_agregar+="<td><button class='btn btn-danger' onclick='remove(this)'><i class='fas fa-trash'><i></button></td>";
   datos_agregar+="</tr>";
@@ -836,7 +888,7 @@ function SumarTotal() {
 
   // Recorremos cada fila de la tabla
   $("#tabla_practica tbody tr").each(function () {
-    let precio = $(this).find('td').eq(2).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
+    let precio = $(this).find('td').eq(4).text().trim(); // Tomamos el precio de la columna correcta (índice 2)
     
     if (precio !== "") { // Aseguramos que el valor no esté vacío
       total += parseFloat(precio) || 0; // Convertimos a número y evitamos NaN con || 0
@@ -901,15 +953,22 @@ function Registrar_Detalle_practicas(id) {
   }
 
   let arreglo_practica = [];
+  let arreglo_precio = [];
+  let arreglo_cantidad = [];
   let arreglo_subtotal = [];
 
   $("#tabla_practica tbody#tbody_tabla_practica tr").each(function () {
       arreglo_practica.push($(this).find('td').eq(0).text().trim());
-      arreglo_subtotal.push($(this).find('td').eq(2).text().trim());
+      arreglo_precio.push($(this).find('td').eq(2).text().trim());
+      arreglo_cantidad.push($(this).find('td').eq(3).text().trim());
+      arreglo_subtotal.push($(this).find('td').eq(4).text().trim());
   });
 
   let practicas = arreglo_practica.join(",");
+  let precio = arreglo_precio.join(",");
+  let cantidad = arreglo_cantidad.join(",");
   let subtotal = arreglo_subtotal.join(",");
+
 
   $.ajax({
       url: "../controller/practicas_paciente/controlador_detalle_practicas.php",
@@ -917,6 +976,8 @@ function Registrar_Detalle_practicas(id) {
       data: {
           id: id,
           practicas: practicas,
+          precio:precio,
+          cantidad:cantidad,
           subtotal:subtotal
       }
   }).done(function (resp) {
@@ -973,6 +1034,8 @@ function listar_practicas_del_paciente(id) {
       {"data": "id_paciente_practica"},
       {"data": "id_practica"},
       {"data": "practica"},
+      {"data": "precio_unitario"},
+      {"data": "cantidad"},
       {"data": "subtotal"},
       {"defaultContent": "<button class='delete btn btn-danger btn-sm' title='Eliminar datos de especialidad'><i class='fa fa-trash'></i> Eliminar</button>"}
     ],
@@ -992,6 +1055,8 @@ function Eliminar_detalle_practica_unico(id){
     if(resp>0){
         Swal.fire("Mensaje de Confirmación","Se elimino la práctica exitosamente","success").then((value)=>{
           tbl_traer_datos.ajax.reload();
+          setTimeout(SumarTotal_Editar, 500); // Esperar un poco antes de recalcular
+
         });
     }else{
       return Swal.fire("Mensaje de Advetencia","No se puede eliminar esta práctica por que esta siendo utilizado en otros formularios, verifique por favor","warning");
@@ -1018,6 +1083,7 @@ $('#tabla_practica_editar').on('click','.delete',function(){
   }).then((result) => {
     if (result.isConfirmed) {
       Eliminar_detalle_practica_unico(data.id_practica_paciente_total);
+      SumarTotal_Editar();
     }
   })
 })
@@ -1028,6 +1094,13 @@ function Agregar_practica_editar() {
   var id_practica_edi = $("#select_practica_editar").val();
   var practica_edi = $("#select_practica_editar option:selected").text();
   var precio_edi = $("#txt_precio_editar").val();
+  var cantidad_edi = $("#txt_cantidad_editar").val();
+  var subtotal_edi = $("#txt_subtotal_editar").val();
+
+  if (!id_practica_edi || id_practica_edi.trim() === "" || !precio_edi || precio_edi === "" || !cantidad_edi || cantidad_edi === "") {
+    return Swal.fire("Mensaje de Advertencia", "Seleccione una práctica y un precio por favor", "warning");
+}
+
 
   if (verificarid_editar(id_practica_edi)) {
     return Swal.fire("Mensaje de Advertencia", "La práctica ya fue agregada a la tabla", "warning");
@@ -1038,6 +1111,9 @@ function Agregar_practica_editar() {
   datos_agregar += "<td for='id'>" + id_practica_edi + "</td>";
   datos_agregar += "<td>" + practica_edi + "</td>";
   datos_agregar += "<td>" + precio_edi + "</td>";
+  datos_agregar += "<td>" + cantidad_edi + "</td>";
+  datos_agregar += "<td>" + subtotal_edi + "</td>";
+
   datos_agregar += "<td><button class='btn btn-danger' onclick='remove1(this)'><i class='fas fa-trash'></i></button></td>";
   datos_agregar += "</tr>";
 
@@ -1058,7 +1134,7 @@ function SumarTotal_Editar() {
   let total = 0;
 
   $("#tabla_practica_editar tbody tr").each(function () {
-    let precio = $(this).find('td').eq(3).text().trim();
+    let precio = $(this).find('td').eq(5).text().trim();
 
     if (precio !== "") {
       total += parseFloat(precio) || 0;
@@ -1074,28 +1150,37 @@ function verificarid_editar(id) {
   return [].filter.call(idverificar, td => td.textContent === id).length > 0;
 }
 
-
 function Modificar_detalle_practicas() {
   let componentes = [];
 
-  let totalText = document.getElementById('lbl_totalneto_editar').textContent.replace(/[^0-9.]/g, '').trim();
+  let totalText = document.getElementById('lbl_totalneto_editar')?.textContent.replace(/[^0-9.]/g, '').trim();
   let total = parseFloat(totalText) || 0;  // Validación robusta del total
-  let idusu = document.getElementById('txtprincipalid').value.trim();
+  let idusu = document.getElementById('txtprincipalid')?.value.trim();
+  let idprac = document.getElementById('txt_id_detalle')?.value.trim();
+
+
+  
+  if (!idusu) {
+    return Swal.fire("Mensaje de Advertencia", "El ID del usuario no es válido.", "warning");
+  }
 
   // Recorremos solo el cuerpo de la tabla para evitar la cabecera
   $("#tabla_practica_editar tbody tr").each(function() {
     let id_practica_general = $(this).find('td').eq(0).text().trim();
     let id_practica = $(this).find('td').eq(1).text().trim();
-    let precioText = $(this).find('td').eq(3).text().trim();
-
-    let precio = parseFloat(precioText) || 0; // Convertimos correctamente a número
+    let precio = parseFloat($(this).find('td').eq(3).text().trim()) || 0;
+    let cantidad = parseFloat($(this).find('td').eq(4).text().trim()) || 0;
+    let precioText = $(this).find('td').eq(5).text().trim();
+    let subtotal = parseFloat(precioText) || 0; // Convertimos correctamente a número
 
     // Validar que todos los campos estén completos
-    if (id_practica && precio > 0) {
+    if (id_practica && subtotal > 0) {
       componentes.push({
-        id_practica_general: id_practica_general,
-        id_practica: id_practica,
-        precio: precio.toFixed(2) // Formato con 2 decimales
+        id_practica_general,
+        id_practica,
+        precio: precio.toFixed(2),
+        cantidad,
+        subtotal: subtotal.toFixed(2) // Formato con 2 decimales
       });
     }
   });
@@ -1110,28 +1195,32 @@ function Modificar_detalle_practicas() {
     url: '../controller/practicas_paciente/controlador_modificar_detalle_practicas.php',
     type: 'POST',
     data: {
-      total: total,
+      total: total.toFixed(2),
       idusu: idusu,
+      idprac:idprac,
       componentes: JSON.stringify(componentes)
     },
     dataType: 'json' // Aseguramos que la respuesta sea JSON
   })
-  .done(function(resp) {
+  .done(function (resp) {
     console.log("Respuesta del servidor:", resp);
+    if (resp.status === 1) {
+        Swal.fire("Mensaje de Confirmación", "Se actualizó correctamente la practica paciente", "success").then(() => {
+          tbl_paciente_practica.ajax.reload();
+            $("#modal_editar").modal('hide');
+        });
+    } else if (resp.status === 2) {
+        Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen o no había registros nuevos- solo se modifico el total", "success");
+        tbl_paciente_practica.ajax.reload();
+        $("#modal_editar").modal('hide');
 
-    if (resp === 1) {
-      Swal.fire("Mensaje de Confirmación", "Prácticas modificadas satisfactoriamente!!!", "success").then(() => {
-        tbl_paciente_practica.ajax.reload();  // Recargar tabla
-        $("#modal_editar").modal('hide');  // Cerrar modal
-      });
-    } else if (resp === 0) {
-      Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen", "warning");
     } else {
-      Swal.fire("Error", "Hubo un problema en la actualización", "error");
+        Swal.fire("Error", "Hubo un problema en la actualización", "error");
     }
-  })
+})
   .fail(function(jqXHR, textStatus, errorThrown) {
     console.error("Error en AJAX:", textStatus, errorThrown);
+    console.error("Respuesta del servidor:", jqXHR.responseText);
     Swal.fire("Error", "No se pudo actualizar las prácticas. Inténtalo de nuevo.", "error");
   });
 }

@@ -6,13 +6,12 @@
 
     if ($consulta) {
         echo json_encode($consulta);
-    } else {
-        echo json_encode(array(
-            "sEcho" => 1,
-            "iTotalRecords" => "0",
-            "iTotalDisplayRecords" => "0",
-            "data" => array(),  // Cambiado de "aaData" a "data" para mantener consistencia
-            "total_sub_total" => 0
-        ));
+    }else{
+        echo '{
+            "sEcho": 1,
+            "iTotalRecords": "0",
+            "iTotalDisplayRecords": "0",
+            "aaData": []
+        }';
     }
 ?>

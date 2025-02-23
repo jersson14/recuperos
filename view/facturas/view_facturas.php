@@ -49,9 +49,10 @@ if (!isset($_SESSION['S_ID'])) {
                   <label for="">Estado de Factura:</label>
                   <select class="form-control" id="select_estado" style="width:100%">
                     <option value="">Seleccione</option>
-                    <option value="PENDIENTE">PENDIENTE</option>
+                    <option value="FACTURADA">FACTURADA</option>
                     <option value="COBRADA">COBRADA</option>
                     <option value="RECHAZADA">RECHAZADA</option>
+                    <option value="PENDIENTE">PENDIENTE</option>
 
                   </select>
                 </div>
@@ -157,7 +158,7 @@ if (!isset($_SESSION['S_ID'])) {
 
             <div class="col-3 form-group">
               <label>Subtotal<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_precio">
+              <input type="text" class="form-control" id="txt_precio" disabled>
             </div>
 
             <div class="col-12 form-group">
@@ -175,7 +176,7 @@ if (!isset($_SESSION['S_ID'])) {
                     <th>Practica</th>
                     <th>Subtotal</th>
                     <th>Acci&oacute;n</th>
-                  </tr> 
+                  </tr>
                 </thead>
                 <tbody id="tbody_tabla_practica">
                 </tbody>
@@ -189,13 +190,14 @@ if (!isset($_SESSION['S_ID'])) {
                 </div>
               </div>
 
-            </div><hr>
+            </div>
+            <hr>
             <hr>
             <div class="col-6 form-group">
               <label>Archivo de Factura <b style="color:red">(*)</b>:</label>
               <div class="custom-file position-relative">
-              <input type="file" class="custom-file-input" id="txt_factura" accept="image/*,application/pdf" onchange="updateFileLabel(event)">
-              <label class="custom-file-label" id="label_txt_factura" for="txt_factura">Seleccione Factura...</label>
+                <input type="file" class="custom-file-input" id="txt_factura" accept="image/*,application/pdf" onchange="updateFileLabel(event)">
+                <label class="custom-file-label" id="label_txt_factura" for="txt_factura">Seleccione Factura...</label>
                 <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_factura" onclick="clearFactura()">X</button>
               </div>
             </div>
@@ -208,7 +210,7 @@ if (!isset($_SESSION['S_ID'])) {
             <div class="col-6 form-group">
               <label>Archivo de Nota de Crédito (Opcional):</label>
               <div class="custom-file position-relative">
-              <input type="file" class="custom-file-input" id="txt_notacre" accept="image/*,application/pdf" onchange="updateFileLabel2(event)">
+                <input type="file" class="custom-file-input" id="txt_notacre" accept="image/*,application/pdf" onchange="updateFileLabel2(event)">
 
                 <label class="custom-file-label" id="label_txt_notacre" for="txt_notacre">Seleccione Nota de crédito...</label>
                 <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_notacre" onclick="clearNotacre()">X</button>
@@ -236,64 +238,57 @@ if (!isset($_SESSION['S_ID'])) {
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header" style="background-color:#1FA0E0;">
-          <h5 class="modal-title" id="exampleModalLabel" style="color:white; text-align:center"><b>MODIFICAR DATOS DE PRÁCTICAS - PACIENTE</b></h5>
+          <h5 class="modal-title" id="exampleModalLabel" style="color:white; text-align:center">
+            <b>EDITAR DATOS DE FACTURA</b>
+          </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
 
-          <div class="row">
+        <div class="modal-body">
+          <div class="row" style="border: 1px solid #ccc; padding: 15px; border-radius: 8px;">
             <div class="col-12 form-group" style="color:red">
               <h6><b>Campos Obligatorios (*)</b></h6>
             </div>
-            <div class="col-12 form-group">
-              <label for="">Obra Social<b style="color:red">(*)</b>:</label>
-              <input type="text" id="txt_id_detalle" hidden>
-              <select class="js-example-basic-single" id="select_obras_editar" style="width:100%" disabled>
-              </select>
-            </div>
-            <div class="col-6 form-group">
-              <label for="">Área<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_area" disabled>
-              </select>
-            </div>
-            <div class="col-6 form-group">
-              <label for="">Paciente<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_paciente" disabled>
 
+            <div class="col-12 form-group">
+              <label>Nro. Factura<b style="color:red">(*)</b>:</label>
+              <input type="text" id="id_factura" hidden>
+              <input type="text" class="form-control" id="txt_nro_factura_editar" placeholder="Ingrese el Nro. de Factura" disabled>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Tipo de Práctica<b style="color:red">(*)</b>:</label>
-              <select class="js-example-basic-single" id="select_practica_editar" style="width:100%">
-              </select>
+
+            <div class="col-12 form-group">
+              <label>Filtro por Obra Social<b style="color:red">(*)</b>:</label>
+              <select class="js-example-basic-single form-control" id="select_obras_editar" disabled></select>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Precio de Práctica<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_precio_editar">
+
+            <div class="col-9 form-group">
+              <label>Pacientes que se realizaron prácticas<b style="color:red">(*)</b>:</label>
+              <select class="js-example-basic-single form-control" id="select_practica_editar"></select>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
-              <input type="text" class="form-control" id="txt_profesional_editar" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
+
+            <div class="col-3 form-group">
+              <label>Subtotal<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_precio_editar" disabled>
             </div>
-            <div class="col-6 form-group">
-              <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
-              <input type="datetime" class="form-control" id="txt_fecha_editar" disabled>
-            </div>
+
             <div class="col-12 form-group">
               <button type="button" class="btn btn-success btn-block" onclick="Agregar_practica_editar()">
-                <i class="fas fa-plus"></i> <b>Agregar Práctica</b>
+                <i class="fas fa-plus"></i> <b>Agregar Detalle</b>
               </button>
             </div>
+
+            <!-- Tabla con marco -->
             <div class="col-12 table-responsive" style="text-align:center">
-              <table id="tabla_practica_editar" style="width:100%" class="table">
+              <table id="tabla_detalle_factura_editar" style="width:100%" class="table">
                 <thead class="thead-dark">
                   <tr>
-                    <th style="text-align:center">Id principal</th>
-                    <th style="text-align:center">Id.</th>
-                    <th style="text-align:center">Practica</th>
-                    <th style="text-align:center">Subtotal</th>
-                    <th style="text-align:center">Acci&oacute;n</th>
+                    <th>Id principal.</th>
+                    <th>Id.</th>
+                    <th>Practica - Paciente</th>
+                    <th>Subtotal</th>
+                    <th>Acci&oacute;n</th>
                   </tr>
                 </thead>
                 <tbody id="tbody_tabla_practica_editar">
@@ -301,16 +296,66 @@ if (!isset($_SESSION['S_ID'])) {
               </table>
               <div class="col-9">
               </div>
-              <div class="col-3">
-              <h3 for="" id="lbl_totalneto"></h3>
+              <div class="d-flex justify-content-end">
+                <div class="text-right"><br>
+                  <h3 id="lbl_totalneto1_editar"></h3>
+                  <hr>
+                </div>
+              </div>
+
+            </div>
+            <hr>
+            <hr>
+            <div class="col-6 form-group">
+              <label>Archivo de Factura <b style="color:red">(*)</b>:</label>
+
+              <div class="custom-file position-relative">
+                <input type="text" id="facturaactual" hidden>
+
+                <input type="file" class="custom-file-input" id="txt_factura_editar" accept="image/*,application/pdf" onchange="updateFileLabelEditar(event)">
+                <label class="custom-file-label" id="label_txt_factura_editar" for="txt_factura_editar">Seleccione Factura...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_factura_editar" onclick="clearFacturaeditar()">X</button>
               </div>
             </div>
 
+            <div class="col-6 form-group">
+              <label>Fecha de actualización<b style="color:red">(*)</b>:</label>
+              <input type="date" class="form-control" id="txt_fecha_editar" disabled>
+            </div>
+
+            <div class="col-6 form-group">
+              <label>Archivo de Nota de Crédito (Opcional):</label>
+              <div class="custom-file position-relative">
+                <input type="text" id="notaactual" hidden>
+
+                <input type="file" class="custom-file-input" id="txt_notacre_editar" accept="image/*,application/pdf" onchange="updateFileLabel2_editar(event)">
+
+                <label class="custom-file-label" id="label_txt_notacre_editar" for="txt_notacre_editar">Seleccione Nota de crédito...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_notacre_editar" onclick="clearNotacreeditar()">X</button>
+              </div>
+            </div>
+            <div class="col-6 form-group">
+              <label>Fecha Nota de Crédito (Opcional):</label>
+              <input type="date" class="form-control" id="txt_fecha_nota_editar">
+            </div>
+            
           </div>
+          <div class="alert alert-warning alert-dismissible" style=" text-align: justify;">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Aviso Importante!</h5>
+                        Si agregaste o eliminaste una práctica de un paciente, asegúrate de hacer clic en el botón <b>Modificar</b> para actualizar el TOTAL GENERAL en la BASE DE DATOS.
+                        </div>
         </div>
+  
+
+      
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
-          <button type="button" class="btn btn-success" onclick="Modificar_detalle_practicas()"><i class="fas fa-edit"></i> Modificar</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fas fa-times ml-1"></i> Cerrar
+          </button>
+          <button type="button" class="btn btn-success" onclick="Modificar_Practica_paciente()">
+            <i class="fas fa-edit"></i> Modificar
+          </button>
         </div>
       </div>
     </div>
@@ -324,6 +369,8 @@ if (!isset($_SESSION['S_ID'])) {
           <div style="display: flex; flex-direction: column;">
             <h5 class="modal-title" id="lb_titulo_facturas"></h5>
             <h5 class="modal-title" id="lb_titulo2_facturas" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+            <h5 class="modal-title" id="lb_titulo3_facturas" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+            <h5 class="modal-title" id="lb_titulo4_facturas" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
           </div>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -395,9 +442,10 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Estado<b style="color:red">(*)</b>:</label>
               <input type="text" id="id_estado" hidden>
               <select class="form-control" id="select_estado_edit" style="width:100%">
-                <option value="PENDIENTE">PENDIENTE</option>
+                <option value="FACTURADA">FACTURADA</option>
                 <option value="COBRADA">COBRADA</option>
                 <option value="RECHAZADA">RECHAZADA</option>
+                <option value="PENDIENTE">PENDIENTE</option>
               </select>
             </div>
             <div class="col-12 form-group">
@@ -414,44 +462,7 @@ if (!isset($_SESSION['S_ID'])) {
     </div>
   </div>
 
-  <div class="modal fade" id="modal_estado_ver" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header" style="background-color:#1FA0E0;">
-          <div style="display: flex; flex-direction: column;color:white">
-            <h5 class="modal-title" id="lb_titulover"></h5>
-            <h5 class="modal-title" id="lb_titulo2ver" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
-          </div>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <div class="col-12 form-group" style="color:red">
-              <h6><b>Campos Obligatorios (*)</b></h6>
-            </div>
-            <div class="col-12 form-group">
-              <label for="">Estado:</label>
-              <select class="form-control" id="select_estado_ver" style="width:100%" disabled>
-                <option value="PENDIENTE">PENDIENTE</option>
-                <option value="COBRADA">COBRADA</option>
-                <option value="RECHAZADA">RECHAZADA</option>
-              </select>
-            </div>
-            <div class="col-12 form-group">
-              <label for="">Motivo:</label>
-              <textarea class="form-control" disabled id="txt_motivo_ver" rows="4" style="resize:none" placeholder="Ingrese el motivo"></textarea>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
-          <button type="button" class="btn btn-success" onclick="Modificar_Estado()"><i class="fas fa-edit"></i> Editar</button>
-        </div>
-      </div>
-    </div>
-  </div>
+
 
 
 
@@ -476,12 +487,14 @@ if (!isset($_SESSION['S_ID'])) {
                   <table id="tabla_ver_historial" class="display compact" style="width:100%; text-align:center;">
                     <thead style="background-color:#0252A0;color:#FFFFFF;">
                       <tr>
-                        <th colspan="4" style="text-align:center; font-size: 18px; font-weight: bold;">HISTORIAL DE MODIFICACIÓN</th>
+                        <th colspan="5" style="text-align:center; font-size: 18px; font-weight: bold;">HISTORIAL DE MODIFICACIÓN</th>
                       </tr>
                       <tr style="text-align:center;">
                         <th style="text-align:center;">Nro.</th>
                         <th style="text-align:center;">Usuario que modifico</th>
                         <th style="text-align:center;">Estado cambiado</th>
+                        <th style="text-align:center;">Motivo</th>
+
                         <th style="text-align:center;">Fecha de modificación</th>
                       </tr>
                     </thead>
@@ -510,18 +523,7 @@ if (!isset($_SESSION['S_ID'])) {
 
   <script>
     $(document).ready(function() {
-      $(document).ready(function() {
-        $("#select_estado_edit").change(function() { // Aquí estaba el error
-          if ($(this).val() === "RECHAZADA") {
-            $("#txt_motivo").prop("disabled", false).attr("required", true); // Activar y hacerlo obligatorio
-          } else {
-            $("#txt_motivo").prop("disabled", true).removeAttr("required").val(""); // Desactivar y limpiar
-          }
-        });
 
-        // Desactivar el campo por defecto al abrir el modal
-        $("#txt_motivo").prop("disabled", true);
-      });
       // Función para inicializar todos los select2 básicos
       function initializeAllSelect2() {
         // Inicializar select2 para obras sociales
@@ -679,6 +681,7 @@ if (!isset($_SESSION['S_ID'])) {
     }
 
     // Establece el valor del campo de fecha con el formato YYYY-MM-DD
+    document.getElementById('txt_fecha_editar').value = y + "-" + m + "-" + d;
     document.getElementById('txt_fecha').value = y + "-" + m + "-" + d;
   </script>
 
@@ -719,6 +722,52 @@ if (!isset($_SESSION['S_ID'])) {
     function clearNotacre() {
       var fileInput = document.getElementById('txt_notacre');
       var fileLabel = document.getElementById('label_txt_notacre');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione Nota de crédito...";
+    }
+  </script>
+
+  <script>
+    function updateFileLabelEditar(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_factura_editar');
+
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir Factura (" + fileName + ")";
+      }
+    }
+
+    function clearFacturaeditar() {
+      var fileInput = document.getElementById('txt_factura_editar');
+      var fileLabel = document.getElementById('label_txt_factura_editar');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione Factura...";
+    }
+  </script>
+
+  <script>
+    function updateFileLabel2_editar(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_notacre_editar');
+
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir Nota de crédito (" + fileName + ")";
+      }
+    }
+
+    function clearNotacreeditar() {
+      var fileInput = document.getElementById('txt_notacre_editar');
+      var fileLabel = document.getElementById('label_txt_notacre_editar');
 
       // Limpiar el input de archivo
       fileInput.value = '';

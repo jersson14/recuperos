@@ -14,7 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HOSPITAL SAMIC</title>
+  <title>RECUPEROS | HOSPITAL SAMIC</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -182,11 +182,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
                   <i class="nav-icon fas fa-file-invoice-dollar"></i>
 
                   <p style="color:white">
-                    Gestión de facturas
+                    Gestión de Facturas
                   </p>
                 </a>
               </li>
-              
+              <li class="nav-item">
+                <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas_archivadas.php')" class="nav-link">
+                <i class="nav-icon fas fa-file-archive" ></i> <!-- Archivada -->
+
+                  <p style="color:white">
+                    Facturas Archivadas
+                  </p>
+                </a>
+              </li>
               <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
                 <b>CONFIGURACIÓN Y MANUAL</b>
               </li>

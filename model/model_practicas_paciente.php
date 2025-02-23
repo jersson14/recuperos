@@ -141,13 +141,15 @@
             conexionBD::cerrar_conexion();
 
         }
-        function Registrar_detalle_practicas($id, $array_practicas, $array_subtotal){
+        function Registrar_detalle_practicas($id, $array_practicas,$array_precio,$array_cantidad, $array_subtotal){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_REGISTRAR_DETALLE_PRACTICAS(?,?,?)"; // Se agregaron 3 placeholders
+            $sql = "CALL SP_REGISTRAR_DETALLE_PRACTICAS(?,?,?,?,?)"; // Se agregaron 3 placeholders
             $query = $c->prepare($sql);
             $query->bindParam(1, $id, PDO::PARAM_INT);
             $query->bindParam(2, $array_practicas, PDO::PARAM_INT);
-            $query->bindParam(3, $array_subtotal, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            $query->bindParam(3, $array_precio, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            $query->bindParam(4, $array_cantidad, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            $query->bindParam(5, $array_subtotal, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
             
             $resul = $query->execute();
             conexionBD::cerrar_conexion();
@@ -309,17 +311,19 @@
             }
             conexionBD::cerrar_conexion();
         }
-        public function Modificar_Detalle_practicas($idpracitcageneral,$idpracitca, $precio,$total,$idusu) {
+        public function Modificar_Detalle_practicas($idpracitcageneral,$idpracitca, $precio,$cantidad,$subtotal,$total,$idusu) {
             $c = conexionBD::conexionPDO();
         
             // Suponiendo que usas una consulta SQL o un procedimiento almacenado
-            $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?,?,?,?,?)"; // Cambia esto a tu consulta real
+            $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?,?,?,?,?,?,?)"; // Cambia esto a tu consulta real
             $query = $c->prepare($sql);
             $query->bindParam(1, $idpracitcageneral);
             $query->bindParam(2, $idpracitca);
             $query->bindParam(3, $precio);
-            $query->bindParam(4, $total);
-            $query->bindParam(5, $idusu);
+            $query->bindParam(4, $cantidad);
+            $query->bindParam(5, $subtotal);
+            $query->bindParam(6, $total);
+            $query->bindParam(7, $idusu);
 
         
             try {
@@ -330,6 +334,25 @@
             } catch (PDOException $e) {
                 error_log($e->getMessage()); // Guarda el error en el log del servidor
                 return 0; // Error en la modificación
+            } finally {
+                conexionBD::cerrar_conexion();
+            }
+        }
+
+        public function Modificar_Total_Usuario($total, $idusu,$idprac) {
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_PRACTICA_SOLA(?,?,?)"; // Cambia esto a tu consulta real
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $total);
+            $query->bindParam(2, $idusu);
+            $query->bindParam(3, $idprac);
+
+            try {
+                $query->execute();
+                return $query->rowCount() > 0 ? 1 : 0;
+            } catch (PDOException $e) {
+                error_log($e->getMessage());
+                return 0;
             } finally {
                 conexionBD::cerrar_conexion();
             }

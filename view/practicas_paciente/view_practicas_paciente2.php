@@ -34,7 +34,17 @@ if (!isset($_SESSION['S_ID'])) {
         <div class="card">
           <div class="card-header">
             <h3 class="card-title"><i class="nav-icon fas fa-th"></i>&nbsp;&nbsp;<b>Listado de Prácticas - Paciente</b></h3>
-            <button class="btn btn-success float-right" onclick="AbrirRegistro()"><i class="fas fa-plus"></i> Nuevo Registro</button>
+            <div class="d-flex justify-content-end gap-3">
+              <button class="btn btn-primary" onclick="AbrirRegistro2()">
+                <i class="fas fa-user-plus"></i>
+                Agregar paciente
+              </button>&nbsp;&nbsp;
+              <button class="btn btn-success" onclick="AbrirRegistro()">
+                <i class="fas fa-plus"></i> Nuevo Registro
+              </button>
+            </div>
+
+
 
           </div>
           <div class="table-responsive" style="text-align:left">
@@ -45,7 +55,7 @@ if (!isset($_SESSION['S_ID'])) {
                   <select class="js-example-basic-single" id="select_obras_buscar" style="width:100%">
                   </select>
                 </div>
-               
+
                 <div class="col-12 col-md-3" role="document">
                   <label for="">&nbsp;</label><br>
                   <button onclick="listar_practica_paciente_obras()" class="btn btn-danger mr-2" style="width:100%" onclick><i class="fas fa-search mr-1"></i>Buscar registros</button>
@@ -122,10 +132,10 @@ if (!isset($_SESSION['S_ID'])) {
               <h6><b>Campos Obligatorios (*)</b></h6>
             </div>
             <div class="col-12 form-group">
-                  <label for="">Obra Social<b style="color:red">(*)</b>:</label>
-                  <select class="js-example-basic-single" id="select_obras" style="width:100%">
-                  </select>
-                </div>
+              <label for="">Obra Social<b style="color:red">(*)</b>:</label>
+              <select class="js-example-basic-single" id="select_obras" style="width:100%">
+              </select>
+            </div>
             <div class="col-6 form-group">
               <label for="">Área<b style="color:red">(*)</b>:</label>
               <select class="js-example-basic-single" id="select_area" style="width:100%">
@@ -136,14 +146,18 @@ if (!isset($_SESSION['S_ID'])) {
               <select class="js-example-basic-single" id="select_paciente" style="width:100%">
               </select>
             </div>
-            <div class="col-12 form-group">
-            <input type="text" class="form-control" id="txt_precio" hidden>
+            <div class="col-8 form-group">
+              <input type="text" class="form-control" id="txt_precio" hidden>
+              <input type="text" class="form-control" id="txt_subtotal" hidden>
 
               <label for="">Tipo de Práctica<b style="color:red">(*)</b>:</label>
               <select class="js-example-basic-single" id="select_practica" style="width:100%">
               </select>
             </div>
-
+            <div class="col-4 form-group">
+              <label for="">Cantidad<b style="color:red">(*)</b>:</label>
+              <input type="number" class="form-control" id="txt_cantidad" value="1">
+            </div>
             <div class="col-6 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
@@ -163,6 +177,8 @@ if (!isset($_SESSION['S_ID'])) {
                   <tr>
                     <th>Id.</th>
                     <th>Practica</th>
+                    <th style="text-align:center; display: none;">Precio unitario</th>
+                    <th>Cantidad</th>
                     <th style="text-align:center; display: none;">Subtotal</th>
                     <th>Acci&oacute;n</th>
                   </tr>
@@ -188,49 +204,50 @@ if (!isset($_SESSION['S_ID'])) {
   </div>
 
   <div class="modal fade" id="modal_ver_practicas" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <div style="display: flex; flex-direction: column;">
-          <h5 class="modal-title" id="lb_titulo"></h5>
-          <h5 class="modal-title" id="lb_titulo2" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div style="display: flex; flex-direction: column;">
+            <h5 class="modal-title" id="lb_titulo"></h5>
+            <h5 class="modal-title" id="lb_titulo2" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-12" style="text-align:center">
-            <div class="table-responsive" style="text-align:center">
-              <div class="card-body">
-                <table id="tabla_ver_practicas" class="display compact" style="width:100%; text-align:center;">
-                  <thead style="background-color:#0252A0;color:#FFFFFF;">
-                    <!-- Fila con el título general -->
-                    <tr>
-                      <th colspan="3" style="text-align:center; font-size: 18px; font-weight: bold;">PRÁCTICAS REALIZADAS</th>
-                    </tr>
-                    <!-- Fila con los encabezados de columnas -->
-                    <tr style="text-align:center;">
-                      <th style="text-align:center;">Nro.</th>
-                      <th style="text-align:center;">Código</th>
-                      <th style="text-align:center;">Práctica</th>
-                    </tr>
-                  </thead>
-                </table>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12" style="text-align:center">
+              <div class="table-responsive" style="text-align:center">
+                <div class="card-body">
+                  <table id="tabla_ver_practicas" class="display compact" style="width:100%; text-align:center;">
+                    <thead style="background-color:#0252A0;color:#FFFFFF;">
+                      <!-- Fila con el título general -->
+                      <tr>
+                        <th colspan="4" style="text-align:center; font-size: 18px; font-weight: bold;">PRÁCTICAS REALIZADAS</th>
+                      </tr>
+                      <!-- Fila con los encabezados de columnas -->
+                      <tr style="text-align:center;">
+                        <th style="text-align:center;">Nro.</th>
+                        <th style="text-align:center;">Código</th>
+                        <th style="text-align:center;">Práctica</th>
+                        <th style="text-align:center;">Cantidad</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-dismiss="modal">
-          <i class="fa fa-arrow-right-from-bracket"></i> Cerrar
-        </button>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fa fa-arrow-right-from-bracket"></i> Cerrar
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 
 
@@ -252,11 +269,11 @@ if (!isset($_SESSION['S_ID'])) {
               <h6><b>Campos Obligatorios (*)</b></h6>
             </div>
             <div class="col-12 form-group">
-                  <label for="">Obra Social<b style="color:red">(*)</b>:</label>
-                  <input type="text" id="txt_id_detalle" hidden>
-                  <select class="js-example-basic-single" id="select_obras_editar" style="width:100%" disabled>
-                  </select>
-                </div>
+              <label for="">Obra Social<b style="color:red">(*)</b>:</label>
+              <input type="text" id="txt_id_detalle" hidden>
+              <select class="js-example-basic-single" id="select_obras_editar" style="width:100%" disabled>
+              </select>
+            </div>
             <div class="col-6 form-group">
               <label for="">Área<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_area" disabled>
@@ -267,13 +284,18 @@ if (!isset($_SESSION['S_ID'])) {
               <input type="text" class="form-control" id="txt_paciente" disabled>
 
             </div>
-            <div class="col-12 form-group">
-            <input type="text" class="form-control" id="txt_precio_editar" hidden >
+            <input type="text" class="form-control" id="txt_precio_editar" hidden>
+            <input type="text" class="form-control" id="txt_subtotal_editar" hidden>
+            <div class="col-8 form-group">
+              <input type="text" class="form-control" id="txt_precio_editar" hidden>
               <label for="">Tipo de Práctica<b style="color:red">(*)</b>:</label>
               <select class="js-example-basic-single" id="select_practica_editar" style="width:100%">
               </select>
             </div>
-
+            <div class="col-4 form-group">
+              <label for="">Cantidad<b style="color:red">(*)</b>:</label>
+              <input type="number" class="form-control" id="txt_cantidad_editar" value="1">
+            </div>
             <div class="col-6 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional_editar" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
@@ -291,10 +313,12 @@ if (!isset($_SESSION['S_ID'])) {
               <table id="tabla_practica_editar" style="width:100%" class="table">
                 <thead class="thead-dark">
                   <tr>
-                  <th style="text-align:center">Id principal</th>
+                    <th style="text-align:center">Id principal</th>
                     <th style="text-align:center">Id.</th>
                     <th style="text-align:center">Practica</th>
-                    <th style="text-align:center; display: none;">Subtotal</th>
+                    <th style="text-align:center;">Precio unitario</th>
+                    <th style="text-align:center">Cantidad</th>
+                    <th style="text-align:center;">Subtotal</th>
                     <th style="text-align:center">Acci&oacute;n</th>
                   </tr>
                 </thead>
@@ -303,8 +327,14 @@ if (!isset($_SESSION['S_ID'])) {
               </table>
               <div class="col-9">
               </div>
-              <div class="col-3">
-                <h3 for="" hidden id="lbl_totalneto_editar" style="display: inline-block;white-space: nowrap;"></h3>
+              <div class="text-left">
+                <h3 id="lbl_totalneto_editar"></h3>
+                <hr>
+              </div>
+              <div class="alert alert-warning alert-dismissible" style=" text-align: justify;">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Aviso Importante!</h5>
+                Si agregaste o eliminaste una práctica, asegúrate de hacer clic en el botón <b>Modificar</b> para actualizar el TOTAL GENERAL en la BASE DE DATOS.
               </div>
             </div>
 
@@ -319,6 +349,59 @@ if (!isset($_SESSION['S_ID'])) {
   </div>
 
 
+  <div class="modal fade" id="modal_registro2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1FA0E0;">
+          <h5 class="modal-title" id="exampleModalLabel" style="color:white; text-align:center"><b>REGISTRO DE PACIENTES</b></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 form-group" style="color:red">
+              <h6><b>Campos Obligatorios (*)</b></h6>
+            </div><br>
+            <div class="col-4 form-group">
+              <label for="">DNI<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_nro" placeholder="Ingrese el DNI" onkeypress="return soloNumeros(event)" maxlenght="8">
+            </div>
+            <div class="col-4 form-group">
+              <label for="">Nombres<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_nom" placeholder="Ingrese los nombres" onkeypress="return sololetras(event)">
+            </div>
+            <div class="col-4 form-group">
+              <label for="">Apellidos<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_apelli" placeholder="Ingrese los apellidos" onkeypress="return sololetras(event)">
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Dirección(Opcional):</label>
+              <textarea class="form-control" id="txt_direccion" rows="3" style="resize:none" placeholder="Ingrese la dirección"></textarea>
+            </div>
+            <div class="col-6 form-group">
+              <label for="">Localidad(Opcional):</label>
+              <input type="text" class="form-control" id="txt_local" placeholder="Ingrese la localidad">
+            </div>
+            <div class="col-6 form-group">
+              <label for="">Teléfono<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_tele" onkeypress="return soloNumeros(event)" placeholder="Ingrese el teléfono o celular">
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Obra Social<b style="color:red">(*)</b>:</label>
+              <select type="text" class="js-example-basic-single" id="txt_obras_sociales" style="width:100%"></select>
+            </div>
+
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
+          <button type="button" class="btn btn-success" onclick="Registrar_Paciente()"><i class="fas fa-save"></i> Registrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <style>
     .hidden {
       display: none;
@@ -326,51 +409,51 @@ if (!isset($_SESSION['S_ID'])) {
   </style>
 
   <script>
-$(document).ready(function () {
-  $('.js-example-basic-single').select2({
+    $(document).ready(function() {
+      $('.js-example-basic-single').select2({
 
-  });
-  Cargar_Select_Obras_Sociales();
-  Cargar_Select_Obras_Sociales2();
-  Cargar_Select_Usuarios();
-  Cargar_Select_Areas();
-  listar_practica_paciente_diario();
-});
+      });
+      Cargar_Select_Obras_Sociales();
+      Cargar_Select_Obras_Sociales2();
+      Cargar_Select_Usuarios();
+      Cargar_Select_Areas();
+      listar_practica_paciente_diario();
+    });
 
-//TRAER DATOS DE PACIENTE
-
-
-$("#select_obras").change(function(){
-var id=$("#select_obras").val();
-Cargar_Select_Paciente(id);
-});
+    //TRAER DATOS DE PACIENTE
 
 
-
-//TRAER DATOS DE PRACTICA
-$("#select_obras").change(function(){
-var id=$("#select_obras").val();
-Cargar_Select_Practica(id);
-});
-
-$("#select_obras_editar").change(function(){
-var id=$("#select_obras_editar").val();
-Cargar_Select_Practica(id);
-});
+    $("#select_obras").change(function() {
+      var id = $("#select_obras").val();
+      Cargar_Select_Paciente(id);
+    });
 
 
-//TRAER MONTO DE PRACTICA
-$("#select_practica").change(function() {
-  var id = $("#select_practica").val();
-  Traerprecio(id);
-});
 
-$("#select_practica_editar").change(function() {
-  var id = $("#select_practica_editar").val();
-  Traerprecio(id);
-});
+    //TRAER DATOS DE PRACTICA
+    $("#select_obras").change(function() {
+      var id = $("#select_obras").val();
+      Cargar_Select_Practica(id);
+    });
 
-//TRAER FECHA ACTUAL
+    $("#select_obras_editar").change(function() {
+      var id = $("#select_obras_editar").val();
+      Cargar_Select_Practica(id);
+    });
+
+
+    //TRAER MONTO DE PRACTICA
+    $("#select_practica").change(function() {
+      var id = $("#select_practica").val();
+      Traerprecio(id);
+    });
+
+    $("#select_practica_editar").change(function() {
+      var id = $("#select_practica_editar").val();
+      Traerprecio(id);
+    });
+
+    //TRAER FECHA ACTUAL
     var n = new Date();
     var y = n.getFullYear();
     var m = n.getMonth() + 1; // Los meses empiezan desde 0, por eso se suma 1
@@ -387,5 +470,27 @@ $("#select_practica_editar").change(function() {
     // Establece el valor del campo de fecha con el formato YYYY-MM-DD
     document.getElementById('txt_fecha').value = y + "-" + m + "-" + d;
 
-
+    $('#modal_registro2').on('shown.bs.modal', function() {
+      $('#txt_nro').trigger('focus')
+    })
+    var input = document.getElementById('txt_nro');
+    input.addEventListener('input', function() {
+      if (this.value.length > 8)
+        this.value = this.value.slice(0, 8);
+    })
+    var input = document.getElementById('txt_tele');
+    input.addEventListener('input', function() {
+      if (this.value.length > 11)
+        this.value = this.value.slice(0, 11);
+    })
+    var input = document.getElementById('txt_nro_editar');
+    input.addEventListener('input', function() {
+      if (this.value.length > 8)
+        this.value = this.value.slice(0, 8);
+    })
+    var input = document.getElementById('txt_tele_editar');
+    input.addEventListener('input', function() {
+      if (this.value.length > 11)
+        this.value = this.value.slice(0, 9);
+    })
   </script>

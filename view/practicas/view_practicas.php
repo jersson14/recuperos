@@ -49,7 +49,7 @@
                 </div>
                 <div class="col-12 col-md-2" role="document">
                   <label for="">&nbsp;</label><br>
-                  <button onclick="listar_practicas_filtro()" class="btn btn-danger mr-2" style="width:100%" onclick><i class="fas fa-search mr-1"></i>Buscar pacientes</button>
+                  <button onclick="listar_practicas_filtro()" class="btn btn-danger mr-2" style="width:100%" onclick><i class="fas fa-search mr-1"></i>Buscar prácticas</button>
                 </div>
                 <div class="col-12 col-md-2" role="document">
                   <label for="">&nbsp;</label><br>

@@ -17,6 +17,7 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
+   
         public function Listar_Facturas_todo(){
             $c = conexionBD::conexionPDO();
             $sql = "CALL SP_LISTAR_FACTURAS_TODO()";
@@ -83,6 +84,26 @@
             conexionBD::cerrar_conexion();
 
         }
+        public function Modificar_Factura($idfactu, $total, $ruta_factura, $ruta_notacre, $fecha, $idusu){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_FACTURA(?,?,?,?,?,?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$idfactu);
+            $query ->bindParam(2,$total);
+            $query ->bindParam(3,$ruta_factura);
+            $query ->bindParam(4,$ruta_notacre);
+            $query ->bindParam(5,$fecha);
+            $query ->bindParam(6,$idusu);
+
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
+
+        }
         function Registrar_detalle_facturas($id, $array_practicas_paciente, $array_subtotal){
             $c = conexionBD::conexionPDO();
             $sql = "CALL SP_REGISTRAR_DETALLE_FACTURA(?,?,?)"; // Se agregaron 3 placeholders
@@ -99,13 +120,14 @@
         
 
 
-        public function Eliminar_Factura($id){
+        public function Eliminar_Factura($id,$idusu){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_ELIMINAR_FACTURA(?)";
+            $sql = "CALL SP_ELIMINAR_FACTURA(?,?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
-    
+            $query ->bindParam(2,$idusu);
+
             $resul = $query->execute();
             if($resul){
                 return 1;
@@ -217,9 +239,24 @@
             conexionBD::cerrar_conexion();
         
         }
-        public function Eliminar_detalle_practica_unico($id){
+        public function Listar_detalle_factura_edit($id){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_ELIMINAR_DETALLE_PRACTICA(?)";
+            $arreglo = array();
+            $sql = "CALL SP_LISTA_DETALLE_FACTURAS_EDITAR(?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        
+        }
+        public function Eliminar_detalle_factura_unico($id){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_ELIMINAR_DETALLE_FACTURA(?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
@@ -269,7 +306,109 @@
             conexionBD::cerrar_conexion();
         
         }
+        public function Modificar_Detalle_facturas($id_factura,$id_practica, $subtotal,$total,$idusu) {
+            $c = conexionBD::conexionPDO();
         
+            // Suponiendo que usas una consulta SQL o un procedimiento almacenado
+            $sql = "CALL SP_MODIFICAR_DETALLE_FACTURA(?,?,?,?,?)"; // Cambia esto a tu consulta real
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $id_factura);
+            $query->bindParam(2, $id_practica);
+            $query->bindParam(3, $subtotal);
+            $query->bindParam(4, $total);
+            $query->bindParam(5, $idusu);
+
+
+        
+            try {
+                $query->execute();
+                // Dependiendo del resultado, puedes devolver 1 para éxito o 0 para error
+                // Asegúrate de ajustar esto según tu procedimiento almacenado o lógica SQL
+                return $query->rowCount() > 0 ? 1 : 0; // 1 si se modificó algo, 0 si no
+            } catch (PDOException $e) {
+                error_log($e->getMessage()); // Guarda el error en el log del servidor
+                return 0; // Error en la modificación
+            } finally {
+                conexionBD::cerrar_conexion();
+            }
+        }
+        public function Modificar_Factura_Solo_Total_Usuario($total, $idusu,$id_Fac) {
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_FACTURA_SOLA(?,?,?)"; // Cambia esto a tu consulta real
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $total);
+            $query->bindParam(2, $idusu);
+            $query->bindParam(3, $id_Fac);
+
+            try {
+                $query->execute();
+                return $query->rowCount() > 0 ? 1 : 0;
+            } catch (PDOException $e) {
+                error_log($e->getMessage());
+                return 0;
+            } finally {
+                conexionBD::cerrar_conexion();
+            }
+        }
+        public function Listar_Facturas_archivadas(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_FACTURAS_ARCHIVADAS()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function Listar_Facturas_todo_archivado(){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_FACTURAS_TODO_ARCHIVADO()";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function Listar_facturas_edtado_obra_archivado($obra){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_FACTURAS_OBRA_ESTADO_ARCHIVADO(?,?)";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->bindParam(1,$obra);
+            $query->bindParam(2,$estado);
+
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
+        public function Listar_facturas_fecha_usu_archivado($fechaini,$fechafin,$usu){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_FACTURAS_FECHAS_USU_ARCHIVADO(?,?,?)";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query->bindParam(1,$fechaini);
+            $query->bindParam(2,$fechafin);
+            $query->bindParam(3,$usu);
+
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        }
     }
 
 

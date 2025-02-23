@@ -196,17 +196,22 @@ function listar_practicas_filtro(){
                   }
           }   
       },
-        {
-          "defaultContent": `
-      
-            <button class='editar btn btn-primary btn-sm' title='Editar datos de área'>
-              <i class='fa fa-edit'></i> Editar
-            </button>
-            <button class='eliminar btn btn-danger btn-sm' title='Eliminar datos de área'>
-              <i class='fa fa-trash'></i> Eliminar
-            </button>
-          `
-        }
+      {
+        "defaultContent": `
+    
+    <button class="historial btn btn-warning btn-sm" title="Ver historial de ediciones">
+      <i class="fa fa-history"></i> Historial
+    </button>
+    
+    
+          <button class='editar btn btn-primary btn-sm' title='Editar datos de área'>
+            <i class='fa fa-edit'></i> Editar
+          </button>
+          <button class='eliminar btn btn-danger btn-sm' title='Eliminar datos de área'>
+            <i class='fa fa-trash'></i> Eliminar
+          </button>
+        `
+      }
       ],
 
     "language":idioma_espanol,
