@@ -328,7 +328,7 @@ if (!isset($_SESSION['S_ID'])) {
               <div class="col-9">
               </div>
               <div class="text-left">
-                <h3 id="lbl_totalneto_editar"></h3>
+                <h3 hidden id="lbl_totalneto_editar"></h3>
                 <hr>
               </div>
               <div class="alert alert-warning alert-dismissible" style=" text-align: justify;">

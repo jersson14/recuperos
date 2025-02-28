@@ -946,7 +946,8 @@ function Agregar_practica(){
   $("#tabla_practica").append(datos_agregar);
   SumarTotal();
 
- 
+document.getElementById('txt_cantidad').value="1";
+
 }
 //BORRAR REGISTRO
 function remove(t){
@@ -1060,6 +1061,13 @@ function Registrar_Detalle_practicas(id) {
       if (resp > 0) {
           tbl_paciente_practica.ajax.reload();
           $("#modal_registro").modal('hide');
+          Cargar_Select_Obras_Sociales2();
+          Cargar_Select_Areas();
+          Cargar_Select_Paciente();
+          Cargar_Select_Practica();
+          document.getElementById('txt_cantidad').value="1";
+          $("#tabla_practica tbody#tbody_tabla_practica").empty();
+
       } else {
           return Swal.fire("Mensaje De Advertencia", "Lo sentimos, no se pudo completar el registro", "warning");
       }

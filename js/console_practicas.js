@@ -327,6 +327,8 @@ function Registrar_Practicas(){
           document.getElementById('txt_valor').value="";
 
         $("#modal_registro").modal('hide');
+        Cargar_Select_Obras_Sociales();
+
         });
       }else{
         Swal.fire("Mensaje de Advertencia","El Código ingresado ya se encuentra en la base de datos, revise por favor","warning");

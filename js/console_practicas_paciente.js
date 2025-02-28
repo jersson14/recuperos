@@ -869,7 +869,7 @@ function Agregar_practica(){
   datos_agregar+="</tr>";
   $("#tabla_practica").append(datos_agregar);
   SumarTotal();
-
+ document.getElementById('txt_cantidad').value="1";
  
 }
 //BORRAR REGISTRO
@@ -969,26 +969,40 @@ function Registrar_Detalle_practicas(id) {
   let cantidad = arreglo_cantidad.join(",");
   let subtotal = arreglo_subtotal.join(",");
 
-
   $.ajax({
       url: "../controller/practicas_paciente/controlador_detalle_practicas.php",
       type: 'POST',
       data: {
           id: id,
           practicas: practicas,
-          precio:precio,
-          cantidad:cantidad,
-          subtotal:subtotal
+          precio: precio,
+          cantidad: cantidad,
+          subtotal: subtotal
       }
   }).done(function (resp) {
       if (resp > 0) {
           tbl_paciente_practica.ajax.reload();
           $("#modal_registro").modal('hide');
-      } else {
+          Cargar_Select_Obras_Sociales2();
+          Cargar_Select_Areas();
+          Cargar_Select_Paciente();
+          Cargar_Select_Practica();
+          document.getElementById('txt_precio').value="";
+          document.getElementById('txt_cantidad').value="1";
+          document.getElementById('txt_subtotal').value="";
+
+          // Limpia la tabla después de registrar
+          $("#tabla_practica tbody#tbody_tabla_practica").empty();
+          
+          // Reinicia el total neto a 0
+          $("#lbl_totalneto").html("<b>Total:</b> $AR");
+        } else {
           return Swal.fire("Mensaje De Advertencia", "Lo sentimos, no se pudo completar el registro", "warning");
       }
   });
 }
+
+
 
 //EDITAR PRACTICAS - PACIENTE
 

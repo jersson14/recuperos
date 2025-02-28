@@ -152,7 +152,9 @@ function listar_facturas_diario(){
                     <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                       <i class='fa fa-eye'></i> Ver Detalles
                     </button>
-
+            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
                   `;
                 }
                   else{
@@ -349,7 +351,9 @@ function listar_facturas(){
                   <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                     <i class='fa fa-eye'></i> Ver Detalles
                   </button>
-
+            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
                 `;
               }
                 else{
@@ -547,7 +551,9 @@ function listar_practica_paciente_obras(){
                   <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                     <i class='fa fa-eye'></i> Ver Detalles
                   </button>
-
+            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
                 `;
               }
                 else{
@@ -750,7 +756,9 @@ function listar_practica_paciente_fecha_usu(){
                   <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                     <i class='fa fa-eye'></i> Ver Detalles
                   </button>
-
+            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
                 `;
               }
                 else{
@@ -1399,6 +1407,21 @@ function Registrar_Detalle_factura(id) {
       if (resp > 0) {
           tbl_facturas.ajax.reload();
           $("#modal_registro").modal('hide');
+          document.getElementById('txt_nro_factura').value="";
+          Cargar_Select_Obras_Sociales2();
+          Cargar_Select_Practica();
+          document.getElementById('txt_precio').value="";
+          document.getElementById('txt_factura').value="";
+          document.getElementById('label_txt_factura').innerHTML="Seleccione Factura...";
+          document.getElementById('txt_notacre').value="";
+          document.getElementById('label_txt_notacre').innerHTML="Seleccione Nota de crédito...";
+          document.getElementById('txt_fecha_nota').value="";
+
+          $("#tabla_detalle_factura tbody#tbody_tabla_practica").empty();
+
+          $("#lbl_totalneto1").html("<b>Total:</b> $AR");
+
+
       } else {
           return Swal.fire("Mensaje De Advertencia", "Lo sentimos, no se pudo completar el registro", "warning");
       }

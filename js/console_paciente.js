@@ -330,6 +330,7 @@ function Registrar_Paciente(){
           document.getElementById('txt_direccion').value="";
           document.getElementById('txt_local').value="";
           document.getElementById('txt_tele').value="";
+          Cargar_Select_Obras_Sociales();
 
         $("#modal_registro").modal('hide');
         });
