@@ -297,7 +297,7 @@ $('#tabla_usuario').on('click','.activar',function(){
       showCancelButton: true,
       confirmButtonColor: '#005CA5',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, Desactivar'
+      confirmButtonText: 'Si, Activar'
     }).then((result) => {
       if (result.isConfirmed) {
         Modificar_Estatus_Usuario(parseInt(data.id_usuario),'ACTIVO',data.USUARIO);

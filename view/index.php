@@ -207,7 +207,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </a>
               </li>
               <li class="nav-item">
-                <a href="../manual.pdf" target="blank" onclick="" class="nav-link">
+                <a href="../manual_admin.pdf" target="blank" onclick="" class="nav-link">
                   <i class="nav-icon fas fa-file-pdf"></i>
                   <p style="color:white">
                     Manual de Usuario
@@ -232,7 +232,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 <b>MANUAL</b>
               </li>
               <li class="nav-item">
-                <a href="../manual.pdf" target="blank" onclick="" class="nav-link">
+                <a href="../manual_doctor.pdf" target="blank" onclick="" class="nav-link">
                 <i class="nav-icon fas fa-file-pdf"></i>
                 <p style="color:white">
                     Manual de Usuario
