@@ -100,6 +100,8 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Fecha registro</th>
                     <th style="text-align:center">Fecha actualización</th>
                     <th style="text-align:center">Usuario que registro</th>
+                    <th style="text-align:center">Estado</th>
+                    <th style="text-align:center">Ver H.C.</th>
                     <th style="text-align:center">Acciones</th>
                   </tr>
                 </thead>
@@ -158,11 +160,19 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Cantidad<b style="color:red">(*)</b>:</label>
               <input type="number" class="form-control" id="txt_cantidad" value="1">
             </div>
-            <div class="col-6 form-group">
+            <div class="col-5 form-group">
+              <label>Archivo de H.C. <b style="color:black">(Opcional)</b>:</label>
+              <div class="custom-file position-relative">
+                <input type="file" class="custom-file-input" id="txt_hc" accept="application/pdf" onchange="updateFileLabel(event)">
+                <label class="custom-file-label" id="label_txt_hc" for="txt_hc">Seleccione H.C...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc" onclick="clearFactura()">X</button>
+              </div>
+            </div>
+            <div class="col-4 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
             </div>
-            <div class="col-6 form-group">
+            <div class="col-3 form-group">
               <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
               <input type="date" class="form-control" id="txt_fecha" disabled>
             </div>
@@ -402,12 +412,97 @@ if (!isset($_SESSION['S_ID'])) {
     </div>
   </div>
 
+  
+  <div class="modal fade" id="modal_adjuntar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1FA0E0;">
+          <div style="display: flex; flex-direction: column;color:white">
+            <h5 class="modal-title"><b>ADJUNTAR HISTORIA CLÍNICA</b></h5>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 form-group" style="color:red">
+              <h6><b>Campos Obligatorios (*)</b></h6>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Obra Social:</label>
+              <input type="text" class="form-control" id="txt_obrit" disabled>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Paciente:</label>
+              <input type="text" class="form-control" id="id_txt_paci" hidden>
+              <input type="text" class="form-control" id="txt_paci" disabled>
+            </div>
+            
+            <div class="col-12 form-group" hidden>
+              <label for="">Total:</label>
+              <input type="text" class="form-control" id="total" disabled>
+            </div>
+            <input type="text" id="foto_actual" hidden>
+
+            <div class="col-12 form-group">
+              <label>Archivo de H.C. <b style="color:red">(*)</b>:</label>
+              <div class="custom-file position-relative">
+                <input type="file" class="custom-file-input" id="txt_hc_editar" accept="application/pdf" onchange="updateFileLabel2(event)">
+                <label class="custom-file-label" id="label_txt_hc_editar" for="txt_hc_editar">Seleccione H.C...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc_editar" onclick="clearFactura2()">X</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
+          <button type="button" class="btn btn-success" onclick="Modificar_HC()"><i class="fas fa-upload"></i> Subir H.C.</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <style>
     .hidden {
       display: none;
     }
   </style>
+  <style>
+    /* Estilo para la tabla */
+    #tabla_practica_editar {
+      border: 2px solid #1FA0E0;
+      border-radius: 8px;
+    }
 
+    #tabla_practica_editar thead {
+      background-color: #1FA0E0;
+      color: white;
+    }
+
+    #tabla_practica_editar th,
+    #tabla_practica_editar td {
+      text-align: center;
+      border: 1px solid #ddd;
+      padding: 10px;
+    }
+
+    /* Asegura que los inputs y selects ocupen el ancho completo */
+    .form-group input,
+    .form-group select {
+      width: 100%;
+    }
+
+    /* Botón de limpiar archivos */
+    .btn-clear-file {
+      position: absolute;
+      right: 80px;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+    }
+  </style>
   <script>
     $(document).ready(function() {
       $('.js-example-basic-single').select2({
@@ -493,4 +588,50 @@ if (!isset($_SESSION['S_ID'])) {
       if (this.value.length > 11)
         this.value = this.value.slice(0, 9);
     })
+  </script>
+
+<script>
+    function updateFileLabel(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_hc');
+
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir H.C. (" + fileName + ")";
+      }
+    }
+
+    function clearFactura() {
+      var fileInput = document.getElementById('txt_hc');
+      var fileLabel = document.getElementById('label_txt_hc');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione H.C...";
+    }
+  </script>
+
+  <script>
+    function updateFileLabel2(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_hc_editar');
+
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir Factura (" + fileName + ")";
+      }
+    }
+
+    function clearFactura2() {
+      var fileInput = document.getElementById('txt_hc_editar');
+      var fileLabel = document.getElementById('label_txt_hc_editar');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione H.C...";
+    }
   </script>

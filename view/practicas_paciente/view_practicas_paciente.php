@@ -96,6 +96,8 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Fecha registro</th>
                     <th style="text-align:center">Fecha actualización</th>
                     <th style="text-align:center">Usuario que registro</th>
+                    <th style="text-align:center">Estado</th>
+                    <th style="text-align:center">Ver H.C.</th>
                     <th style="text-align:center">Acciones</th>
                   </tr>
                 </thead>
@@ -318,20 +320,12 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Subtotal<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_subtotal_editar" disabled>
             </div>
-            <div class="col-4 form-group">
-              <label>Archivo de H.C. <b style="color:black">(Opcional)</b>:</label>
-              <div class="custom-file position-relative">
-                <input type="file" class="custom-file-input" id="txt_hc_editar" accept="application/pdf" onchange="updateFileLabel2(event)">
-                <label class="custom-file-label" id="label_txt_hc_editar" for="txt_hc_editar">Seleccione HC.C...</label>
-                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc_editar" onclick="clearFactura2()">X</button>
-              </div>
-            </div>
-            <div class="col-4 form-group">
+            <div class="col-6 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional_editar" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
             </div>
 
-            <div class="col-4 form-group">
+            <div class="col-6 form-group">
               <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
               <input type="datetime" class="form-control" id="txt_fecha_editar" disabled>
             </div>
@@ -381,6 +375,57 @@ if (!isset($_SESSION['S_ID'])) {
       </div>
     </div>
   </div>
+
+  <div class="modal fade" id="modal_adjuntar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1FA0E0;">
+          <div style="display: flex; flex-direction: column;color:white">
+            <h5 class="modal-title"><b>ADJUNTAR HISTORIA CLÍNICA</b></h5>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 form-group" style="color:red">
+              <h6><b>Campos Obligatorios (*)</b></h6>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Obra Social:</label>
+              <input type="text" class="form-control" id="txt_obrit" disabled>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Paciente:</label>
+              <input type="text" class="form-control" id="id_txt_paci" hidden>
+              <input type="text" class="form-control" id="txt_paci" disabled>
+            </div>
+            
+            <div class="col-12 form-group">
+              <label for="">Total:</label>
+              <input type="text" class="form-control" id="total" disabled>
+            </div>
+            <input type="text" id="foto_actual" hidden>
+
+            <div class="col-12 form-group">
+              <label>Archivo de H.C. <b style="color:red">(*)</b>:</label>
+              <div class="custom-file position-relative">
+                <input type="file" class="custom-file-input" id="txt_hc_editar" accept="application/pdf" onchange="updateFileLabel2(event)">
+                <label class="custom-file-label" id="label_txt_hc_editar" for="txt_hc_editar">Seleccione H.C...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc_editar" onclick="clearFactura2()">X</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
+          <button type="button" class="btn btn-success" onclick="Modificar_HC()"><i class="fas fa-upload"></i> Subir H.C.</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 
 
   <style>

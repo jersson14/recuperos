@@ -68,12 +68,37 @@ function listar_practica_paciente_diario(){
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
+        {
+          "data": "estado",
+          render: function(data, type, row) {
+              if (data == 'PENDIENTE') {
+                  return '<span class="badge bg-warning">PENDIENTE</span>';
+              
+            } else {
+              return ` <span class="badge bg-success">COMPLETO</span>`;
+
+              }
+          }
+      },        
+      {"data":"historia_clinica",
+        render: function(data,type,row){
+                if(data=='' || data=='controller/practicas_paciente/filepracticas/'){
+                    return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                }else{
+                  return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver H.C.'><i class='fas fa-eye'></i> Ver Historia Clínica</a>";
+                }
+            }   
+        },    
 
 
        {"data":"tiene_factura",
           render: function(data,type,row){
-              if(data==0){
+              if(row.tiene_factura==0 && row.estado=='PENDIENTE'){
               return `
+                     <button class='adjuntar btn btn-dark btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Subir HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
@@ -84,16 +109,36 @@ function listar_practica_paciente_diario(){
                 <i class="fa fa-trash"></i> Eliminar
               </button>
             `;
-              }else{
-              return `
+          }else if(row.tiene_factura==0 && row.estado=='COMPLETADO'){
+            return `
+                                                   <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Editar HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
               <button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
                 <i class="fa fa-edit"></i> Editar
               </button>
-
+             <button class="eliminar btn btn-danger btn-sm" title="Eliminar práctica">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
             `;
+              }else{
+                return `
+                <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+<i class='fa fa-upload'></i> Editar HC
+</button>
+
+<button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
+<i class="fa fa-eye"></i> Ver prácticas
+</button>
+<button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
+<i class="fa fa-edit"></i> Editar
+</button>
+
+`;
               }
       }
       },
@@ -185,10 +230,37 @@ function listar_practica_paciente(){
         {"data":"USUARIO"},
 
 
+        {
+          "data": "estado",
+          render: function(data, type, row) {
+              if (data == 'PENDIENTE') {
+                  return '<span class="badge bg-warning">PENDIENTE</span>';
+              
+            } else {
+              return ` <span class="badge bg-success">COMPLETO</span>`;
+
+              }
+          }
+      },        
+      {"data":"historia_clinica",
+        render: function(data,type,row){
+                if(data=='' || data=='controller/practicas_paciente/filepracticas/'){
+                    return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                }else{
+                  return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver H.C.'><i class='fas fa-eye'></i> Ver Historia Clínica</a>";
+                }
+            }   
+        },    
+
+
         {"data":"tiene_factura",
           render: function(data,type,row){
-              if(data==0){
+              if(row.tiene_factura==0 && row.estado=='PENDIENTE'){
               return `
+                     <button class='adjuntar btn btn-dark btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Subir HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
@@ -199,16 +271,36 @@ function listar_practica_paciente(){
                 <i class="fa fa-trash"></i> Eliminar
               </button>
             `;
-              }else{
-              return `
+          }else if(row.tiene_factura==0 && row.estado=='COMPLETADO'){
+            return `
+                                                   <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Editar HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
               <button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
                 <i class="fa fa-edit"></i> Editar
               </button>
-
+             <button class="eliminar btn btn-danger btn-sm" title="Eliminar práctica">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
             `;
+              }else{
+                return `
+                <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+<i class='fa fa-upload'></i> Editar HC
+</button>
+
+<button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
+<i class="fa fa-eye"></i> Ver prácticas
+</button>
+<button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
+<i class="fa fa-edit"></i> Editar
+</button>
+
+`;
               }
       }
       },
@@ -300,10 +392,37 @@ function listar_practica_paciente_obras(){
         {"data":"USUARIO"},
 
 
+        {
+          "data": "estado",
+          render: function(data, type, row) {
+              if (data == 'PENDIENTE') {
+                  return '<span class="badge bg-warning">PENDIENTE</span>';
+              
+            } else {
+              return ` <span class="badge bg-success">COMPLETO</span>`;
+
+              }
+          }
+      },        
+      {"data":"historia_clinica",
+        render: function(data,type,row){
+                if(data=='' || data=='controller/practicas_paciente/filepracticas/'){
+                    return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                }else{
+                  return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver H.C.'><i class='fas fa-eye'></i> Ver Historia Clínica</a>";
+                }
+            }   
+        },    
+
+
         {"data":"tiene_factura",
           render: function(data,type,row){
-              if(data==0){
+            if(row.tiene_factura==0 && row.estado=='PENDIENTE'){
               return `
+                     <button class='adjuntar btn btn-dark btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Subir HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
@@ -314,20 +433,40 @@ function listar_practica_paciente_obras(){
                 <i class="fa fa-trash"></i> Eliminar
               </button>
             `;
-              }else{
-              return `
+          }else if(row.tiene_factura==0 && row.estado=='COMPLETADO'){
+            return `
+                                                   <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Editar HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
               <button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
                 <i class="fa fa-edit"></i> Editar
               </button>
+                    <button class="eliminar btn btn-danger btn-sm" title="Eliminar práctica">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
 
             `;
+              }else{
+                return `
+                <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+<i class='fa fa-upload'></i> Editar HC
+</button>
+
+<button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
+<i class="fa fa-eye"></i> Ver prácticas
+</button>
+<button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
+<i class="fa fa-edit"></i> Editar
+</button>
+
+`;
               }
       }
       },
-                
     ],
 
     "language":idioma_espanol,
@@ -415,10 +554,37 @@ function listar_practica_paciente_fecha_usu(){
         {"data":"fecha_formateada"},
         {"data":"fecha_formateada2"},
         {"data":"USUARIO"},
+        {
+          "data": "estado",
+          render: function(data, type, row) {
+              if (data == 'PENDIENTE') {
+                  return '<span class="badge bg-warning">PENDIENTE</span>';
+              
+            } else {
+              return ` <span class="badge bg-success">COMPLETO</span>`;
+
+              }
+          }
+      },        
+      {"data":"historia_clinica",
+        render: function(data,type,row){
+                if(data=='' || data=='controller/practicas_paciente/filepracticas/'){
+                    return "<button class='btn btn-danger btn-sm' disabled title='Ver archivo'><i class='fa fa-file-pdf'></i></button>";
+                }else{
+                  return "<a class='btn btn-success btn-sm' href='../"+data+"' target='_blank' title='Ver H.C.'><i class='fas fa-eye'></i> Ver Historia Clínica</a>";
+                }
+            }   
+        },    
+
+
         {"data":"tiene_factura",
           render: function(data,type,row){
-              if(data==0){
+              if(row.tiene_factura==0 || row.estado=='PENDIENTE'){
               return `
+                     <button class='adjuntar btn btn-dark btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Subir HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
@@ -429,16 +595,36 @@ function listar_practica_paciente_fecha_usu(){
                 <i class="fa fa-trash"></i> Eliminar
               </button>
             `;
-              }else{
+              }else if(row.tiene_factura==0 && row.estado=='COMPLETADO'){
               return `
+                                                   <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+  <i class='fa fa-upload'></i> Editar HC
+</button>
+
               <button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
                 <i class="fa fa-eye"></i> Ver prácticas
               </button>
               <button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
                 <i class="fa fa-edit"></i> Editar
               </button>
-
+             <button class="eliminar btn btn-danger btn-sm" title="Eliminar práctica">
+                <i class="fa fa-trash"></i> Eliminar
+              </button>
             `;
+              }else{
+                return `
+                <button class='adjuntar btn btn-warning btn-sm' title='Adjuntar archivo de H.C.'>
+<i class='fa fa-upload'></i> Editar HC
+</button>
+
+<button class="mostrar btn btn-success btn-sm" title="Mostrar prácticas del paciente">
+<i class="fa fa-eye"></i> Ver prácticas
+</button>
+<button class="editar btn btn-primary btn-sm" title="Editar datos de la práctica">
+<i class="fa fa-edit"></i> Editar
+</button>
+
+`;
               }
       }
       },
@@ -988,28 +1174,55 @@ function Registrar_Practica() {
       return Swal.fire("Mensaje de Advertencia", "La tabla de prácticas debe tener al menos un registro", "warning");
   }
 
-  let area = $("#select_area").val();
-  let paciente = $("#select_paciente").val();
-  let practica = $("#select_practica").val();
+   //DATOS DEL DOCENTE
+   let area = document.getElementById('select_area').value;
+   let paciente = document.getElementById('select_paciente').value;
+   let practica = document.getElementById('select_practica').value;
+   let total = parseFloat(document.getElementById('lbl_totalneto').textContent.replace(/[^0-9.]/g, '')) || 0;
+   let hc = document.getElementById('txt_hc').value;
+   let idusu = document.getElementById('txtprincipalid').value;
+   
+   if (!area || !paciente || !practica) {
+    return Swal.fire("Mensaje De Advertencia", "Debe llenar los datos de la práctica primero para guardar", "warning");
+}
+   // Obtener la fecha actual para generar nombres únicos
+   let f = new Date();
+   
+   // Procesar Factura
+   let histocli = "";
+   if (hc.length > 0) {
+     let extensionFact = hc.split('.').pop();
+     histocli = "HC" + f.getDate() + "-" + (f.getMonth() + 1) + "-" + f.getFullYear() + "-" + f.getHours() + "-" + f.getMilliseconds() + "." + extensionFact;
+   }
+   
+   // Procesar Nota de Crédito
 
-  if (!area || !paciente || !practica) {
-      return Swal.fire("Mensaje De Advertencia", "Debe llenar los datos de la práctica primero para guardar", "warning");
-  }
+   
+   // Crear FormData
+   let formData = new FormData();
+   let hcObj = $("#txt_hc")[0].files[0]; // Obtener el archivo de factura
+   
+   if (hcObj) {
+     formData.append("hc", hcObj, histocli);
+   }
+   
+   // Agregar otros datos al FormData
+   formData.append("area", area);
+   formData.append("paciente", paciente);
+   formData.append("total", total);
+   formData.append("histocli", histocli);
+   formData.append("hcObj", hcObj);
+   formData.append("idusu", idusu);
+   
 
-  let total = parseFloat(document.getElementById('lbl_totalneto').textContent.replace(/[^0-9.]/g, '')) || 0;
-  let idusu = document.getElementById('txtprincipalid').value;
-
-  $.ajax({
-      url: "../controller/practicas_paciente/controlador_registrar_practicas_docente.php",
-      type: 'POST',
-      data: {
-          area2: area,
-          paciente2: paciente,
-          total: total,
-          idusu: idusu
-      }
-  }).done(function (resp) {
-      if (resp > 0) {
+     $.ajax({
+       url: "../controller/practicas_paciente/controlador_registrar_practicas_docente.php",
+       type:'POST',
+       data:formData,
+       contentType:false,
+       processData:false,
+       success:function(resp){
+        if (resp > 0) {
           Registrar_Detalle_practicas(parseInt(resp));
           Swal.fire("Mensaje de Confirmación", "Datos registrados correctamente", "success").then(() => {
               tbl_paciente_practica.ajax.reload();
@@ -1018,8 +1231,10 @@ function Registrar_Practica() {
       } else {
           return Swal.fire("Mensaje De Advertencia", "Lo sentimos, no se pudo completar el registro", "warning");
       }
-  });
-}
+       }
+     });
+ }
+ 
 
 
 // REGISTRO DETALLE PRACTICAS
@@ -1391,4 +1606,64 @@ function Registrar_Paciente(){
 
     }
   })
+}
+
+//ADJUNTAR HISTORIA CLINICA
+$('#tabla_paciente_practica').on('click','.adjuntar',function(){
+  var data = tbl_paciente_practica.row($(this).parents('tr')).data();
+
+  if(tbl_paciente_practica.row(this).child.isShown()){
+      var data = tbl_paciente_practica.row(this).data();
+  }
+  $("#modal_adjuntar").modal('show');
+  document.getElementById('id_txt_paci').value=data.id_paciente_practica;
+  document.getElementById('txt_paci').value=data.PACIENTE;
+  document.getElementById('txt_obrit').value=data.obra_social;
+  document.getElementById('total').value=data.total;
+  document.getElementById('foto_actual').value=data.historia_clinica;
+
+
+})
+
+function Modificar_HC(){
+  let id = document.getElementById("id_txt_paci").value
+  let archivo = document.getElementById("txt_hc_editar").value
+  let archivoactual = document.getElementById("foto_actual").value
+
+  if(id.length==0 || archivo.length==0){
+    return Swal.fire("Mensaje de Advertencia","EL archivo no puede estar vacio","warning");
+}
+
+    let extension = archivo.split('.').pop();
+    let nombrearchivo="";
+    let f = new Date();
+    if(archivo.length>0){
+      nombrearchivo="HC"+f.getDate()+"-"+(f.getMonth()+1)+"-"+f.getFullYear()+"-"+f.getHours()+"-"+f.getMilliseconds()+"."+extension;
+    }
+    let formData = new FormData();
+    let archivoobj = $("#txt_hc_editar")[0].files[0];
+
+    formData.append("id",id);
+    formData.append("nombrearchivo",nombrearchivo);
+    formData.append("archivoactual",archivoactual);
+    formData.append("archivoobj",archivoobj);
+    $.ajax({
+      url:"../controller/practicas_paciente/controlador_modificar_hc.php",
+      type:'POST',
+      data:formData,
+      contentType:false,
+      processData:false,
+      success:function(resp){
+        if(resp.length>0){
+          Swal.fire("Mensaje de Confirmación","Archivo subido","success").then((value)=>{
+            $("#modal_adjuntar").modal('hide');
+            tbl_paciente_practica.ajax.reload();
+            document.getElementById('txt_hc_editar').value="";
+
+          });
+        }else{
+          Swal.fire("Mensaje de Advertencia","No se pudo subir el archivo","warning");
+        }
+      }
+    });
 }

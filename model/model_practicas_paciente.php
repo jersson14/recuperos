@@ -125,14 +125,15 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
-        public function Registrar_Practicas_paciente($area2,$paciente2,$total,$idusu){
+        public function Registrar_practica($area,$paciente,$total,$rutaPracticaPaci,$idusu){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_REGISTRAR_PRACTICAS_PACIENTE(?,?,?,?)";
+            $sql = "CALL SP_REGISTRAR_PRACTICAS_PACIENTE(?,?,?,?,?)";
             $query  = $c->prepare($sql);
-            $query ->bindParam(1,$area2);
-            $query ->bindParam(2,$paciente2);
+            $query ->bindParam(1,$area);
+            $query ->bindParam(2,$paciente);
             $query ->bindParam(3,$total);
-            $query ->bindParam(4,$idusu);
+            $query ->bindParam(4,$rutaPracticaPaci);
+            $query ->bindParam(5,$idusu);
 
             $query->execute();
             if($row = $query->fetchColumn()){
@@ -356,6 +357,22 @@
             } finally {
                 conexionBD::cerrar_conexion();
             }
+        }
+        public function Modificar_archivo_HC($id,$ruta){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_HC(?,?)";
+            $arreglo = array();
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query ->bindParam(2,$ruta);
+
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
         }
         
     }
