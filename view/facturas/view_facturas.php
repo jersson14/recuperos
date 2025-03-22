@@ -101,12 +101,14 @@ if (!isset($_SESSION['S_ID'])) {
                     <th style="text-align:center">Obra Social</th>
                     <th style="text-align:center">Nro. Factura</th>
                     <th style="text-align:center">Monto Total</th>
+                    <th style="text-align:center">Saldo Cobrado</th>
+                    <th style="text-align:center">Saldo Pendiente</th>
                     <th style="text-align:center">Ver Factura</th>
                     <th style="text-align:center">Ver Nota de crédito</th>
                     <th style="text-align:center">Fecha Nota de crédito</th>
                     <th style="text-align:center">Fecha registro</th>
-
                     <th style="text-align:center">Estado</th>
+                    <th style="text-align:center">Acción Pagos</th>
                     <th style="text-align:center">Acciones</th>
                   </tr>
                 </thead>
@@ -173,7 +175,7 @@ if (!isset($_SESSION['S_ID'])) {
                 <thead class="thead-dark">
                   <tr>
                     <th>Id.</th>
-                    <th>Practica</th>
+                    <th>Practica - Paciente</th>
                     <th>Subtotal</th>
                     <th>Acci&oacute;n</th>
                   </tr>
@@ -338,17 +340,17 @@ if (!isset($_SESSION['S_ID'])) {
               <label>Fecha Nota de Crédito (Opcional):</label>
               <input type="date" class="form-control" id="txt_fecha_nota_editar">
             </div>
-            
+
           </div>
           <div class="alert alert-warning alert-dismissible" style=" text-align: justify;">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-                        <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Aviso Importante!</h5>
-                        Si agregaste o eliminaste una práctica de un paciente, asegúrate de hacer clic en el botón <b>Modificar</b> para actualizar el TOTAL GENERAL en la BASE DE DATOS.
-                        </div>
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+            <h5><i class="icon fas fa-exclamation-triangle"></i> ¡Aviso Importante!</h5>
+            Si agregaste o eliminaste una práctica de un paciente, asegúrate de hacer clic en el botón <b>Modificar</b> para actualizar el TOTAL GENERAL en la BASE DE DATOS.
+          </div>
         </div>
-  
 
-      
+
+
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" data-dismiss="modal">
             <i class="fas fa-times ml-1"></i> Cerrar
@@ -515,12 +517,167 @@ if (!isset($_SESSION['S_ID'])) {
   </div>
 
 
+
+  <div class="modal fade" id="modal_pagar" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1FA0E0;">
+          <div style="display: flex; flex-direction: column;color:white">
+            <h5 class="modal-title" id="lb_tituloesta_pagar"></h5>
+            <h5 class="modal-title" id="lb_titulo2esta_pagar" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 form-group" style="color:red">
+              <h6><b>Campos Obligatorios (*)</b></h6>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Saldo Pendiente<b style="color:red">(*)</b>:</label>
+              <input type="text" id="id_pago" hidden>
+              <input type="text" class="form-control" id="txt_total" disabled>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Monto a Cancelar<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_pagar" placeholder="Ingrese el monto a cancelar" onkeypress="return soloNumeros(event)">
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Nuevo Saldo Pendiente<b style="color:red">(*)</b>:</label>
+              <input type="text" class="form-control" id="txt_saldo" disabled>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Fecha de pago<b style="color:red">(*)</b>:</label>
+              <input type="date" class="form-control" id="txt_fecha_pago" disabled>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
+          <button type="button" class="btn btn-success" onclick="Realizar_pago()"><i class="fas fa-check"></i> Pagar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="modal_ver_pagos" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div style="display: flex; flex-direction: column;color:black">
+            <h5 class="modal-title" id="lb_tituloesta_history"></h5>
+            <h5 class="modal-title" id="lb_titulo2esta_history" style="margin-top: 10px;"></h5> <!-- Espaciado entre títulos -->
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12" style="text-align:center">
+              <div class="table-responsive" style="text-align:center">
+                <div class="card-body">
+                  <!-- Título general -->
+                  <table id="tabla_ver_pagos" class="display compact" style="width:100%; text-align:center;">
+                    <thead style="background-color:#0252A0;color:#FFFFFF;">
+                      <tr>
+                        <th colspan="6" style="text-align:center; font-size: 18px; font-weight: bold;">HISTORIAL DE PAGOS</th>
+                      </tr>
+                      <tr style="text-align:center;">
+                        <th style="text-align:center;">Nro.</th>
+                        <th style="text-align:center;">Usuario que registro</th>
+                        <th style="text-align:center;">Monto cancelado</th>
+                        <th style="text-align:center;">Fecha de pago</th>
+                        <th style="text-align:center;">Estado</th>
+                        <th style="text-align:center;">Acción</th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">
+            <i class="fa fa-arrow-right-from-bracket"></i> Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="modal_ver_anulado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="background-color:#1FA0E0;">
+          <div style="display: flex; flex-direction: column;color:white">
+            <h5 class="modal-title"><b>MOTIVO DE ANULACIÓN</b></h5>
+          </div>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-12 form-group" style="color:red">
+              <h6><b>Campos Obligatorios (*)</b></h6>
+            </div>
+
+            <div class="col-12 form-group">
+              <label for="">Fecha de anulación:</label>
+              <input type="datetime" class="form-control" id="txt_fecha_anulado2" disabled>
+            </div>
+            <div class="col-12 form-group">
+              <label for="">Motivo:</label>
+              <textarea class="form-control" id="txt_motivo2" disabled rows="4" style="resize:none" placeholder="Ingrese el motivo"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fas fa-times ml-1"></i> Cerrar</button>
+          <button type="button" class="btn btn-success" onclick="Realizar_pago()"><i class="fas fa-check"></i> Pagar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
   <style>
     .hidden {
       display: none;
     }
   </style>
 
+  <script>
+    // Add an event listener to the payment input field
+    document.getElementById('txt_pagar').addEventListener('input', calculateBalance);
+
+    // Function to calculate the balance
+    function calculateBalance() {
+      // Get the values from the fields
+      const totalValue = parseFloat(document.getElementById('txt_total').value) || 0;
+      const paymentValue = parseFloat(document.getElementById('txt_pagar').value) || 0;
+
+      // Calculate the balance
+      const balance = totalValue - paymentValue;
+
+      // Display the balance in the saldo field
+      document.getElementById('txt_saldo').value = balance.toFixed(2);
+    }
+
+    // Also calculate when the total field changes
+    document.getElementById('txt_total').addEventListener('input', calculateBalance);
+
+    // Initialize the calculation when the modal opens
+    $('#modal_pagar').on('shown.bs.modal', function() {
+      calculateBalance();
+    });
+  </script>
   <script>
     $(document).ready(function() {
 
@@ -683,6 +840,7 @@ if (!isset($_SESSION['S_ID'])) {
     // Establece el valor del campo de fecha con el formato YYYY-MM-DD
     document.getElementById('txt_fecha_editar').value = y + "-" + m + "-" + d;
     document.getElementById('txt_fecha').value = y + "-" + m + "-" + d;
+    document.getElementById('txt_fecha_pago').value = y + "-" + m + "-" + d;
   </script>
 
   <script>

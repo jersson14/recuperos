@@ -159,11 +159,20 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Subtotal<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_subtotal" disabled>
             </div>
-            <div class="col-6 form-group">
+            <div class="col-4 form-group">
+              <label>Archivo de H.C. <b style="color:black">(Opcional)</b>:</label>
+              <div class="custom-file position-relative">
+                <input type="file" class="custom-file-input" id="txt_hc" accept="application/pdf" onchange="updateFileLabel(event)">
+                <label class="custom-file-label" id="label_txt_hc" for="txt_hc">Seleccione H.C...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc" onclick="clearFactura()">X</button>
+              </div>
+            </div>
+            <div class="col-4 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
             </div>
-            <div class="col-6 form-group">
+          
+            <div class="col-4 form-group">
               <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
               <input type="date" class="form-control" id="txt_fecha" disabled>
             </div>
@@ -309,11 +318,20 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Subtotal<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_subtotal_editar" disabled>
             </div>
-            <div class="col-6 form-group">
+            <div class="col-4 form-group">
+              <label>Archivo de H.C. <b style="color:black">(Opcional)</b>:</label>
+              <div class="custom-file position-relative">
+                <input type="file" class="custom-file-input" id="txt_hc_editar" accept="application/pdf" onchange="updateFileLabel2(event)">
+                <label class="custom-file-label" id="label_txt_hc_editar" for="txt_hc_editar">Seleccione HC.C...</label>
+                <button type="button" class="btn btn-danger btn-sm btn-clear-file" id="btn_clear_hc_editar" onclick="clearFactura2()">X</button>
+              </div>
+            </div>
+            <div class="col-4 form-group">
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional_editar" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
             </div>
-            <div class="col-6 form-group">
+
+            <div class="col-4 form-group">
               <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
               <input type="datetime" class="form-control" id="txt_fecha_editar" disabled>
             </div>
@@ -653,5 +671,47 @@ if (!isset($_SESSION['S_ID'])) {
     }
   </style>
   <script>
+    function updateFileLabel(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_hc');
 
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir H.C. (" + fileName + ")";
+      }
+    }
+
+    function clearFactura() {
+      var fileInput = document.getElementById('txt_hc');
+      var fileLabel = document.getElementById('label_txt_hc');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione H.C...";
+    }
+  </script>
+
+  <script>
+    function updateFileLabel2(event) {
+      var input = event.target;
+      var label = document.getElementById('label_txt_hc_editar');
+
+      if (input.files && input.files[0]) {
+        var fileName = input.files[0].name;
+        label.innerHTML = "Subir Factura (" + fileName + ")";
+      }
+    }
+
+    function clearFactura2() {
+      var fileInput = document.getElementById('txt_hc_editar');
+      var fileLabel = document.getElementById('label_txt_hc_editar');
+
+      // Limpiar el input de archivo
+      fileInput.value = '';
+
+      // Restablecer el texto del label
+      fileLabel.innerHTML = "Seleccione H.C...";
+    }
   </script>

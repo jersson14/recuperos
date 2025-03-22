@@ -1674,6 +1674,37 @@ INSERT INTO `paciente_practica` (`id_paciente_practica`, `id_area`, `id_paciente
 --
 -- Estructura de tabla para la tabla `practicas`
 --
+CREATE TABLE `usuario` (
+  `id_usuario` int(11) NOT NULL,
+  `dni_usuario` char(8) DEFAULT NULL,
+  `usu_nombre` varchar(255) DEFAULT NULL,
+  `usu_apellido` varchar(255) DEFAULT NULL,
+  `usu_email` varchar(255) DEFAULT NULL,
+  `usu_telefono` char(11) DEFAULT NULL,
+  `usu_direccion` varchar(255) DEFAULT NULL,
+  `usu_usuario` varchar(255) DEFAULT NULL,
+  `usu_contrasenia` varchar(255) DEFAULT NULL,
+  `usu_rol` enum('MEDICO','ADMINISTRADOR') DEFAULT NULL,
+  `usu_estatus` enum('DESACTIVADO','ACTIVO') DEFAULT NULL,
+  `usu_foto` varchar(500) DEFAULT NULL,
+  `id_empresa` int(11) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`id_usuario`, `dni_usuario`, `usu_nombre`, `usu_apellido`, `usu_email`, `usu_telefono`, `usu_direccion`, `usu_usuario`, `usu_contrasenia`, `usu_rol`, `usu_estatus`, `usu_foto`, `id_empresa`, `created_at`, `updated_at`) VALUES
+(1, '72646121', 'JERSSON JORGE', 'CORILLA MIRANDA', 'jersson14071996@gmail.com', '974031318', 'JR. NICOLAS DE PIEROLA', 'jersson', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-600.jpg', 1, '2025-01-18 14:56:34', '2025-01-25 11:45:46'),
+(2, '23354564', 'ESTEFANY', 'CHIPANA DAMIAN', 'ESTE23@GMAIL.COM', '922145214', 'JR. CANADA N° 323', 'ESTEFANY2025', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-312.jpg', 1, '2025-01-18 15:43:46', '2025-01-25 11:41:34'),
+(3, '34455454', 'JHOSEP', 'DAVILA MERMA', 'JHOSEP321@GMAIL.COM', '924158487', 'JR. CUSCO N° 323', 'JHOSEP12@GMAIL.COM', '$2y$12$EghB6xXAOQTSCQNeww8bYOcFEnhmAb8.Na7NqfuujdBWEXLw4z1fi', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/', 1, '2025-01-25 00:00:00', '2025-01-25 11:40:38'),
+(4, '64415434', 'SOFIA', 'SANCHEZ JIMENEZ', 'SFOI123@GMAIL.COM', '920414444', 'AV. PERU N° 323', 'SOFIA2025', '$2y$12$GLuvdovVqnkeMOZybSJ7HOo5i7dsfEBd9PF94BR35ly58UsAbzrSa', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-176.jpg', 1, '2025-01-25 00:00:00', '2025-01-25 11:43:58'),
+(5, '99526626', 'ANDRES', 'PEÑA HUAMAN', 'ANDRES21@GMAIL.COM', '954214587', 'AV. CANADA N° 323', 'ANDRES2025', '$2y$12$SgNBUsWce5wNi984Ln0uhOPvOgMd5HGmbuShTfTN.Ziyt4E2f2uBe', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-631.webp', 1, '2025-01-25 09:57:53', '2025-02-15 10:32:52'),
+(6, '15155177', 'JOSE', 'PEÑA DAVALOS', 'JOSE21@GMAIL.COM', '925414587', 'JR. CHALHUANCA N° 323', 'JOSE2025', '$2y$12$YRVa5QTS4DeNqtHsInTi8uvhmfsN9EdnJyiPzc6GrHuME5CJUtdka', 'MEDICO', '', 'controller/usuario/fotos/IMG25-1-2025-11-287.jpg', 1, '2025-01-25 11:19:45', '2025-01-25 11:37:18');
+
+
 
 CREATE TABLE `practicas` (
   `id_práctica` int(11) NOT NULL,
@@ -1751,35 +1782,6 @@ INSERT INTO `practica_totales` (`id_practica_paciente_total`, `id_practica_pacie
 -- Estructura de tabla para la tabla `usuario`
 --
 
-CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
-  `dni_usuario` char(8) DEFAULT NULL,
-  `usu_nombre` varchar(255) DEFAULT NULL,
-  `usu_apellido` varchar(255) DEFAULT NULL,
-  `usu_email` varchar(255) DEFAULT NULL,
-  `usu_telefono` char(11) DEFAULT NULL,
-  `usu_direccion` varchar(255) DEFAULT NULL,
-  `usu_usuario` varchar(255) DEFAULT NULL,
-  `usu_contrasenia` varchar(255) DEFAULT NULL,
-  `usu_rol` enum('MEDICO','ADMINISTRADOR') DEFAULT NULL,
-  `usu_estatus` enum('DESACTIVADO','ACTIVO') DEFAULT NULL,
-  `usu_foto` varchar(500) DEFAULT NULL,
-  `id_empresa` int(11) DEFAULT NULL,
-  `created_at` datetime DEFAULT NULL,
-  `updated_at` datetime DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id_usuario`, `dni_usuario`, `usu_nombre`, `usu_apellido`, `usu_email`, `usu_telefono`, `usu_direccion`, `usu_usuario`, `usu_contrasenia`, `usu_rol`, `usu_estatus`, `usu_foto`, `id_empresa`, `created_at`, `updated_at`) VALUES
-(1, '72646121', 'JERSSON JORGE', 'CORILLA MIRANDA', 'jersson14071996@gmail.com', '974031318', 'JR. NICOLAS DE PIEROLA', 'jersson', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-600.jpg', 1, '2025-01-18 14:56:34', '2025-01-25 11:45:46'),
-(2, '23354564', 'ESTEFANY', 'CHIPANA DAMIAN', 'ESTE23@GMAIL.COM', '922145214', 'JR. CANADA N° 323', 'ESTEFANY2025', '$2y$12$uNlahljrlLnIjOgmL9NnreYGzLWJSrO5dIUT8Dx.F.OsuyX7z7kkO', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-312.jpg', 1, '2025-01-18 15:43:46', '2025-01-25 11:41:34'),
-(3, '34455454', 'JHOSEP', 'DAVILA MERMA', 'JHOSEP321@GMAIL.COM', '924158487', 'JR. CUSCO N° 323', 'JHOSEP12@GMAIL.COM', '$2y$12$EghB6xXAOQTSCQNeww8bYOcFEnhmAb8.Na7NqfuujdBWEXLw4z1fi', 'MEDICO', 'ACTIVO', 'controller/usuario/fotos/', 1, '2025-01-25 00:00:00', '2025-01-25 11:40:38'),
-(4, '64415434', 'SOFIA', 'SANCHEZ JIMENEZ', 'SFOI123@GMAIL.COM', '920414444', 'AV. PERU N° 323', 'SOFIA2025', '$2y$12$GLuvdovVqnkeMOZybSJ7HOo5i7dsfEBd9PF94BR35ly58UsAbzrSa', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-176.jpg', 1, '2025-01-25 00:00:00', '2025-01-25 11:43:58'),
-(5, '99526626', 'ANDRES', 'PEÑA HUAMAN', 'ANDRES21@GMAIL.COM', '954214587', 'AV. CANADA N° 323', 'ANDRES2025', '$2y$12$SgNBUsWce5wNi984Ln0uhOPvOgMd5HGmbuShTfTN.Ziyt4E2f2uBe', 'ADMINISTRADOR', 'ACTIVO', 'controller/usuario/fotos/IMG25-1-2025-11-631.webp', 1, '2025-01-25 09:57:53', '2025-02-15 10:32:52'),
-(6, '15155177', 'JOSE', 'PEÑA DAVALOS', 'JOSE21@GMAIL.COM', '925414587', 'JR. CHALHUANCA N° 323', 'JOSE2025', '$2y$12$YRVa5QTS4DeNqtHsInTi8uvhmfsN9EdnJyiPzc6GrHuME5CJUtdka', 'MEDICO', '', 'controller/usuario/fotos/IMG25-1-2025-11-287.jpg', 1, '2025-01-25 11:19:45', '2025-01-25 11:37:18');
 
 --
 -- Índices para tablas volcadas
@@ -1851,6 +1853,10 @@ ALTER TABLE `paciente_practica`
   ADD KEY `fk_paciente` (`id_paciente`),
   ADD KEY `fk_usu233` (`id_usuario`);
 
+
+ALTER TABLE `usuario`
+  ADD PRIMARY KEY (`id_usuario`),
+  ADD KEY `fk_empresa` (`id_empresa`);
 --
 -- Indices de la tabla `practicas`
 --
@@ -1870,9 +1876,7 @@ ALTER TABLE `practica_totales`
 --
 -- Indices de la tabla `usuario`
 --
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_usuario`),
-  ADD KEY `fk_empresa` (`id_empresa`);
+
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -1935,6 +1939,10 @@ ALTER TABLE `paciente_practica`
 --
 -- AUTO_INCREMENT de la tabla `practicas`
 --
+
+ALTER TABLE `usuario`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
 ALTER TABLE `practicas`
   MODIFY `id_práctica` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
@@ -1947,8 +1955,6 @@ ALTER TABLE `practica_totales`
 --
 -- AUTO_INCREMENT de la tabla `usuario`
 --
-ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Restricciones para tablas volcadas
@@ -2006,6 +2012,9 @@ ALTER TABLE `paciente_practica`
   ADD CONSTRAINT `fk_paciente` FOREIGN KEY (`id_paciente`) REFERENCES `pacientes` (`id_paciente`) ON DELETE NO ACTION ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_usu233` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
+ALTER TABLE `usuario`
+  ADD CONSTRAINT `fk_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`) ON UPDATE CASCADE;
+COMMIT;
 --
 -- Filtros para la tabla `practicas`
 --
@@ -2023,9 +2032,7 @@ ALTER TABLE `practica_totales`
 --
 -- Filtros para la tabla `usuario`
 --
-ALTER TABLE `usuario`
-  ADD CONSTRAINT `fk_empresa` FOREIGN KEY (`id_empresa`) REFERENCES `empresa` (`id_empresa`) ON UPDATE CASCADE;
-COMMIT;
+
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

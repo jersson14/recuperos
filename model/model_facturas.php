@@ -409,6 +409,75 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         }
+
+        //PAGAR FACTURA
+        public function Realizar_pago($id,$pagar,$saldo,$idusu){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_REALIZAR_PAGO(?,?,?,?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query ->bindParam(2,$pagar);
+            $query ->bindParam(3,$saldo);
+            $query ->bindParam(4,$idusu);
+
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
+        }
+        public function Listar_historial_pagoas($id){
+            $c = conexionBD::conexionPDO();
+            $arreglo = array();
+            $sql = "CALL SP_LISTA_HISTORIAL_PAGOS(?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            foreach($resultado as $resp){
+                $arreglo["data"][]=$resp;
+            }
+            return $arreglo;
+            conexionBD::cerrar_conexion();
+        
+        }
+
+        public function Anular_pago($id,$idusu,$motivo_anulacion,$monto_anulado){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_ANULAR_PAGO(?,?,?,?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$id);
+            $query ->bindParam(2,$idusu);
+            $query ->bindParam(3,$motivo_anulacion);
+            $query ->bindParam(4,$monto_anulado);
+
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
+        }
+        public function Listar_practocaticas_por_obra($id_obra){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_LISTAR_PRACTICAS_OBRA(?)";
+            $arreglo = array();
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $id_obra); // Aquí estabas usando $id en lugar de $id_obra
+        
+            $query->execute();
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+            
+            // No necesitas el formato "data" para el uso que le estás dando
+            // Simplemente devuelve el array de resultados
+            return $resultado;
+            
+            // Esta línea nunca se ejecuta porque está después del return
+            // conexionBD::cerrar_conexion();
+        }
     }
 
 

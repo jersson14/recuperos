@@ -65,6 +65,22 @@ function listar_facturas_diario(){
             return `<strong>$AR ${data}</strong>`;
           }
         },
+        {
+          "data": "saldo_cobrado",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {
+          "data": "saldo_pendiente",
+          render: function(data, type, row) {
+            if (data == 0) {
+              return '<span class="badge bg-success fs-5">$AR ' + data + '</span>';
+            } else {
+              return '<span class="badge bg-danger fs-5">$AR ' + data + '</span>';
+            }
+          }
+        },
         {"data":"archivo_fact",
           render: function(data,type,row){
                   if(data=='' || data=='controller/facturas/filefacturas/'){
@@ -100,14 +116,38 @@ function listar_facturas_diario(){
                 } else if (data == 'FACTURADA') {
                   return '<span class="badge bg-primary">FACTURADA</span>';
               } else {
-                    return ` <span class="badge bg-danger">RECHAZADA</span>                    `;
+                    return '<span class="badge bg-danger">RECHAZADA</span>';
                 }
             }
         },        
+        {
+          "data": "saldo_pendiente",
+          render: function(data, type, row) {
+              if (data == 0) {
+                  return  `
+             
+                  <button class='pagar btn btn-success btn-sm' title='Realizar pago' hidden>
+                      <i class='fa fa-exchange-alt'></i> Pagar
+                  </button>
+                  <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos' > 
+                      <i class="fa fa-dollar-sign"></i> Historial pagos
+                    </button>
+                    `;
+            } else {
+                  return ` <button class='pagar btn btn-success btn-sm' title='Realizar pago'>
+                      <i class='fa fa-exchange-alt'></i> Pagar
+                  </button>
+                  <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                      <i class="fa fa-dollar-sign"></i> Historial pagos
+                    </button>                    `;
+              }
+          }
+      },        
 
         {"data":"estado_fact",
           render: function(data,type,row){
                   if(data=='PENDIENTE'){
+                    if (row.monto === row.saldo_pendiente) {
                       return  `
                       <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
                         <i class="fa fa-history"></i> Historial
@@ -125,9 +165,30 @@ function listar_facturas_diario(){
                         <i class='fa fa-trash'></i> Eliminar
                       </button>
                     `;
-                  }else if(data=='COBRADA'){
+                    }else{
                       return  `
-                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                    }
+                   
+                  }else if(data=='COBRADA'){
+                    if (row.monto === row.saldo_pendiente) {
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
                         <i class="fa fa-history"></i> Historial
                       </button>
                       <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
@@ -143,23 +204,68 @@ function listar_facturas_diario(){
                         <i class='fa fa-trash'></i> Eliminar
                       </button>
                     `;
-                  }else if(data=='FACTURADA'){
-                    return  `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    }else{
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
                         <i class='fa fa-trash'></i> Eliminar
                       </button>
-                  `;
+                    `;
+                    }
+                  }else if(data=='FACTURADA'){
+                    if (row.monto === row.saldo_pendiente) {
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                    }else{
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                    }
                 }
                   else{
-                      return `
-                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
+                    if (row.monto === row.saldo_pendiente) {
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
                         <i class="fa fa-history"></i> Historial
                       </button>
                       <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
@@ -175,6 +281,25 @@ function listar_facturas_diario(){
                         <i class='fa fa-trash'></i> Eliminar
                       </button>
                     `;
+                    }else{
+                      return  `
+                      <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                        <i class="fa fa-history"></i> Historial
+                      </button>
+                      <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                          <i class='fa fa-exchange-alt'></i> Cambiar estado
+                      </button>
+                      <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                        <i class='fa fa-eye'></i> Ver Detalles
+                      </button>
+                      <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                        <i class='fa fa-edit'></i> Editar
+                      </button>
+                      <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                        <i class='fa fa-trash'></i> Eliminar
+                      </button>
+                    `;
+                    }
                   }
           }   
       },
@@ -263,6 +388,22 @@ function listar_facturas(){
             return `<strong>$AR ${data}</strong>`;
           }
         },
+        {
+          "data": "saldo_cobrado",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {
+          "data": "saldo_pendiente",
+          render: function(data, type, row) {
+            if (data == 0) {
+              return '<span class="badge bg-success fs-5">$AR ' + data + '</span>';
+            } else {
+              return '<span class="badge bg-danger fs-5">$AR ' + data + '</span>';
+            }
+          }
+        },
         {"data":"archivo_fact",
           render: function(data,type,row){
                   if(data=='' || data=='controller/facturas/filefacturas/'){
@@ -303,80 +444,188 @@ function listar_facturas(){
               }
           }
       },        
-
-      {"data":"estado_fact",
-        render: function(data,type,row){
-                if(data=='PENDIENTE'){
-                    return  `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm'  title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
+      {
+        "data": "saldo_pendiente",
+        render: function(data, type, row) {
+            if (data == 0) {
+                return  `
+           
+                <button class='pagar btn btn-success btn-sm' title='Realizar pago' hidden>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>
                   `;
-                }else if(data=='COBRADA'){
-                    return  `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm'  title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
-                  `;
-                }else if(data=='FACTURADA'){
+          } else {
+                return ` <button class='pagar btn btn-success btn-sm' title='Realizar pago'>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>                    `;
+            }
+        }
+    },        
+    {"data":"estado_fact",
+      render: function(data,type,row){
+              if(data=='PENDIENTE'){
+                if (row.monto === row.saldo_pendiente) {
                   return  `
-                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
                     <i class="fa fa-history"></i> Historial
                   </button>
-
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
                   <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                     <i class='fa fa-eye'></i> Ver Detalles
                   </button>
-            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                        <i class='fa fa-trash'></i> Eliminar
-                      </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
                 `;
-              }
-                else{
-                    return `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm'  title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
-                  `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
                 }
-        }   
-    },
+               
+              }else if(data=='COBRADA'){
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+              }else if(data=='FACTURADA'){
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+            }
+              else{
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+              }
+      }   
+  },
                 
     ],
 
@@ -463,6 +712,22 @@ function listar_practica_paciente_obras(){
             return `<strong>$AR ${data}</strong>`;
           }
         },
+        {
+          "data": "saldo_cobrado",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {
+          "data": "saldo_pendiente",
+          render: function(data, type, row) {
+            if (data == 0) {
+              return '<span class="badge bg-success fs-5">$AR ' + data + '</span>';
+            } else {
+              return '<span class="badge bg-danger fs-5">$AR ' + data + '</span>';
+            }
+          }
+        },
         {"data":"archivo_fact",
           render: function(data,type,row){
                   if(data=='' || data=='controller/facturas/filefacturas/'){
@@ -503,7 +768,29 @@ function listar_practica_paciente_obras(){
               }
           }
       },        
-
+      {
+        "data": "saldo_pendiente",
+        render: function(data, type, row) {
+            if (data == 0) {
+                return  `
+           
+                <button class='pagar btn btn-success btn-sm' title='Realizar pago' hidden>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>
+                  `;
+          } else {
+                return ` <button class='pagar btn btn-success btn-sm' title='Realizar pago'>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>                    `;
+            }
+        }
+    },        
       {"data":"estado_fact",
         render: function(data,type,row){
                 if(data=='PENDIENTE'){
@@ -666,6 +953,22 @@ function listar_practica_paciente_fecha_usu(){
             return `<strong>$AR ${data}</strong>`;
           }
         },
+        {
+          "data": "saldo_cobrado",
+          "render": function (data, type, row) {
+            return `<strong>$AR ${data}</strong>`;
+          }
+        },
+        {
+          "data": "saldo_pendiente",
+          render: function(data, type, row) {
+            if (data == 0) {
+              return '<span class="badge bg-success fs-5">$AR ' + data + '</span>';
+            } else {
+              return '<span class="badge bg-danger fs-5">$AR ' + data + '</span>';
+            }
+          }
+        },
         {"data":"archivo_fact",
           render: function(data,type,row){
                   if(data=='' || data=='controller/facturas/filefacturas/'){
@@ -703,85 +1006,193 @@ function listar_practica_paciente_fecha_usu(){
               } else if (data == 'FACTURADA') {
                 return '<span class="badge bg-primary">FACTURADA</span>';
             } else {
-              return ` <span class="badge bg-danger">RECHAZADA</span>                    `;
+              return ` <span class="badge bg-danger">RECHAZADA</span>`;
 
               }
           }
       },        
-
-      {"data":"estado_fact",
-        render: function(data,type,row){
-                if(data=='PENDIENTE'){
-                    return  `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
+      {
+        "data": "saldo_pendiente",
+        render: function(data, type, row) {
+            if (data == 0) {
+                return  `
+           
+                <button class='pagar btn btn-success btn-sm' title='Realizar pago' hidden>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>
                   `;
-                }else if(data=='COBRADA'){
-                    return  `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
-                  `;
-                }else if(data=='FACTURADA'){
+          } else {
+                return ` <button class='pagar btn btn-success btn-sm' title='Realizar pago'>
+                    <i class='fa fa-exchange-alt'></i> Pagar
+                </button>
+                <button class='historial_pagos btn btn-dark btn-sm' title='Ver historial pagos'> 
+                    <i class="fa fa-dollar-sign"></i> Historial pagos
+                  </button>                    `;
+            }
+        }
+    },        
+    {"data":"estado_fact",
+      render: function(data,type,row){
+              if(data=='PENDIENTE'){
+                if (row.monto === row.saldo_pendiente) {
                   return  `
-                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
                     <i class="fa fa-history"></i> Historial
                   </button>
-
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
                   <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
                     <i class='fa fa-eye'></i> Ver Detalles
                   </button>
-            <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                        <i class='fa fa-trash'></i> Eliminar
-                      </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
                 `;
-              }
-                else{
-                    return `
-                    <button class='historial_fac btn btn-dark btn-sm' title='Ver historia'>
-                      <i class="fa fa-history"></i> Historial
-                    </button>
-                    <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
-                        <i class='fa fa-exchange-alt'></i> Cambiar estado
-                    </button>
-                    <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
-                      <i class='fa fa-eye'></i> Ver Detalles
-                    </button>
-                    <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
-                      <i class='fa fa-edit'></i> Editar
-                    </button>
-                    <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
-                      <i class='fa fa-trash'></i> Eliminar
-                    </button>
-                  `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
                 }
-        }   
-    },
+               
+              }else if(data=='COBRADA'){
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+              }else if(data=='FACTURADA'){
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+            }
+              else{
+                if (row.monto === row.saldo_pendiente) {
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }else{
+                  return  `
+                  <button class='historial_fac btn btn-dark btn-sm' title='Ver historial'>
+                    <i class="fa fa-history"></i> Historial
+                  </button>
+                  <button class='cambio btn btn-warning btn-sm' title='Cambiar estado'>
+                      <i class='fa fa-exchange-alt'></i> Cambiar estado
+                  </button>
+                  <button class='mostrar btn btn-success btn-sm' title='Mostrar detalle de la factura'>
+                    <i class='fa fa-eye'></i> Ver Detalles
+                  </button>
+                  <button class='editar hidden btn btn-primary btn-sm' title='Editar datos de la factura'>
+                    <i class='fa fa-edit'></i> Editar
+                  </button>
+                  <button class='eliminar btn btn-danger btn-sm' title='Eliminar factura'>
+                    <i class='fa fa-trash'></i> Eliminar
+                  </button>
+                `;
+                }
+              }
+      }   
+  },
     ],
 
     "language":idioma_espanol,
@@ -889,85 +1300,88 @@ function Cargar_Select_Obras_Sociales2() {
     type: 'POST'
   }).done(function(resp) {
     let data = JSON.parse(resp);
-    cadena = "<option value='' disabled selected>Seleccione Obra Social</option>"; // Placeholder por defecto
+    let cadena = "<option value='' disabled selected>Seleccione Obra Social</option>"; // Placeholder por defecto
+    
     if (data.length > 0) {
       for (let i = 0; i < data.length; i++) {
-        cadena += "<option value='" + data[i][0] + "'>CUIT: " + data[i][1] + " - Nombre: " + data[i][2] + "</option>";
+        cadena += `<option value='${data[i][0]}'>CUIT: ${data[i][1]} - Nombre: ${data[i][2]}</option>`;
       }
-      $('#select_obras, #select_obras_editar').html(cadena);
-      
-
-   
-      // Cargar las prácticas correspondientes a la obra seleccionada por defecto
-      var id_practica = $("#select_practica").val();
-      Cargar_Select_Practica(id_practica, 'select_practica');
-
-            // Cargar las prácticas correspondientes a la obra seleccionada por defecto
-            var id_practica2 = $("#select_practica_editar").val();
-            Cargar_Select_Practica(id_practica2, 'select_practica_editar');
-
-      
-    } else {
-      $('#select_obras, #select_obras_editar').html(cadena);
     }
-    $('#select_obras,#select_obras_editar').select2({
+
+    $('#select_obras, #select_obras_editar').html(cadena).select2({
       placeholder: "Seleccionar Obra Social",
       allowClear: true,
-      width: '100%' // Asegura que use todo el ancho
+      width: '100%' 
     });
+
+    // Evento change para cargar prácticas cuando cambia la obra social
+    $('#select_obras, #select_obras_editar').off('change').on('change', function() {
+      let obraSocialId = $(this).val();
+      let selectPracticaId = $(this).attr("id") === "select_obras" ? "select_practica" : "select_practica_editar";
+
+      if (obraSocialId) {
+        Cargar_Select_Practica(obraSocialId, selectPracticaId); // Cargar prácticas para la obra social seleccionada
+        cargarDetallePracticasPorObraSocial(obraSocialId);
+      } else {
+        // Si no hay obra social seleccionada, limpiar la tabla y selects
+        $(`#${selectPracticaId}`).html("<option value='' disabled selected>No hay datos disponibles</option>").trigger("change");
+        $('#tbody_tabla_practica_editar').html('');
+        $('#lbl_totalneto1_editar').text('Total: $0.00');
+      }
+    });
+
+    // Si ya hay una obra social seleccionada, cargar sus prácticas
+    let obraSocialIdInicial = $('#select_obras_editar').val();
+    if (obraSocialIdInicial) {
+      Cargar_Select_Practica(obraSocialIdInicial, "select_practica_editar");
+      cargarDetallePracticasPorObraSocial(obraSocialIdInicial);
+    }
+  }).fail(function() {
+    console.error("Error al cargar las obras sociales.");
   });
 }
 
-
-
-
-function Cargar_Select_Practica(id2, id_practica = null) {
+function Cargar_Select_Practica(obraSocialId, selectId, id_practica = null) {
   $.ajax({
     url: "../controller/facturas/controlador_cargar_select_paciente_practica_factura.php",
     type: 'POST',
-    data: { id2: id2 },
+    data: { id2: obraSocialId },
   }).done(function(resp) {
     let data = JSON.parse(resp);
     let cadena = "<option value='' disabled selected>No hay datos disponibles</option>";
 
     if (data.length > 0) {
-      cadena = "<option value='' disabled selected>Seleccione práctica</option>"; // Placeholder
+      cadena = "<option value='' disabled selected>Seleccione práctica</option>";
       for (let i = 0; i < data.length; i++) {
-        cadena += "<option value='" + data[i][0] + "'>DNI: " + data[i][1] + " - Paciente: " + data[i][2] + "</option>";
-
+        cadena += `<option value='${data[i][0]}'>DNI: ${data[i][1]} - Paciente: ${data[i][2]}</option>`;
       }
     }
 
-    // Actualizar los selects
-    $('#select_practica').html(cadena);
-    $('#select_practica_editar').html(cadena);
- 
-    // Si hay una práctica seleccionada para edición
-    if (id_practica) {
-      $('#select_practica_editar').val(id_practica).trigger('change');
-    }
-
-    // Inicializar select2
-    $('#select_practica').select2({
+    $(`#${selectId}`).html(cadena).select2({
       placeholder: "Seleccionar práctica - paciente",
       allowClear: true,
       width: '100%'
     });
 
+    if (id_practica) {
+      $(`#${selectId}`).val(id_practica).trigger('change');
+    }
+
     // Evento change para cargar el precio cuando se seleccione una práctica
-    $('#select_practica').on('change', function() {
-      var idSeleccionado = $(this).val();
+    $(`#${selectId}`).off('change').on('change', function() {
+      let idSeleccionado = $(this).val();
       if (idSeleccionado) {
         Traerprecio(idSeleccionado);
       } else {
-        $("#txt_precio").val(''); // Limpiar si no hay selección
+        $("#txt_precio").val('');
       }
     });
 
   }).fail(function() {
-    console.log("Error al cargar las prácticas.");
+    console.error("Error al cargar las prácticas.");
   });
 }
+
 
 function Traerprecio(id) {
   $.ajax({
@@ -988,6 +1402,55 @@ function Traerprecio(id) {
     console.log("Error al traer el precio.");
   });
 }
+function cargarDetallePracticasPorObraSocial(obraSocialId) {
+  let tbody = $('#tbody_tabla_practica');
+  tbody.html('<tr><td colspan="4">Cargando...</td></tr>');
+
+  $.ajax({
+    url: "../controller/facturas/controlador_cargar_practicas_por_obra.php",
+    type: 'POST',
+    data: { id_obra: obraSocialId }
+  }).done(function(resp) {
+    try {
+      let data = JSON.parse(resp);
+      let html = '';
+      let totalNeto = 0;
+      
+      if (data.length > 0) {
+        data.forEach(practica => {
+          const subtotal = parseFloat(practica.total) || 0;
+          totalNeto += subtotal;
+          html += `
+            <tr>
+              <td for="id">${practica.id_paciente_practica}</td>
+              <td>${practica.Dni} - ${practica.paciente}</td>
+              <td>${subtotal.toFixed(2)}</td>
+              <td>
+                <button class="btn btn-danger btn-sm" onclick='remove(this)'>
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>`;
+        });
+      } else {
+        html = '<tr><td colspan="4">No hay prácticas disponibles para esta obra social</td></tr>';
+      }
+
+      tbody.html(html);
+      $("#lbl_totalneto1").html(`<b>Total:</b> $AR ${totalNeto.toFixed(2)}`);
+    } catch (error) {
+      console.error('Error al procesar los datos:', error);
+      tbody.html('<tr><td colspan="4">Error al procesar los datos</td></tr>');
+    }
+  }).fail(function(error) {
+    console.error('Error al cargar las prácticas:', error);
+    tbody.html('<tr><td colspan="4">Error al cargar las prácticas</td></tr>');
+  });
+}
+
+
+
+
 
 // MODAL ESTADO
 $('#tabla_facturas').on('click','.cambio',function(){
@@ -1265,22 +1728,22 @@ function remove(t){
   SumarTotal();
   console.log(SumarTotal());
 }
-function SumarTotal(){
-  let arreglo_total=new Array();
-   let count=0;
-   let total=0;
-   $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").each(function(){
-     arreglo_total.push($(this).find('td').eq(2).text());
-     count++;
-   })
-   for(var i=0;i<count;i++){
-     var suma = arreglo_total[i];
-     total=(parseFloat(total)+parseFloat(suma)).toFixed(2);
-     
-   };
-   $("#lbl_totalneto1").html("<b>Total:</b> $AR "+total);
+function SumarTotal() {
+  let total = 0;
 
- }
+  $("#tabla_detalle_factura tbody#tbody_tabla_practica tr").each(function() {
+    let monto = $(this).find('td').eq(2).text().replace(/[^0-9.]/g, ''); // Elimina todo excepto números y punto decimal
+    
+    let valorNumerico = parseFloat(monto);
+    
+    if (!isNaN(valorNumerico)) { // Verifica si es un número válido
+      total += valorNumerico;
+    }
+  });
+
+  $("#lbl_totalneto1").html(`<b>Total:</b> $AR ${total.toFixed(2)}`);
+}
+
 
 function verificarid(id){
   let idverificar=document.querySelectorAll('#tabla_detalle_factura td[for="id"]');
@@ -1938,3 +2401,265 @@ function Modificar_detalle_facturas() {
 }
 
 
+//FUNCIONALIDADES PARA PAGO
+
+$('#tabla_facturas').on('click', '.pagar', function () {
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if (tbl_facturas.row(this).child.isShown()) {
+      data = tbl_facturas.row(this).data();
+  }
+
+  // Mostrar el modal
+  $("#modal_pagar").modal('show');
+
+  // Esperar a que el modal termine de abrirse para enfocar el campo
+  $("#modal_pagar").on('shown.bs.modal', function () {
+      $('#txt_pagar').trigger('focus');
+  });
+
+  // Actualizar los valores en el modal
+  document.getElementById('lb_tituloesta_pagar').innerHTML = "<b>FACTURA N°:</b> " + data.numero_fact;
+  document.getElementById('lb_titulo2esta_pagar').innerHTML = "<b>OBRA SOCIAL:</b> " + data.obra_social;
+  document.getElementById('id_pago').value = data.id_factura;
+  document.getElementById('txt_total').value = data.saldo_pendiente;
+});
+
+
+//PAGAR FACTURA
+function Realizar_pago(){
+  let id = document.getElementById('id_pago').value;
+  let total = document.getElementById('txt_total').value;
+  let pagar = document.getElementById('txt_pagar').value;
+  let saldo = document.getElementById('txt_saldo').value;
+  let idusu = document.getElementById('txtprincipalid').value;
+
+  if (isNaN(pagar) || pagar <= 0) {
+    return Swal.fire("Mensaje de Advertencia", "Ingrese un monto válido a pagar", "warning");
+}
+
+if (pagar > total) {
+    return Swal.fire("Mensaje de Advertencia", "El monto a pagar no puede ser mayor al total", "warning");
+}
+  $.ajax({
+    "url":"../controller/facturas/controlador_realizar_pago.php",
+    type:'POST',
+    data:{
+      id:id,
+      pagar:pagar,
+      saldo:saldo,
+      idusu:idusu
+    }
+  }).done(function(resp){
+    if(resp>0){
+        Swal.fire("Mensaje de Confirmación","Se realizo correctamente el pago con el monto de: AR$"+pagar,"success").then((value)=>{
+          tbl_facturas.ajax.reload();
+        $("#modal_pagar").modal('hide');
+        });
+    }else{
+      return Swal.fire("Mensaje de Error","No se completo el pago","error");
+
+    }
+  })
+}
+
+
+//MODAL VER PAGOS
+$('#tabla_facturas').on('click','.historial_pagos',function(){
+  var data = tbl_facturas.row($(this).parents('tr')).data();
+
+  if(tbl_facturas.row(this).child.isShown()){
+      var data = tbl_facturas.row(this).data();
+  }
+$("#modal_ver_pagos").modal('show');
+
+document.getElementById('lb_tituloesta_history').innerHTML = "<b>FACTURA N°:</b> " + data.numero_fact;
+document.getElementById('lb_titulo2esta_history').innerHTML = "<b>OBRA SOCIAL:</b> " + data.obra_social;
+listar_pagos(data.id_factura);
+
+})
+// VISTA DE HISTORIAL
+var tbl_pagos;
+function listar_pagos(id) {
+  tbl_pagos = $("#tabla_ver_pagos").DataTable({
+      "ordering": false,
+      "bLengthChange": true,
+      "searching": false,  // Deshabilita la barra de búsqueda
+      "lengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "Todos"]],
+      "pageLength": 5,
+      "destroy": true,
+      "pagingType": 'full_numbers',
+      "scrollCollapse": true,
+      "responsive": true,
+      "async": false,
+      "processing": true,
+      "ajax": {
+          "url": "../controller/facturas/controlador_listar_pagos.php",
+          "type": 'POST',
+          "data": { id: id },
+          "dataSrc": function(json) {
+              console.log("Respuesta JSON:", json);
+              return json.data;
+          }
+      },
+      "dom": 'Bfrtip', 
+      "buttons": [
+        {
+          extend: 'excelHtml5',
+          text: '<i class="fas fa-file-excel"></i> Excel',
+          titleAttr: 'Exportar a Excel',
+          filename: "LISTA_DE_HISTORIAL_DE_PAGOS",
+          title: "LISTA DE HISTORIAL DE PAGOS",
+          className: 'btn btn-success' 
+        },
+        {
+          extend: 'pdfHtml5',
+          text: '<i class="fas fa-file-pdf"></i> PDF',
+          titleAttr: 'Exportar a PDF',
+          filename: "LISTA_DE_HISTORIAL_DE_PAGOS",
+          title: "LISTA DE HISTORIAL DE PAGOS",
+          className: 'btn btn-danger'
+        },
+        {
+          extend: 'print',
+          text: '<i class="fa fa-print"></i> Imprimir',
+          titleAttr: 'Imprimir',
+          title: "LISTA DE HISTORIAL DE PAGOS",
+          className: 'btn btn-primary' 
+        }
+      ],
+      "columns": [
+          { "data": null, "render": function(data, type, row, meta) { return meta.row + 1; } }, 
+          { "data": "USUARIO" },
+          {
+            "data": "monto_pagado",
+            "render": function (data, type, row) {
+              return `<strong>$AR ${data}</strong>`;
+            }
+          },
+          { "data": "fecha_formateada" },
+          {"data":"estado",
+            render: function(data,type,row){
+                    if(data=='VALIDO'){
+                    return '<span class="badge bg-success">VALIDO</span>';
+                    }else{
+                    return '<span class="badge bg-danger">ANULADO</span>';
+                    }
+            }   
+        },
+          {
+            "data": "estado",
+            render: function(data, type, row) {
+                if (data == 'VALIDO') {
+                    return  `
+                   <button class='anular btn btn-danger btn-sm' title='Anular el pago'><i class='fa fa-ban'></i> Anular</button>
+                    <button class='ver_anulado btn btn-warning btn-sm' hidden title='Ver motivo'><i class='fa fa-eye'></i> Ver Anulado</button>
+                      `;
+              } else {
+                return  `
+                <button class='anular btn btn-danger btn-sm' hidden title='Anular el pago'><i class='fa fa-ban'></i> Anular</button>
+                    <button class='ver_anulado btn btn-warning btn-sm' title='Ver motivo'><i class='fa fa-eye'></i> Ver Anulado</button>
+                   `;
+                }
+            }
+        },        
+      ],
+      "language": {
+          "emptyTable": "No se encontraron datos", // ✅ Mensaje cuando la tabla está vacía
+          "zeroRecords": "No se encontraron resultados", // ✅ Mensaje para búsquedas sin coincidencias
+          "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+          "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+          "infoFiltered": "(filtrado de _MAX_ registros en total)",
+          "lengthMenu": "Mostrar _MENU_ registros",
+          "loadingRecords": "Cargando...",
+          "processing": "Procesando...",
+          "search": "Buscar:",
+          "paginate": {
+              "first": "Primero",
+              "last": "Último",
+              "next": "Siguiente",
+              "previous": "Anterior"
+          }
+      },
+      "select": true
+  });
+}
+
+
+//ANULAR PAGO
+function Anular_pago(id, motivo, monto_anulado) {
+  let idusu = document.getElementById('txtprincipalid').value;
+
+
+
+  $.ajax({
+      url: "../controller/facturas/controlador_anular_pago.php",
+      type: 'POST',
+      data: {
+          id: id,
+          idusu: idusu,
+          motivo_anulacion: motivo,  // Enviamos el motivo de anulación
+          monto_anulado: monto_anulado       // Enviamos el monto anulado
+      }
+  }).done(function(resp) {
+      if (resp > 0) {
+          Swal.fire("Mensaje de Confirmación", "Se anuló el pago con éxito", "success").then(() => {
+              tbl_pagos.ajax.reload();
+              tbl_facturas.ajax.reload();
+          });
+      } else {
+          return Swal.fire("Mensaje de Advertencia", "No se puede anular el pago, verifique por favor", "warning");
+      }
+  });
+}
+
+// ENVIANDO AL BOTÓN DELETE
+$('#tabla_ver_pagos').on('click', '.anular', function() {
+  var data = tbl_pagos.row($(this).parents('tr')).data();
+
+  if (tbl_pagos.row(this).child.isShown()) {
+      var data = tbl_pagos.row(this).data();
+  }
+
+  Swal.fire({
+      title: '¿Desea anular el pago de <b style="color:blue">AR$ ' + data.monto_pagado + '</b>?',
+      html: "<p>Por favor, ingrese el motivo de la anulación antes de confirmar.</p>" +
+            "<p style='color:red; font-weight: bold;'>⚠️ Al anular este pago:</p>" +
+            "<ul style='text-align: left; color: red; font-weight: bold;'>" +
+            "<li>El monto será sumado al <b>Saldo pendiente</b>.</li>" +
+            "<li>El monto será restado del <b>Saldo cobrado</b>.</li>" +
+            "</ul>",
+      icon: 'warning',
+      input: 'text',
+      inputPlaceholder: 'Escriba el motivo de la anulación...',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, Anular',
+      preConfirm: (motivo) => {
+          if (!motivo) {
+              Swal.showValidationMessage("El motivo de anulación es obligatorio");
+          }
+          return motivo;
+      }
+  }).then((result) => {
+      if (result.isConfirmed) {
+          let motivoAnulacion = result.value;
+          Anular_pago(data.id_historial_pagos, motivoAnulacion, data.monto_pagado);
+      }
+  });
+});
+
+
+$('#tabla_ver_pagos').on('click','.ver_anulado',function(){
+  var data = tbl_pagos.row($(this).parents('tr')).data();
+
+  if(tbl_pagos.row(this).child.isShown()){
+      var data = tbl_pagos.row(this).data();
+  }
+$("#modal_ver_anulado").modal('show');
+
+document.getElementById('txt_motivo2').value = data.motivo_anulacion;
+document.getElementById('txt_fecha_anulado2').value = data.fecha_anula;
+
+})
