@@ -1827,7 +1827,8 @@ function Registrar_Practica_paciente() {
              document.getElementById('txt_fecha_nota').value = "";
             Cargar_Select_Obras_Sociales2();
             Cargar_Select_Practica();
- 
+            $("#tabla_detalle_factura tbody#tbody_tabla_practica").empty();
+
              // Cerrar el modal
 
             });

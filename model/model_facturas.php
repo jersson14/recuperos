@@ -427,22 +427,23 @@
                 return 0;
             }
             conexionBD::cerrar_conexion();
-        }
-        public function Listar_historial_pagoas($id){
+        }public function Listar_historial_pagoas($id) {
             $c = conexionBD::conexionPDO();
-            $arreglo = array();
+            $arreglo = ["data" => []]; // ✅ Asegura que la clave "data" siempre existe
             $sql = "CALL SP_LISTA_HISTORIAL_PAGOS(?)";
-            $query  = $c->prepare($sql);
-            $query ->bindParam(1,$id);
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $id);
             $query->execute();
             $resultado = $query->fetchAll(PDO::FETCH_ASSOC);
-            foreach($resultado as $resp){
-                $arreglo["data"][]=$resp;
-            }
-            return $arreglo;
-            conexionBD::cerrar_conexion();
         
+            if (!empty($resultado)) { // ✅ Solo llena "data" si hay resultados
+                $arreglo["data"] = $resultado;
+            }
+        
+            conexionBD::cerrar_conexion();
+            return $arreglo;
         }
+        
 
         public function Anular_pago($id,$idusu,$motivo_anulacion,$monto_anulado){
             $c = conexionBD::conexionPDO();

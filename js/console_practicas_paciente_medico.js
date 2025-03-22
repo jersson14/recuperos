@@ -705,6 +705,24 @@ function Cargar_Select_Areas() {
   });
 }
 
+$('#modal_registro').on('shown.bs.modal', function() {
+  $('#select_area').select2({
+    placeholder: "Seleccionar Área",
+    allowClear: true,
+      dropdownParent: $('#modal_registro')
+  });
+});
+
+$('#modal_editar').on('shown.bs.modal', function() {
+  $('#select_area_editar').select2({
+    placeholder: "Seleccionar Área",
+    allowClear: true,
+      dropdownParent: $('#modal_editar')
+  });
+});
+
+
+
 
 function Cargar_Select_Obras_Sociales() {
   $.ajax({
@@ -772,6 +790,23 @@ function Cargar_Select_Obras_Sociales2() {
     });
   });
 }
+
+$('#modal_registro').on('shown.bs.modal', function() {
+  $('#select_obras').select2({
+    placeholder: "Seleccionar Obra Social",
+    allowClear: true,
+      dropdownParent: $('#modal_registro')
+  });
+});
+
+$('#modal_editar').on('shown.bs.modal', function() {
+  $('#select_obras_editar').select2({
+    placeholder: "Seleccionar Obra Social",
+    allowClear: true,
+      dropdownParent: $('#modal_editar')
+  });
+});
+
 // Función para cargar pacientes
 function Cargar_Select_Paciente(id) {
   console.log("Cargando pacientes para obra social ID:", id); // Debug
