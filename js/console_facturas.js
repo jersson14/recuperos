@@ -2427,40 +2427,40 @@ $('#tabla_facturas').on('click', '.pagar', function () {
 
 
 //PAGAR FACTURA
-function Realizar_pago(){
+function Realizar_pago() {
   let id = document.getElementById('id_pago').value;
-  let total = document.getElementById('txt_total').value;
-  let pagar = document.getElementById('txt_pagar').value;
-  let saldo = document.getElementById('txt_saldo').value;
+  let total = parseFloat(document.getElementById('txt_total').value) || 0;
+  let pagar = parseFloat(document.getElementById('txt_pagar').value) || 0;
+  let saldo = parseFloat(document.getElementById('txt_saldo').value) || 0;
   let idusu = document.getElementById('txtprincipalid').value;
 
   if (isNaN(pagar) || pagar <= 0) {
-    return Swal.fire("Mensaje de Advertencia", "Ingrese un monto válido a pagar", "warning");
-}
+      return Swal.fire("Mensaje de Advertencia", "Ingrese un monto válido a pagar", "warning");
+  }
 
-if (pagar > total) {
-    return Swal.fire("Mensaje de Advertencia", "El monto a pagar no puede ser mayor al total", "warning");
-}
+  if (pagar > total) {
+      return Swal.fire("Mensaje de Advertencia", "El monto a pagar no puede ser mayor al total", "warning");
+  }
+
   $.ajax({
-    "url":"../controller/facturas/controlador_realizar_pago.php",
-    type:'POST',
-    data:{
-      id:id,
-      pagar:pagar,
-      saldo:saldo,
-      idusu:idusu
-    }
-  }).done(function(resp){
-    if(resp>0){
-        Swal.fire("Mensaje de Confirmación","Se realizo correctamente el pago con el monto de: AR$"+pagar,"success").then((value)=>{
-          tbl_facturas.ajax.reload();
-        $("#modal_pagar").modal('hide');
-        });
-    }else{
-      return Swal.fire("Mensaje de Error","No se completo el pago","error");
-
-    }
-  })
+      url: "../controller/facturas/controlador_realizar_pago.php",
+      type: 'POST',
+      data: {
+          id: id,
+          pagar: pagar,
+          saldo: saldo,
+          idusu: idusu
+      }
+  }).done(function(resp) {
+      if (resp > 0) {
+          Swal.fire("Mensaje de Confirmación", "Se realizó correctamente el pago con el monto de: AR$" + pagar, "success").then((value) => {
+              tbl_facturas.ajax.reload();
+              $("#modal_pagar").modal('hide');
+          });
+      } else {
+          return Swal.fire("Mensaje de Error", "No se completó el pago", "error");
+      }
+  });
 }
 
 
