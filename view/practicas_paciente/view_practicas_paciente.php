@@ -173,7 +173,7 @@ if (!isset($_SESSION['S_ID'])) {
               <label for="">Profesional Responsable<b style="color:red">(*)</b>:</label>
               <input type="text" class="form-control" id="txt_profesional" value="<?php echo $_SESSION['S_COMPLETOS']; ?>" disabled>
             </div>
-          
+
             <div class="col-4 form-group">
               <label for="">Fecha registro<b style="color:red">(*)</b>:</label>
               <input type="date" class="form-control" id="txt_fecha" disabled>
@@ -204,9 +204,7 @@ if (!isset($_SESSION['S_ID'])) {
                 <h3 id="lbl_totalneto"></h3>
                 <hr>
               </div>
-
             </div>
-
           </div>
         </div>
         <div class="modal-footer">
@@ -401,7 +399,7 @@ if (!isset($_SESSION['S_ID'])) {
               <input type="text" class="form-control" id="id_txt_paci" hidden>
               <input type="text" class="form-control" id="txt_paci" disabled>
             </div>
-            
+
             <div class="col-12 form-group">
               <label for="">Total:</label>
               <input type="text" class="form-control" id="total" disabled>
