@@ -427,7 +427,8 @@
                 return 0;
             }
             conexionBD::cerrar_conexion();
-        }public function Listar_historial_pagoas($id) {
+        }
+        public function Listar_historial_pagoas($id) {
             $c = conexionBD::conexionPDO();
             $arreglo = ["data" => []]; // ✅ Asegura que la clave "data" siempre existe
             $sql = "CALL SP_LISTA_HISTORIAL_PAGOS(?)";
@@ -462,6 +463,7 @@
             }
             conexionBD::cerrar_conexion();
         }
+
         public function Listar_practocaticas_por_obra($id_obra){
             $c = conexionBD::conexionPDO();
             $sql = "CALL SP_LISTAR_PRACTICAS_OBRA(?)";
@@ -478,6 +480,25 @@
             
             // Esta línea nunca se ejecuta porque está después del return
             // conexionBD::cerrar_conexion();
+        }
+           public function Modificar_Factura_Archivo($idfactu, $ruta_factura, $ruta_notacre, $fecha, $idusu){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_MODIFICAR_FACTURA_ARCHIVO(?,?,?,?,?)";
+            $query  = $c->prepare($sql);
+            $query ->bindParam(1,$idfactu);
+            $query ->bindParam(2,$ruta_factura);
+            $query ->bindParam(3,$ruta_notacre);
+            $query ->bindParam(4,$fecha);
+            $query ->bindParam(5,$idusu);
+
+            $resul = $query->execute();
+            if($resul){
+                return 1;
+            }else{
+                return 0;
+            }
+            conexionBD::cerrar_conexion();
+
         }
     }
 

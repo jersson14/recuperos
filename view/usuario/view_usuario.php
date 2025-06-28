@@ -129,6 +129,7 @@
               <select class="form-control" id="select_rol_editar" style="width:100%">
                   <option value="">Seleccione</option>
                   <option value="MEDICO">MEDICO</option>
+                  <option value="FACTURA">FACTURA</option>
                   <option value="ADMINISTRADOR">ADMINISTRADOR</option>
               </select>
           </div>
@@ -219,6 +220,7 @@
               <select class="form-control" id="select_rol_editar2" style="width:100%">
                   <option value="">Seleccione</option>
                   <option value="MEDICO">MEDICO</option>
+                  <option value="FACTURA">FACTURA</option>
                   <option value="ADMINISTRADOR">ADMINISTRADOR</option>
               </select>
           </div>
