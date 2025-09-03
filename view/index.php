@@ -246,16 +246,23 @@ scratch. This page gets rid of all links and provides the needed markup only.
             }
             ?>
              <?php if ($_SESSION['S_ROL'] == "MEDICO") { ?>
-              
+               <li class="nav-item">
+                <a href="#" onclick="cargar_contenido('contenido_principal','paciente/view_paciente.php')" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                <p style="color:white">
+                    Paciente
+                  </p>
+                </a>
+              </li>
               <li class="nav-item">
-                <a href="#" onclick="cargar_contenido('contenido_principal','facturas/view_facturas_solo.php')" class="nav-link">
+                <a href="#" onclick="cargar_contenido('contenido_principal','practicas_paciente/view_practicas_paciente2.php')" class="nav-link">
                 <i class="nav-icon fas fa-stethoscope"></i>
                 <p style="color:white">
                     Prácticas - Paciente
                   </p>
                 </a>
               </li>
-            
+             
               <li class="header text-center" style="color:#FFFFFF; background-color:#023D77; border-radius: 10px;">
                 <b>MANUAL</b>
               </li>
