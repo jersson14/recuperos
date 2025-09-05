@@ -191,7 +191,6 @@ if (!isset($_SESSION['S_ID'])) {
                   <hr>
                 </div>
               </div>
-
             </div>
             <hr>
             <hr>
