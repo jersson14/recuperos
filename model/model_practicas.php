@@ -79,18 +79,16 @@
             
             return $resul ? 1 : 0;
         }
-        public function Modificar_Practicas($id,$code,$pract,$valor,$obra,$status,$idusu){
+        public function Modificar_Practicas($id,$code,$pract,$status,$idusu){
             $c = conexionBD::conexionPDO();
-            $sql = "CALL SP_MODIFICAR_PRACTICAS(?,?,?,?,?,?,?)";
+            $sql = "CALL SP_MODIFICAR_PRACTICAS(?,?,?,?,?)";
             $arreglo = array();
             $query  = $c->prepare($sql);
             $query ->bindParam(1,$id);
             $query ->bindParam(2,$code);
             $query ->bindParam(3,$pract);
-            $query ->bindParam(4,$valor);
-            $query ->bindParam(5,$obra);
-            $query ->bindParam(6,$status);
-            $query ->bindParam(7,$idusu);
+            $query ->bindParam(4,$status);
+            $query ->bindParam(5,$idusu);
 
             $query->execute();
             if($row = $query->fetchColumn()){
@@ -209,6 +207,36 @@
             return $arreglo;
             conexionBD::cerrar_conexion();
         
+        }
+
+        function Modificar_practica_todas_obras($id, $codigo, $practica, $valor) {
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_REGISTRAR_PRACTICA_TODAS_OBRAS2(?,?,?,?)";
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $id, PDO::PARAM_INT);
+            $query->bindParam(2, $codigo, PDO::PARAM_STR);
+            $query->bindParam(3, $practica, PDO::PARAM_STR);
+            $query->bindParam(4, $valor, PDO::PARAM_STR);
+            
+            $resul = $query->execute();
+            conexionBD::cerrar_conexion();
+            
+            return $resul ? 1 : 0;
+        }
+         function Registrar_detalle_practicas_obras2($id, $array_codigo,$array_practica,$array_valor, $array_idobra){
+            $c = conexionBD::conexionPDO();
+            $sql = "CALL SP_REGISTRAR_DETALLE_PRACTICAS_OBRAS2(?,?,?,?,?)"; // Se agregaron 3 placeholders
+            $query = $c->prepare($sql);
+            $query->bindParam(1, $id, PDO::PARAM_INT);
+            $query->bindParam(2, $array_codigo, PDO::PARAM_INT);
+            $query->bindParam(3, $array_practica, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            $query->bindParam(4, $array_valor, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            $query->bindParam(5, $array_idobra, PDO::PARAM_STR); // Asegurar que el subtotal sea string/decimal
+            
+            $resul = $query->execute();
+            conexionBD::cerrar_conexion();
+            
+            return $resul ? 1 : 0;
         }
     }
 

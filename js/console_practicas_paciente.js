@@ -701,8 +701,8 @@ function Cargar_Select_Obras_Sociales2() {
 
    
       // Cargar las prácticas correspondientes a la obra seleccionada por defecto
-      var id_practica = $("#select_practica").val();
-      Cargar_Select_Practica(id_practica, 'select_practica');
+      var id_practicas_obras = $("#select_practica").val();
+      Cargar_Select_Practica(id_practicas_obras, 'select_practica');
 
       
     } else {
@@ -756,7 +756,7 @@ function Cargar_Select_Paciente(id, id_paciente = null) {
 
 
 
-function Cargar_Select_Practica(id2, id_practica = null) {
+function Cargar_Select_Practica(id2, id_practicas_obras = null) {
   $.ajax({
     url: "../controller/practicas_paciente/controlador_cargar_select_paciente_practica2.php",
     type: 'POST',
@@ -778,8 +778,8 @@ function Cargar_Select_Practica(id2, id_practica = null) {
     $('#select_practica_editar').html(cadena);
  
     // Si hay una práctica seleccionada para edición
-    if (id_practica) {
-      $('#select_practica_editar').val(id_practica).trigger('change');
+    if (id_practicas_obras) {
+      $('#select_practica_editar').val(id_practicas_obras).trigger('change');
     }
 
     // Inicializar select2
@@ -842,6 +842,7 @@ function actualizarSubtotal() {
   const subtotal = precio * cantidad;
   $("#txt_subtotal").val(subtotal.toFixed(2));
 }
+
 
 $(document).ready(function() {
   actualizarSubtotal(); // Inicializar subtotal al cargar la página
@@ -977,7 +978,7 @@ function listar_practicas(id) {
       ],
       "columns": [
 
-          { "data": "cod_practica" },
+          { "data": "codigo_prac" },
           { "data": "PRACTICA" },
           {
             "data": "PRECIOUNI",
@@ -1255,8 +1256,8 @@ function listar_practicas_del_paciente(id) {
     },
     "columns": [
       {"data": "id_paciente_practica"},
-      {"data": "id_practica"},
-      {"data": "practica"},
+      {"data": "id_prac_obras"},
+      {"data": "nombre_prac"},
       {"data": "precio_unitario"},
       {"data": "cantidad"},
       {"data": "subtotal"},
@@ -1344,6 +1345,89 @@ function Agregar_practica_editar() {
   SumarTotal_Editar();
 }
 
+function Modificar_detalle_practicas() {
+    let componentes = [];
+    let totalText = document.getElementById('lbl_totalneto_editar')?.textContent.replace(/[^0-9.]/g, '').trim();
+    let total = parseFloat(totalText) || 0;
+    let idusu = document.getElementById('txtprincipalid')?.value.trim();
+    let idprac = document.getElementById('txt_id_detalle')?.value.trim();
+    
+    console.log("=== DEBUG MODIFICAR DETALLE ===");
+    console.log("Total:", total);
+    console.log("ID Usuario:", idusu);
+    console.log("ID Práctica:", idprac);
+    
+    if (!idusu) {
+        return Swal.fire("Mensaje de Advertencia", "El ID del usuario no es válido.", "warning");
+    }
+    
+    // Recorremos solo el cuerpo de la tabla
+    $("#tabla_practica_editar tbody tr").each(function(index) {
+        let id_practica_general = $(this).find('td').eq(0).text().trim();
+        let id_practica = $(this).find('td').eq(1).text().trim();
+        let precio = parseFloat($(this).find('td').eq(3).text().trim()) || 0;
+        let cantidad = parseFloat($(this).find('td').eq(4).text().trim()) || 0;
+        let subtotal = parseFloat($(this).find('td').eq(5).text().trim()) || 0;
+        
+        console.log(`Fila ${index}:`, {
+            id_practica_general,
+            id_practica,
+            precio,
+            cantidad,
+            subtotal
+        });
+        
+        if (id_practica && subtotal > 0) {
+            componentes.push({
+                id_practica_general,
+                id_practica,
+                precio: precio.toFixed(2),
+                cantidad,
+                subtotal: subtotal.toFixed(2)
+            });
+        }
+    });
+    
+    console.log("Componentes a enviar:", componentes);
+    
+    if (componentes.length === 0) {
+        return Swal.fire("Mensaje de Advertencia", "No hay prácticas válidas en la tabla para modificar", "warning");
+    }
+    
+    // Enviar datos por AJAX
+    $.ajax({
+        url: '../controller/practicas_paciente/controlador_modificar_detalle_practicas.php',
+        type: 'POST',
+        data: {
+            total: total.toFixed(2),
+            idusu: idusu,
+            idprac: idprac,
+            componentes: JSON.stringify(componentes)
+        },
+        dataType: 'json'
+    })
+    .done(function (resp) {
+        console.log("Respuesta del servidor:", resp);
+        if (resp.status === 1) {
+            Swal.fire("Mensaje de Confirmación", "Se actualizó correctamente la practica paciente", "success").then(() => {
+                tbl_paciente_practica.ajax.reload();
+                $("#modal_editar").modal('hide');
+            });
+        } else if (resp.status === 2) {
+            Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen o no había registros nuevos- solo se modifico el total", "success");
+            tbl_paciente_practica.ajax.reload();
+            $("#modal_editar").modal('hide');
+        } else {
+            Swal.fire("Error", resp.message || "Hubo un problema en la actualización", "error");
+        }
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("Error en AJAX:", textStatus, errorThrown);
+        console.error("Respuesta del servidor:", jqXHR.responseText);
+        Swal.fire("Error", "No se pudo actualizar las prácticas. Inténtalo de nuevo.", "error");
+    });
+}
+
 // BORRAR REGISTRO
 function remove1(t) {
   var td = t.parentNode;
@@ -1373,80 +1457,7 @@ function verificarid_editar(id) {
   return [].filter.call(idverificar, td => td.textContent === id).length > 0;
 }
 
-function Modificar_detalle_practicas() {
-  let componentes = [];
 
-  let totalText = document.getElementById('lbl_totalneto_editar')?.textContent.replace(/[^0-9.]/g, '').trim();
-  let total = parseFloat(totalText) || 0;  // Validación robusta del total
-  let idusu = document.getElementById('txtprincipalid')?.value.trim();
-  let idprac = document.getElementById('txt_id_detalle')?.value.trim();
-
-
-  
-  if (!idusu) {
-    return Swal.fire("Mensaje de Advertencia", "El ID del usuario no es válido.", "warning");
-  }
-
-  // Recorremos solo el cuerpo de la tabla para evitar la cabecera
-  $("#tabla_practica_editar tbody tr").each(function() {
-    let id_practica_general = $(this).find('td').eq(0).text().trim();
-    let id_practica = $(this).find('td').eq(1).text().trim();
-    let precio = parseFloat($(this).find('td').eq(3).text().trim()) || 0;
-    let cantidad = parseFloat($(this).find('td').eq(4).text().trim()) || 0;
-    let precioText = $(this).find('td').eq(5).text().trim();
-    let subtotal = parseFloat(precioText) || 0; // Convertimos correctamente a número
-
-    // Validar que todos los campos estén completos
-    if (id_practica && subtotal > 0) {
-      componentes.push({
-        id_practica_general,
-        id_practica,
-        precio: precio.toFixed(2),
-        cantidad,
-        subtotal: subtotal.toFixed(2) // Formato con 2 decimales
-      });
-    }
-  });
-
-  // Verificar si hay datos para enviar
-  if (componentes.length === 0) {
-    return Swal.fire("Mensaje de Advertencia", "No hay prácticas válidas en la tabla para modificar", "warning");
-  }
-
-  // Enviar datos por AJAX
-  $.ajax({
-    url: '../controller/practicas_paciente/controlador_modificar_detalle_practicas.php',
-    type: 'POST',
-    data: {
-      total: total.toFixed(2),
-      idusu: idusu,
-      idprac:idprac,
-      componentes: JSON.stringify(componentes)
-    },
-    dataType: 'json' // Aseguramos que la respuesta sea JSON
-  })
-  .done(function (resp) {
-    console.log("Respuesta del servidor:", resp);
-    if (resp.status === 1) {
-        Swal.fire("Mensaje de Confirmación", "Se actualizó correctamente la practica paciente", "success").then(() => {
-          tbl_paciente_practica.ajax.reload();
-            $("#modal_editar").modal('hide');
-        });
-    } else if (resp.status === 2) {
-        Swal.fire("Mensaje de Información", "No se modificaron las prácticas porque ya existen o no había registros nuevos- solo se modifico el total", "success");
-        tbl_paciente_practica.ajax.reload();
-        $("#modal_editar").modal('hide');
-
-    } else {
-        Swal.fire("Error", "Hubo un problema en la actualización", "error");
-    }
-})
-  .fail(function(jqXHR, textStatus, errorThrown) {
-    console.error("Error en AJAX:", textStatus, errorThrown);
-    console.error("Respuesta del servidor:", jqXHR.responseText);
-    Swal.fire("Error", "No se pudo actualizar las prácticas. Inténtalo de nuevo.", "error");
-  });
-}
 
 
 

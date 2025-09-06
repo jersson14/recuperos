@@ -313,32 +313,37 @@
             conexionBD::cerrar_conexion();
         }
         public function Modificar_Detalle_practicas($idpracitcageneral,$idpracitca, $precio,$cantidad,$subtotal,$total,$idusu) {
-            $c = conexionBD::conexionPDO();
+    $c = conexionBD::conexionPDO();
+    
+    $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?,?,?,?,?,?,?)";
+    $query = $c->prepare($sql);
+    $query->bindParam(1, $idpracitcageneral);
+    $query->bindParam(2, $idpracitca);
+    $query->bindParam(3, $precio);
+    $query->bindParam(4, $cantidad);
+    $query->bindParam(5, $subtotal);
+    $query->bindParam(6, $total);
+    $query->bindParam(7, $idusu);
+    
+    try {
+        $query->execute();
         
-            // Suponiendo que usas una consulta SQL o un procedimiento almacenado
-            $sql = "CALL SP_MODIFICAR_DETALLE_PRACTICAS(?,?,?,?,?,?,?)"; // Cambia esto a tu consulta real
-            $query = $c->prepare($sql);
-            $query->bindParam(1, $idpracitcageneral);
-            $query->bindParam(2, $idpracitca);
-            $query->bindParam(3, $precio);
-            $query->bindParam(4, $cantidad);
-            $query->bindParam(5, $subtotal);
-            $query->bindParam(6, $total);
-            $query->bindParam(7, $idusu);
-
+        // Obtener el resultado del procedimiento
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        $registros_afectados = $result ? intval($result['resultado']) : 0;
         
-            try {
-                $query->execute();
-                // Dependiendo del resultado, puedes devolver 1 para éxito o 0 para error
-                // Asegúrate de ajustar esto según tu procedimiento almacenado o lógica SQL
-                return $query->rowCount() > 0 ? 1 : 0; // 1 si se modificó algo, 0 si no
-            } catch (PDOException $e) {
-                error_log($e->getMessage()); // Guarda el error en el log del servidor
-                return 0; // Error en la modificación
-            } finally {
-                conexionBD::cerrar_conexion();
-            }
-        }
+        // Log para debugging
+        error_log("SP_MODIFICAR_DETALLE_PRACTICAS - Registros afectados: " . $registros_afectados);
+        
+        return $registros_afectados > 0 ? 1 : 0;
+        
+    } catch (PDOException $e) {
+        error_log("Error en SP_MODIFICAR_DETALLE_PRACTICAS: " . $e->getMessage());
+        return 0;
+    } finally {
+        conexionBD::cerrar_conexion();
+    }
+}
 
         public function Modificar_Total_Usuario($total, $idusu,$idprac) {
             $c = conexionBD::conexionPDO();

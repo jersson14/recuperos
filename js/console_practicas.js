@@ -231,16 +231,36 @@ $("#tabla_practicas").on("click", ".editar", function () {
   if (tbl_practicas.row(this).child.isShown()) {
     var data = tbl_practicas.row(this).data();
   }
+  
   $("#modal_editar").modal("show");
-  document.getElementById("txt_id_practica").value = data.id_práctica;
+  document.getElementById("txt_id_practica").value = data.id_practica;
   document.getElementById("txt_code_editar").value = data.cod_practica;
   document.getElementById("txt_practica_editar").value = data.practica;
-  document.getElementById("txt_valor_editar").value = data.valor;
+  
+  // NUEVO: Mostrar el total de obras sociales
+  document.getElementById("total_obras_display").textContent = data.total_obras || 0;
+  
+  // Cambiar el color del indicador según la cantidad
+  let totalObrasElement = document.getElementById("total_obras_display");
+  let alertElement = totalObrasElement.closest('.alert');
+  
+  if (data.total_obras > 0) {
+    totalObrasElement.style.color = "#28a745"; // Verde si tiene obras
+    alertElement.style.borderColor = "#28a745";
+    alertElement.style.backgroundColor = "#d4edda";
+  } else {
+    totalObrasElement.style.color = "#dc3545"; // Rojo si no tiene obras
+    alertElement.style.borderColor = "#dc3545";
+    alertElement.style.backgroundColor = "#f8d7da";
+  }
+  
   $("#txt_obras_sociales_editar")
     .select2()
     .val(data.id_obras)
     .trigger("change.select2");
   document.getElementById("txt_estatus").value = data.estado;
+  
+  console.log("Total de obras sociales:", data.total_obras);
 });
 
 function AbrirRegistro() {
@@ -555,69 +575,7 @@ function limpiarFormulario() {
   $("#tabla_practica_obra tbody#tbody_tabla_practica_obra").empty();
 }
 
-function Modificar_Paciente() {
-  let id = document.getElementById("txt_id_practica").value;
-  let code = document.getElementById("txt_code_editar").value;
-  let pract = document.getElementById("txt_practica_editar").value;
-  let valor = document.getElementById("txt_valor_editar").value;
-  let obra = document.getElementById("txt_obras_sociales_editar").value;
-  let status = document.getElementById("txt_estatus").value;
-  let idusu = document.getElementById("txtprincipalid").value;
 
-  if (
-    id.length == 0 ||
-    code.length == 0 ||
-    pract.length == 0 ||
-    valor.length == 0 ||
-    status.length == 0 ||
-    obra.length == 0
-  ) {
-    return Swal.fire(
-      "Mensaje de Advertencia",
-      "Tiene campos vacios",
-      "warning"
-    );
-  }
-
-  $.ajax({
-    url: "../controller/practicas/controlador_modificar_practicas.php",
-    type: "POST",
-    data: {
-      id: id,
-      code: code,
-      pract: pract,
-      valor: valor,
-      obra: obra,
-      status: status,
-      idusu: idusu,
-    },
-  }).done(function (resp) {
-    if (resp > 0) {
-      if (resp == 1) {
-        Swal.fire(
-          "Mensaje de Confirmación",
-          "Datos de la Práctica Actualizado",
-          "success"
-        ).then((value) => {
-          tbl_practicas.ajax.reload();
-          $("#modal_editar").modal("hide");
-        });
-      } else {
-        Swal.fire(
-          "Mensaje de Advertencia",
-          "El Código que esta ingresando ya se encuentra en la base de datos, revise por favor",
-          "warning"
-        );
-      }
-    } else {
-      return Swal.fire(
-        "Mensaje de Error",
-        "No se completo el proceso",
-        "error"
-      );
-    }
-  });
-}
 ///////VALIDAR EMAIL
 function Eliminar_paciente(id) {
   $.ajax({
@@ -1199,4 +1157,340 @@ function listar_historial_modi_prac_obra(id) {
       },
       "select": true
   });
+}
+function Modificar_Practicas() {
+  let id = document.getElementById("txt_id_practica").value;
+  let code = document.getElementById("txt_code_editar").value;
+  let pract = document.getElementById("txt_practica_editar").value;
+  let status = document.getElementById("txt_estatus").value;
+  let idusu = document.getElementById("txtprincipalid").value;
+
+  if (code.length == 0 || pract.length == 0) {
+    return Swal.fire(
+      "Mensaje de Advertencia",
+      "Tiene campos vacios",
+      "warning"
+    );
+  }
+
+  // Verificar si el checkbox "Todas las obras sociales" está marcado
+  let todasObras = document.getElementById("chk_todas_obras_sociales_editar").checked;
+
+  // Solo validar si NO están marcadas todas las obras sociales
+  if (!todasObras) {
+    let count = $("#tabla_practica_obra_editar tbody#tbody_tabla_practica_obra_editar tr").length;
+    if (count === 0) {
+      return Swal.fire(
+        "Mensaje de Advertencia",
+        "Debe agregar al menos una obra social o seleccionar 'Todas las Obras Sociales'",
+        "warning"
+      );
+    }
+  }
+
+  $.ajax({
+    url: "../controller/practicas/controlador_modificar_practicas.php",
+    type: "POST",
+    data: {
+      id: id,
+      code: code,
+      pract: pract,
+      status: status,
+      idusu: idusu
+    },
+  }).done(function (resp) {
+    console.log("Respuesta modificar práctica:", resp);
+    if (resp > 0) {
+      if (todasObras) {
+        // Si está marcado "Todas las obras sociales", registrar para todas
+        console.log("Llamando a Modificar_Practica_Todas_ObrasEditar con ID:", id);
+        Modificar_Practica_Todas_ObrasEditar(id, function(success) {
+          if (success) {
+            mostrarMensajeExitoYCerrar(code);
+          } else {
+            Swal.fire(
+              "Mensaje de Error",
+              "Error al registrar en todas las obras sociales",
+              "error"
+            );
+          }
+        });
+      } else {
+        // Si no, registrar solo las seleccionadas manualmente
+        console.log("Llamando a Registrar_Detalle_practicasObraEditar con ID:", id);
+        Registrar_Detalle_practicasObraEditar(id, function(success) {
+          if (success) {
+            mostrarMensajeExitoYCerrar(code);
+          } else {
+            Swal.fire(
+              "Mensaje de Error",
+              "Error al registrar las obras sociales seleccionadas",
+              "error"
+            );
+          }
+        });
+      }
+    } else {
+      return Swal.fire(
+        "Mensaje de Error",
+        "No se completo la actualización",
+        "error"
+      );
+    }
+  }).fail(function() {
+    Swal.fire(
+      "Mensaje de Error",
+      "Error de conexión al modificar la práctica",
+      "error"
+    );
+  });
+
+  // Función para mostrar mensaje de éxito y cerrar modal
+  function mostrarMensajeExitoYCerrar(code) {
+    Swal.fire(
+      "Mensaje de Confirmación",
+      "Se modificó la práctica con el Código N°: <b>" + code + "</b>",
+      "success"
+    ).then((value) => {
+      tbl_practicas.ajax.reload();
+      limpiarFormularioEditar();
+      $("#modal_editar").modal("hide");
+    });
+  }
+}
+
+// FUNCIÓN MODIFICADA: Registrar práctica para todas las obras sociales
+function Modificar_Practica_Todas_ObrasEditar(id, callback) {
+  let code = document.getElementById("txt_code_editar").value;
+  let pract = document.getElementById("txt_practica_editar").value;
+  let valor = document.getElementById("txt_valor_editar").value;
+
+  console.log("Ejecutando Modificar_Practica_Todas_ObrasEditar");
+  console.log("ID:", id, "Código:", code, "Práctica:", pract, "Valor:", valor);
+
+  if (valor.length == 0) {
+    Swal.fire(
+      "Mensaje de Advertencia", 
+      "Debe ingresar el valor monetario", 
+      "warning"
+    );
+    if (callback) callback(false);
+    return;
+  }
+
+  $.ajax({
+    url: "../controller/practicas/controlador_registro_todas_obras2.php",
+    type: 'POST',
+    data: {
+      id: id,
+      codigo: code,
+      practica: pract,
+      valor: valor
+    }
+  }).done(function (resp) {
+    console.log("Respuesta todas las obras:", resp);
+    if (resp > 0) {
+      console.log("Práctica modificada para todas las obras sociales");
+      if (callback) callback(true);
+    } else {
+      Swal.fire(
+        "Mensaje De Advertencia", 
+        "Error al registrar para todas las obras sociales", 
+        "warning"
+      );
+      if (callback) callback(false);
+    }
+  }).fail(function() {
+    console.error("Error AJAX en Modificar_Practica_Todas_ObrasEditar");
+    Swal.fire(
+      "Mensaje de Error",
+      "Error de conexión al registrar en todas las obras sociales",
+      "error"
+    );
+    if (callback) callback(false);
+  });
+}
+
+// FUNCIÓN MODIFICADA: Registro detalle practicas - obras
+function Registrar_Detalle_practicasObraEditar(id, callback) {
+  let count = $("#tabla_practica_obra_editar tbody#tbody_tabla_practica_obra_editar tr").length;
+  
+  console.log("Ejecutando Registrar_Detalle_practicasObraEditar");
+  console.log("Count de filas:", count);
+  
+  if (count === 0) {
+    Swal.fire(
+      "Mensaje de Advertencia", 
+      "El detalle de las prácticas debe tener al menos un registro", 
+      "warning"
+    );
+    if (callback) callback(false);
+    return;
+  }
+
+  let arreglo_codigo = [];
+  let arreglo_practica = [];
+  let arreglo_valor = [];
+  let arreglo_id = [];
+
+  $("#tabla_practica_obra_editar tbody#tbody_tabla_practica_obra_editar tr").each(function () {
+    arreglo_codigo.push($(this).find('td').eq(0).text().trim());
+    arreglo_practica.push($(this).find('td').eq(1).text().trim());
+    arreglo_valor.push($(this).find('td').eq(2).text().trim());
+    arreglo_id.push($(this).find('td').eq(3).text().trim());
+  });
+
+  let codigo = arreglo_codigo.join(",");
+  let practica = arreglo_practica.join(",");
+  let valor = arreglo_valor.join(",");
+  let idobra = arreglo_id.join(",");
+
+  console.log("Datos a enviar:", {id, codigo, practica, valor, idobra});
+
+  $.ajax({
+    url: "../controller/practicas/controlador_detalle_practicas_obra2.php",
+    type: 'POST',
+    data: {
+      id: id,
+      codigo: codigo,
+      practica: practica,
+      valor: valor,
+      idobra: idobra
+    }
+  }).done(function (resp) {
+    console.log("Respuesta detalle obras:", resp);
+    if (resp > 0) {
+      console.log("Detalles registrados correctamente");
+      if (callback) callback(true);
+    } else {
+      Swal.fire(
+        "Mensaje De Advertencia", 
+        "Lo sentimos, no se pudo completar el registro", 
+        "warning"
+      );
+      if (callback) callback(false);
+    }
+  }).fail(function() {
+    console.error("Error AJAX en Registrar_Detalle_practicasObraEditar");
+    Swal.fire(
+      "Mensaje de Error",
+      "Error de conexión al registrar las obras sociales",
+      "error"
+    );
+    if (callback) callback(false);
+  });
+}
+
+// FUNCIÓN PARA MANEJAR EL TOGGLE DEL CHECKBOX
+function toggleObrasSocialesEditar() {
+  let checkbox = document.getElementById("chk_todas_obras_sociales_editar");
+  let selectObras = document.getElementById("txt_obras_sociales_editar");
+  let btnAgregar = document.querySelector("button[onclick='Agregar_practica_obraEditar()']");
+  let inputValor = document.getElementById("txt_valor_editar");
+
+  if (checkbox.checked) {
+    // Si está marcado, deshabilitar select y botón agregar
+    $(selectObras).prop('disabled', true);
+    btnAgregar.disabled = true;
+    btnAgregar.style.opacity = '0.5';
+    
+    // Limpiar la tabla
+    $("#tabla_practica_obra_editar tbody#tbody_tabla_practica_obra_editar").empty();
+    
+    // Hacer obligatorio el valor monetario
+    inputValor.required = true;
+    inputValor.style.borderColor = '#dc3545';
+    
+    Swal.fire({
+      icon: 'info',
+      title: 'Modo: Todas las Obras Sociales',
+      text: 'Se registrará esta práctica para todas las obras sociales disponibles.',
+      timer: 3000,
+      showConfirmButton: false
+    });
+  } else {
+    // Si no está marcado, habilitar select y botón agregar
+    $(selectObras).prop('disabled', false);
+    btnAgregar.disabled = false;
+    btnAgregar.style.opacity = '1';
+    
+    // Quitar obligatoriedad visual del valor
+    inputValor.required = false;
+    inputValor.style.borderColor = '';
+  }
+}
+
+// VALIDACIÓN MODIFICADA
+function verificaridEditar(id) {
+  let existe = $("#tbody_tabla_practica_obra_editar td[for='id']").filter(function () {
+    return $(this).text() === id;
+  }).length > 0;
+  
+  return existe;
+}
+
+// AGREGAR PRÁCTICA-OBRA MODIFICADA
+function Agregar_practica_obraEditar() {
+  // Verificar si el checkbox está marcado
+  let todasObras = document.getElementById("chk_todas_obras_sociales_editar").checked; // This line was already changed in the last edit.
+  
+  if (todasObras) {
+    return Swal.fire(
+      "Mensaje de Advertencia", 
+      "No puede agregar obras individuales mientras esté seleccionado 'Todas las Obras Sociales'", 
+      "warning"
+    );
+  }
+
+  var cod = $("#txt_code_editar").val().trim(); 
+  var prac = $("#txt_practica_editar").val().trim(); 
+  var val = $("#txt_valor_editar").val().trim(); 
+  var idobr = $("#txt_obras_sociales_editar").val().trim(); 
+  var obr = $("#txt_obras_sociales_editar option:selected").text().trim();
+
+  if (cod.length == 0 || prac.length == 0 || val.length == 0 || idobr.length == 0) {
+    return Swal.fire("Mensaje de Advertencia", "Complete todos los campos obligatorios", "warning");
+  }
+
+  if (verificaridEditar(idobr)) {
+    return Swal.fire("Mensaje de Advertencia", "La obra social asociada a la práctica ya fue agregado a la tabla", "warning");
+  }
+
+  var datos_agregar = `
+    <tr>
+      <td>${cod}</td>
+      <td>${prac}</td>
+      <td>${val}</td>
+      <td for="id">${idobr}</td>
+      <td>${obr}</td>
+      <td><button class='btn btn-danger' onclick='removeEditar(this)'><i class='fas fa-trash'></i></button></td>
+    </tr>`;
+
+  $("#tbody_tabla_practica_obra_editar").append(datos_agregar); 
+  $("#txt_obras_sociales_editar").val("").trigger("change");
+  $("#txt_valor_editar").val("");
+}
+
+// BORRAR REGISTRO (sin cambios)
+function removeEditar(t) {
+  $(t).closest("tr").remove();
+}
+
+
+
+// FUNCIÓN PARA LIMPIAR EL FORMULARIO
+function limpiarFormularioEditar() {
+  document.getElementById('txt_code_editar').value = "";
+  document.getElementById('txt_practica_editar').value = "";
+  document.getElementById('txt_valor_editar').value = "";
+  document.getElementById('txt_obras_sociales_editar').checked = false;
+  
+  // Rehabilitar controles
+  $("#txt_obras_sociales_editar").prop('disabled', false).val("").trigger("change");
+  let btnAgregar = document.querySelector("button[onclick='Agregar_practica_obraEditar()']");
+  btnAgregar.disabled = false;
+  btnAgregar.style.opacity = '1';
+  
+  // Limpiar tabla
+  $("#tabla_practica_obra_editar tbody#tbody_tabla_practica_obra_editar").empty();
 }
