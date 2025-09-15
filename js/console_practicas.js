@@ -772,30 +772,70 @@ function listar_practicaS_obras(id) {
     },
     dom: "Bfrtip",
     buttons: [
-      {
-        extend: "excelHtml5",
-        text: '<i class="fas fa-file-excel"></i> Excel',
-        titleAttr: "Exportar a Excel",
-        filename: "LISTA_DE_PRACTICAS_OBRAS",
-        title: "LISTA DE PRACTICAS - OBRAS",
-        className: "btn btn-success",
-      },
-      {
-        extend: "pdfHtml5",
-        text: '<i class="fas fa-file-pdf"></i> PDF',
-        titleAttr: "Exportar a PDF",
-        filename: "LISTA_DE_PRACTICAS_OBRAS",
-        title: "LISTA DE PRACTICAS - OBRAS",
-        className: "btn btn-danger",
-      },
-      {
-        extend: "print",
-        text: '<i class="fa fa-print"></i> Imprimir',
-        titleAttr: "Imprimir",
-        title: "LISTA DE PRACTICAS - OBRAS",
-        className: "btn btn-primary",
-      },
-    ],
+    {
+      extend: "excelHtml5",
+      text: '<i class="fas fa-file-excel"></i> Excel',
+      titleAttr: "Exportar a Excel",
+      filename: "LISTA_DE_PRACTICAS_OBRAS",
+      title: "LISTA DE PRACTICAS - OBRAS",
+      className: "btn btn-success",
+      exportOptions: {
+        columns: [0,1,2,3,4],
+        format: {
+          body: function (data, row, column, node) {
+            var $input = $('input', node);
+            var value = $input.length ? $input.val() : $(node).text().trim();
+            if (column === 4) { // columna valor
+              return '$AR ' + value;
+            }
+            return value;
+          }
+        }
+      }
+    },
+    {
+      extend: "pdfHtml5",
+      text: '<i class="fas fa-file-pdf"></i> PDF',
+      titleAttr: "Exportar a PDF",
+      filename: "LISTA_DE_PRACTICAS_OBRAS",
+      title: "LISTA DE PRACTICAS - OBRAS",
+      className: "btn btn-danger",
+      exportOptions: {
+        columns: [0,1,2,3,4],
+        format: {
+          body: function (data, row, column, node) {
+            var $input = $('input', node);
+            var value = $input.length ? $input.val() : $(node).text().trim();
+            if (column === 4) { // columna valor
+              return '$AR ' + value;
+            }
+            return value;
+          }
+        }
+      }
+    },
+    {
+      extend: "print",
+      text: '<i class="fa fa-print"></i> Imprimir',
+      titleAttr: "Imprimir",
+      title: "LISTA DE PRACTICAS - OBRAS",
+      className: "btn btn-primary",
+      exportOptions: {
+        columns: [0,1,2,3,4],
+        format: {
+          body: function (data, row, column, node) {
+            var $input = $('input', node);
+            var value = $input.length ? $input.val() : $(node).text().trim();
+            if (column === 4) { // columna valor
+              return '$AR ' + value;
+            }
+            return value;
+          }
+        }
+      }
+    }
+  ],
+
     columns: [
       {
         data: null,
@@ -937,19 +977,25 @@ $("#tabla_practicas_obras_sociales").on("click", ".eliminar_prac_obra", function
 
 function Modificacion_masiva() {
   let id = document.getElementById("txt_id_practica2").value;
-  let code = document.getElementById("bulk_codigo").value;
-  let pract = document.getElementById("bulk_practica").value;
-  let valor = document.getElementById("bulk_valor").value;
+  let code = document.getElementById("bulk_codigo").value.trim();
+  let pract = document.getElementById("bulk_practica").value.trim();
+  let valor = document.getElementById("bulk_valor").value.trim();
   let idusu = document.getElementById("txtprincipalid").value;
-  if (
-    id.length == 0 ||
-    code.length == 0 ||
-    pract.length == 0 ||
-    valor.length == 0 
-    ) {
+
+  // primero validar que haya id (debe existir siempre)
+  if (id.length === 0) {
     return Swal.fire(
       "Mensaje de Advertencia",
-      "Tiene campos vacios",
+      "No se ha especificado la práctica a modificar",
+      "warning"
+    );
+  }
+
+  // validar que al menos uno de los campos (code, pract, valor) tenga algo
+  if (code.length === 0 && pract.length === 0 && valor.length === 0) {
+    return Swal.fire(
+      "Mensaje de Advertencia",
+      "Debe ingresar al menos un campo para modificar",
       "warning"
     );
   }
@@ -966,25 +1012,27 @@ function Modificacion_masiva() {
     },
   }).done(function (resp) {
     if (resp > 0) {
-        Swal.fire(
-          "Mensaje de Confirmación",
-          "Datos de la Práctica - Obra social Actualizado de forma masiva",
-          "success"
-        ).then((value) => {
-          tbl_detalle_practica_obra.ajax.reload();
-          document.getElementById("bulk_codigo").value = "";
-          document.getElementById("bulk_practica").value = "";
-          document.getElementById("bulk_valor").value = "";
-        });      
+      Swal.fire(
+        "Mensaje de Confirmación",
+        "Datos de la Práctica - Obra social Actualizado de forma masiva",
+        "success"
+      ).then(() => {
+        tbl_detalle_practica_obra.ajax.reload();
+        // limpiar solo los campos de entrada, no el id
+        document.getElementById("bulk_codigo").value = "";
+        document.getElementById("bulk_practica").value = "";
+        document.getElementById("bulk_valor").value = "";
+      });
     } else {
-      return Swal.fire(
+      Swal.fire(
         "Mensaje de Error",
-        "No se completo el proceso",
+        "No se completó el proceso",
         "error"
       );
     }
   });
 }
+
 
 
 function Editar_practica_obra(id) {
