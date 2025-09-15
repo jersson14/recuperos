@@ -1018,6 +1018,8 @@ function Modificacion_masiva() {
         "success"
       ).then(() => {
         tbl_detalle_practica_obra.ajax.reload();
+        tbl_practicas.ajax.reload();
+
         // limpiar solo los campos de entrada, no el id
         document.getElementById("bulk_codigo").value = "";
         document.getElementById("bulk_practica").value = "";
